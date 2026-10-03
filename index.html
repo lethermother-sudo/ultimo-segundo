@@ -261,6 +261,7 @@ button:active{
 <canvas id="canvas"></canvas>
 
 <div id="hud" class="hidden">
+
   <div class="hudTop">
 
     <div class="hudBox">
@@ -270,7 +271,7 @@ button:active{
 
     <div id="phaseHud" class="hudBox">
       <div class="hudLabel">FASE</div>
-      <div id="phaseValue" class="hudValue">1</div>
+      <div id="phaseValue" class="hudValue">1 / 50</div>
     </div>
 
     <div id="cityHud" class="hudBox">
@@ -281,70 +282,129 @@ button:active{
   </div>
 
   <div style="text-align:center;margin-top:8px;">
-    <div id="speedHud" style="font-size:10px;letter-spacing:2px;color:#55edff;">VELOCIDADE 0.0x</div>
-    <div id="targetHud" style="font-size:9px;letter-spacing:1px;opacity:.55;margin-top:3px;">META 1200</div>
+    <div id="speedHud"
+         style="font-size:10px;letter-spacing:2px;color:#55edff;">
+      VELOCIDADE 0.8x
+    </div>
+
+    <div id="targetHud"
+         style="font-size:9px;letter-spacing:1px;opacity:.55;margin-top:3px;">
+      META 1200
+    </div>
   </div>
+
 </div>
 
 <div id="bottomHud" class="hidden">
-  <div id="hint">← → TROCAR FAIXA • ↑ PULAR • ↓ DESLIZAR</div>
+  <div id="hint">
+    ← → TROCAR FAIXA • ↑ PULAR • ↓ DESLIZAR
+  </div>
 </div>
+
 
 <!-- MENU -->
 
 <div id="menu" class="screen">
-  <div class="logoSmall">RUNNER EXPERIENCE</div>
 
-  <h1>ÚLTIMO<br>SEGUNDO</h1>
+  <div class="logoSmall">
+    RUNNER EXPERIENCE
+  </div>
+
+  <h1>
+    ÚLTIMO<br>
+    SEGUNDO
+  </h1>
 
   <div class="subtitle">
     CORRA • DESVIE • SOBREVIVA
   </div>
 
   <div class="buttons">
-    <button id="playBtn">JOGAR</button>
-    <button id="phasesBtn">FASES</button>
+
+    <button id="playBtn">
+      JOGAR
+    </button>
+
+    <button id="phasesBtn">
+      FASES
+    </button>
+
   </div>
 
-  <div id="menuBest">MELHOR PONTUAÇÃO 0</div>
+  <div id="menuBest">
+    MELHOR PONTUAÇÃO 0
+  </div>
+
 </div>
+
 
 <!-- FASES -->
 
 <div id="phaseScreen" class="screen hidden">
-  <div class="phaseTitle">SELECIONE A FASE</div>
+
+  <div class="phaseTitle">
+    SELECIONE A FASE
+  </div>
 
   <div id="phaseGrid" class="phaseGrid"></div>
 
-  <div class="buttons" style="margin-top:15px;width:min(370px,94vw);">
-    <button id="phaseBackBtn">VOLTAR</button>
+  <div class="buttons"
+       style="margin-top:15px;width:min(370px,94vw);">
+
+    <button id="phaseBackBtn">
+      VOLTAR
+    </button>
+
   </div>
+
 </div>
+
 
 <!-- RESULTADO -->
 
 <div id="resultScreen" class="screen hidden">
-  <div class="logoSmall">RESULTADO</div>
 
-  <h1 id="resultTitle">VITÓRIA</h1>
+  <div class="logoSmall">
+    RESULTADO
+  </div>
 
-  <div id="resultScore" class="resultScore">0 PONTOS</div>
+  <h1 id="resultTitle">
+    VITÓRIA
+  </h1>
+
+  <div id="resultScore" class="resultScore">
+    0 PONTOS
+  </div>
+
   <div id="resultInfo" class="resultInfo"></div>
 
   <div id="resultButtons" class="buttons">
-    <button id="nextBtn">PRÓXIMA FASE</button>
-    <button id="retryBtn">JOGAR NOVAMENTE</button>
-    <button id="resultMenuBtn">MENU</button>
+
+    <button id="nextBtn">
+      PRÓXIMA FASE
+    </button>
+
+    <button id="retryBtn">
+      VOLTAR PARA FASE 1
+    </button>
+
+    <button id="resultMenuBtn">
+      MENU
+    </button>
+
   </div>
+
 </div>
 
 </div>
+
 
 <script>
 "use strict";
 
+
 /* =========================================================
-   CONFIGURAÇÃO
+   CANVAS
 ========================================================= */
 
 const canvas = document.getElementById("canvas");
@@ -352,62 +412,119 @@ const ctx = canvas.getContext("2d");
 
 let W = 0;
 let H = 0;
-let DPR = Math.min(window.devicePixelRatio || 1,2);
+
+let DPR =
+  Math.min(window.devicePixelRatio || 1,2);
 
 function resize(){
+
   W = window.innerWidth;
   H = window.innerHeight;
 
-  DPR = Math.min(window.devicePixelRatio || 1,2);
+  DPR =
+    Math.min(window.devicePixelRatio || 1,2);
 
-  canvas.width = Math.floor(W * DPR);
-  canvas.height = Math.floor(H * DPR);
+  canvas.width =
+    Math.floor(W * DPR);
 
-  canvas.style.width = W + "px";
-  canvas.style.height = H + "px";
+  canvas.height =
+    Math.floor(H * DPR);
 
-  ctx.setTransform(DPR,0,0,DPR,0,0);
+  canvas.style.width =
+    W + "px";
+
+  canvas.style.height =
+    H + "px";
+
+  ctx.setTransform(
+    DPR,
+    0,
+    0,
+    DPR,
+    0,
+    0
+  );
 }
 
-window.addEventListener("resize",resize);
+window.addEventListener(
+  "resize",
+  resize
+);
+
 resize();
+
 
 /* =========================================================
    ELEMENTOS
 ========================================================= */
 
-const menu = document.getElementById("menu");
-const phaseScreen = document.getElementById("phaseScreen");
-const resultScreen = document.getElementById("resultScreen");
+const menu =
+  document.getElementById("menu");
 
-const hud = document.getElementById("hud");
-const bottomHud = document.getElementById("bottomHud");
+const phaseScreen =
+  document.getElementById("phaseScreen");
 
-const scoreHud = document.getElementById("scoreHud");
-const phaseValue = document.getElementById("phaseValue");
-const coinsHud = document.getElementById("coinsHud");
-const speedHud = document.getElementById("speedHud");
-const targetHud = document.getElementById("targetHud");
+const resultScreen =
+  document.getElementById("resultScreen");
 
-const phaseGrid = document.getElementById("phaseGrid");
+const hud =
+  document.getElementById("hud");
 
-const resultTitle = document.getElementById("resultTitle");
-const resultScore = document.getElementById("resultScore");
-const resultInfo = document.getElementById("resultInfo");
+const bottomHud =
+  document.getElementById("bottomHud");
 
-const playBtn = document.getElementById("playBtn");
-const phasesBtn = document.getElementById("phasesBtn");
-const phaseBackBtn = document.getElementById("phaseBackBtn");
+const scoreHud =
+  document.getElementById("scoreHud");
 
-const nextBtn = document.getElementById("nextBtn");
-const retryBtn = document.getElementById("retryBtn");
-const resultMenuBtn = document.getElementById("resultMenuBtn");
+const phaseValue =
+  document.getElementById("phaseValue");
+
+const coinsHud =
+  document.getElementById("coinsHud");
+
+const speedHud =
+  document.getElementById("speedHud");
+
+const targetHud =
+  document.getElementById("targetHud");
+
+const phaseGrid =
+  document.getElementById("phaseGrid");
+
+const resultTitle =
+  document.getElementById("resultTitle");
+
+const resultScore =
+  document.getElementById("resultScore");
+
+const resultInfo =
+  document.getElementById("resultInfo");
+
+const playBtn =
+  document.getElementById("playBtn");
+
+const phasesBtn =
+  document.getElementById("phasesBtn");
+
+const phaseBackBtn =
+  document.getElementById("phaseBackBtn");
+
+const nextBtn =
+  document.getElementById("nextBtn");
+
+const retryBtn =
+  document.getElementById("retryBtn");
+
+const resultMenuBtn =
+  document.getElementById("resultMenuBtn");
+
 
 /* =========================================================
    50 FASES
 ========================================================= */
 
 const phaseNames = [
+
   "CIDADE NEON",
   "CENTRO FUTURISTA",
   "VIA NOTURNA",
@@ -418,6 +535,7 @@ const phaseNames = [
   "MEGA TÚNEL",
   "CIDADE AÉREA",
   "NÚCLEO CENTRAL",
+
   "DISTRITO ÔMEGA",
   "LINHA ZERO",
   "CIDADE ELÉTRICA",
@@ -428,6 +546,7 @@ const phaseNames = [
   "DISTRITO X",
   "ZONA VIOLETA",
   "METRÓPOLE 20",
+
   "CIDADE FANTASMA",
   "SETOR 21",
   "AUTOESTRADA",
@@ -438,6 +557,7 @@ const phaseNames = [
   "VIA CYBER",
   "SETOR 28",
   "NÚCLEO SOMBRA",
+
   "ZONA TURBO",
   "DISTRITO 32",
   "CIDADE ÔMEGA",
@@ -448,6 +568,7 @@ const phaseNames = [
   "DISTRITO 38",
   "CIDADE ZERO",
   "VIA FINAL",
+
   "SETOR 41",
   "CORREDOR SUPREMO",
   "ZONA EXTREMA",
@@ -458,14 +579,17 @@ const phaseNames = [
   "NÚCLEO FINAL",
   "ÚLTIMA CORRIDA",
   "ÚLTIMO SEGUNDO"
+
 ];
+
 
 function getPhaseData(p){
 
-  const speed = Math.min(
-    0.78,
-    0.34 + (p - 1) * 0.009
-  );
+  const speed =
+    Math.min(
+      0.78,
+      0.34 + (p - 1) * 0.009
+    );
 
   const target =
     Math.floor(
@@ -477,76 +601,116 @@ function getPhaseData(p){
   let spawnGap;
 
   if(p <= 5){
+
     spawnGap = 2.15;
+
   }else if(p <= 15){
+
     spawnGap = 1.85;
+
   }else if(p <= 30){
+
     spawnGap = 1.55;
+
   }else{
+
     spawnGap = 1.30;
   }
 
   return {
     name:phaseNames[p-1],
-    speed,
-    target,
-    spawnGap
+    speed:speed,
+    target:target,
+    spawnGap:spawnGap
   };
 }
+
 
 /* =========================================================
    PROGRESSO
 ========================================================= */
 
-let unlocked = Number(
-  localStorage.getItem("ultimoSegundoUnlocked") || 1
-);
+/*
+  IMPORTANTE:
 
-let best = Number(
-  localStorage.getItem("ultimoSegundoBest") || 0
-);
+  O progresso das fases desbloqueadas é salvo.
 
-let selectedPhase = Number(
-  localStorage.getItem("ultimoSegundoPhase") || 1
-);
+  MAS a fase atual da corrida NÃO é salva.
 
-unlocked = Math.max(1,Math.min(50,unlocked));
-selectedPhase = Math.max(1,Math.min(unlocked,50));
+  Portanto, se perder, a corrida volta para a Fase 1.
+*/
+
+let unlocked =
+  Number(
+    localStorage.getItem(
+      "ultimoSegundoUnlocked"
+    ) || 1
+  );
+
+let best =
+  Number(
+    localStorage.getItem(
+      "ultimoSegundoBest"
+    ) || 0
+  );
+
+unlocked =
+  Math.max(
+    1,
+    Math.min(50,unlocked)
+  );
+
 
 function saveProgress(){
-  localStorage.setItem("ultimoSegundoUnlocked",String(unlocked));
-  localStorage.setItem("ultimoSegundoBest",String(best));
-  localStorage.setItem("ultimoSegundoPhase",String(selectedPhase));
+
+  localStorage.setItem(
+    "ultimoSegundoUnlocked",
+    String(unlocked)
+  );
+
+  localStorage.setItem(
+    "ultimoSegundoBest",
+    String(best)
+  );
 }
 
+
 /* =========================================================
-   ESTADO DO JOGO
+   ESTADO
 ========================================================= */
 
 let running = false;
 
 let phase = 1;
+
 let score = 0;
+
 let coins = 0;
 
 let gameTime = 0;
+
 let lastTime = 0;
 
 let spawnTimer = 0;
 
 let lane = 1;
+
 let laneVisual = 1;
 
 let jumpTime = 0;
+
 let slideTime = 0;
 
 let objects = [];
+
 let particles = [];
 
 let shake = 0;
 
 let swipeStartX = 0;
+
 let swipeStartY = 0;
+
 
 /* =========================================================
    AUDIO
@@ -554,47 +718,82 @@ let swipeStartY = 0;
 
 let audioCtx = null;
 
+
 function initAudio(){
 
   if(audioCtx) return;
 
   try{
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    audioCtx =
+      new (
+        window.AudioContext ||
+        window.webkitAudioContext
+      )();
+
   }catch(e){
+
     audioCtx = null;
   }
 }
 
-function beep(freq,duration,type="sine",volume=.035){
+
+function beep(
+  freq,
+  duration,
+  type="sine",
+  volume=.035
+){
 
   if(!audioCtx) return;
 
   try{
 
-    if(audioCtx.state === "suspended"){
+    if(
+      audioCtx.state ===
+      "suspended"
+    ){
+
       audioCtx.resume();
     }
 
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+    const osc =
+      audioCtx.createOscillator();
+
+    const gain =
+      audioCtx.createGain();
 
     osc.type = type;
-    osc.frequency.value = freq;
 
-    gain.gain.setValueAtTime(volume,audioCtx.currentTime);
+    osc.frequency.value =
+      freq;
+
+    gain.gain.setValueAtTime(
+      volume,
+      audioCtx.currentTime
+    );
+
     gain.gain.exponentialRampToValueAtTime(
       .001,
       audioCtx.currentTime + duration
     );
 
     osc.connect(gain);
-    gain.connect(audioCtx.destination);
+
+    gain.connect(
+      audioCtx.destination
+    );
 
     osc.start();
-    osc.stop(audioCtx.currentTime + duration);
+
+    osc.stop(
+      audioCtx.currentTime +
+      duration
+    );
 
   }catch(e){}
 }
+
 
 /* =========================================================
    TELAS
@@ -603,37 +802,71 @@ function beep(freq,duration,type="sine",volume=.035){
 function showScreen(screen){
 
   menu.classList.add("hidden");
-  phaseScreen.classList.add("hidden");
-  resultScreen.classList.add("hidden");
+
+  phaseScreen.classList.add(
+    "hidden"
+  );
+
+  resultScreen.classList.add(
+    "hidden"
+  );
 
   if(screen){
-    screen.classList.remove("hidden");
+
+    screen.classList.remove(
+      "hidden"
+    );
   }
 }
 
+
 function updateMenu(){
 
-  document.getElementById("menuBest").textContent =
-    "MELHOR PONTUAÇÃO " + best;
+  document.getElementById(
+    "menuBest"
+  ).textContent =
+    "MELHOR PONTUAÇÃO " +
+    best;
 }
+
+
+/* =========================================================
+   MENU DE FASES
+========================================================= */
 
 function buildPhaseMenu(){
 
   phaseGrid.innerHTML = "";
 
-  for(let i=1;i<=50;i++){
+  for(
+    let i=1;
+    i<=50;
+    i++
+  ){
 
-    const data = getPhaseData(i);
+    const data =
+      getPhaseData(i);
 
-    const button = document.createElement("button");
+    const button =
+      document.createElement(
+        "button"
+      );
 
     button.className =
       "phaseBtn" +
-      (i > unlocked ? " locked" : "");
+      (
+        i > unlocked
+          ? " locked"
+          : ""
+      );
 
     button.innerHTML =
-      "<strong>" + i + "</strong>" +
-      "<span>" + data.name + "</span>";
+      "<strong>" +
+      i +
+      "</strong>" +
+      "<span>" +
+      data.name +
+      "</span>";
 
     if(i > unlocked){
 
@@ -641,48 +874,59 @@ function buildPhaseMenu(){
 
     }else{
 
-      button.addEventListener("click",function(){
+      button.addEventListener(
+        "click",
+        function(){
 
-        selectedPhase = i;
-        saveProgress();
+          /*
+            O usuário pode escolher
+            manualmente uma fase já desbloqueada.
+          */
 
-        startGame(i);
-
-      });
-
+          startGame(i);
+        }
+      );
     }
 
-    phaseGrid.appendChild(button);
+    phaseGrid.appendChild(
+      button
+    );
   }
 }
 
+
 /* =========================================================
-   INICIAR JOGO
+   COMEÇAR
 ========================================================= */
 
 function startGame(p){
 
   initAudio();
 
-  phase = Math.max(1,Math.min(50,p));
-
-  selectedPhase = phase;
-
-  saveProgress();
+  phase =
+    Math.max(
+      1,
+      Math.min(50,p)
+    );
 
   score = 0;
+
   coins = 0;
 
   gameTime = 0;
+
   spawnTimer = 0;
 
   lane = 1;
+
   laneVisual = 1;
 
   jumpTime = 0;
+
   slideTime = 0;
 
   objects = [];
+
   particles = [];
 
   shake = 0;
@@ -691,20 +935,32 @@ function startGame(p){
 
   showScreen(null);
 
-  hud.classList.remove("hidden");
-  bottomHud.classList.remove("hidden");
+  hud.classList.remove(
+    "hidden"
+  );
+
+  bottomHud.classList.remove(
+    "hidden"
+  );
 
   updateHUD();
 
-  lastTime = performance.now();
+  lastTime =
+    performance.now();
 
   requestAnimationFrame(loop);
 
-  beep(600,.08,"square",.025);
+  beep(
+    600,
+    .08,
+    "square",
+    .025
+  );
 }
 
+
 /* =========================================================
-   FIM DE JOGO
+   GAME OVER
 ========================================================= */
 
 function gameOver(){
@@ -714,31 +970,69 @@ function gameOver(){
   running = false;
 
   if(score > best){
-    best = score;
+
+    best =
+      Math.floor(score);
+
     saveProgress();
   }
 
-  resultTitle.textContent = "FIM DE JOGO";
+  /*
+    IMPORTANTE:
+
+    Ao perder, não importa se estava
+    na fase 2, 7, 20 ou 49.
+
+    O próximo jogo começa na Fase 1.
+  */
+
+  resultTitle.textContent =
+    "FIM DE JOGO";
 
   resultScore.textContent =
-    Math.floor(score) + " PONTOS";
+    Math.floor(score) +
+    " PONTOS";
 
   resultInfo.textContent =
-    "FASE " + phase +
-    " • " + getPhaseData(phase).name +
-    " • " + coins + " MOEDAS";
+    "VOCÊ CHEGOU À FASE " +
+    phase +
+    " • " +
+    getPhaseData(phase).name +
+    " • " +
+    coins +
+    " MOEDAS";
 
-  nextBtn.classList.add("hidden");
+  nextBtn.classList.add(
+    "hidden"
+  );
 
-  retryBtn.textContent = "TENTAR NOVAMENTE";
+  retryBtn.classList.remove(
+    "hidden"
+  );
 
-  hud.classList.add("hidden");
-  bottomHud.classList.add("hidden");
+  retryBtn.textContent =
+    "VOLTAR PARA FASE 1";
 
-  showScreen(resultScreen);
+  hud.classList.add(
+    "hidden"
+  );
 
-  beep(130,.22,"sawtooth",.04);
+  bottomHud.classList.add(
+    "hidden"
+  );
+
+  showScreen(
+    resultScreen
+  );
+
+  beep(
+    130,
+    .22,
+    "sawtooth",
+    .04
+  );
 }
+
 
 /* =========================================================
    VITÓRIA
@@ -751,55 +1045,93 @@ function winPhase(){
   running = false;
 
   if(score > best){
-    best = score;
+
+    best =
+      Math.floor(score);
   }
 
   if(phase < 50){
 
-    if(unlocked < phase + 1){
-      unlocked = phase + 1;
-    }
+    if(
+      unlocked <
+      phase + 1
+    ){
 
-    selectedPhase = phase + 1;
+      unlocked =
+        phase + 1;
+    }
 
     saveProgress();
 
-    nextBtn.classList.remove("hidden");
+    nextBtn.classList.remove(
+      "hidden"
+    );
 
-    resultTitle.textContent = "FASE CONCLUÍDA";
+    resultTitle.textContent =
+      "FASE CONCLUÍDA";
 
     resultInfo.textContent =
-      "FASE " + phase +
-      " • " + getPhaseData(phase).name +
-      " • FASE " + (phase + 1) +
+      "FASE " +
+      phase +
+      " • " +
+      getPhaseData(phase).name +
+      " • FASE " +
+      (phase + 1) +
       " DESBLOQUEADA";
 
   }else{
 
     saveProgress();
 
-    nextBtn.classList.add("hidden");
+    nextBtn.classList.add(
+      "hidden"
+    );
 
-    resultTitle.textContent = "VOCÊ VENCEU";
+    resultTitle.textContent =
+      "VOCÊ VENCEU";
 
     resultInfo.textContent =
       "VOCÊ COMPLETOU AS 50 FASES";
   }
 
   resultScore.textContent =
-    Math.floor(score) + " PONTOS";
+    Math.floor(score) +
+    " PONTOS";
 
-  hud.classList.add("hidden");
-  bottomHud.classList.add("hidden");
+  hud.classList.add(
+    "hidden"
+  );
 
-  showScreen(resultScreen);
+  bottomHud.classList.add(
+    "hidden"
+  );
 
-  beep(880,.10,"square",.035);
+  showScreen(
+    resultScreen
+  );
 
-  setTimeout(function(){
-    beep(1180,.16,"square",.035);
-  },110);
+  beep(
+    880,
+    .10,
+    "square",
+    .035
+  );
+
+  setTimeout(
+    function(){
+
+      beep(
+        1180,
+        .16,
+        "square",
+        .035
+      );
+
+    },
+    110
+  );
 }
+
 
 /* =========================================================
    HUD
@@ -807,23 +1139,29 @@ function winPhase(){
 
 function updateHUD(){
 
-  const data = getPhaseData(phase);
+  const data =
+    getPhaseData(phase);
 
-  scoreHud.textContent = Math.floor(score);
+  scoreHud.textContent =
+    Math.floor(score);
 
   phaseValue.textContent =
-    phase + " / 50";
+    phase +
+    " / 50";
 
-  coinsHud.textContent = coins;
+  coinsHud.textContent =
+    coins;
 
   speedHud.textContent =
     "VELOCIDADE " +
-    (data.speed / .42).toFixed(1) +
+    (data.speed/.42).toFixed(1) +
     "x";
 
   targetHud.textContent =
-    "META " + data.target;
+    "META " +
+    data.target;
 }
+
 
 /* =========================================================
    PERSPECTIVA
@@ -834,56 +1172,114 @@ function horizonY(){
   return H * .34;
 }
 
+
 function roadBottomY(){
 
   return H * .96;
 }
 
+
 function roadHalfWidth(z){
 
-  const t = Math.max(0,Math.min(1,1-z));
+  const t =
+    Math.max(
+      0,
+      Math.min(
+        1,
+        1-z
+      )
+    );
 
-  return W * (
-    .10 +
-    .43 * Math.pow(t,.82)
-  );
+  return W *
+    (
+      .10 +
+      .43 *
+      Math.pow(
+        t,
+        .82
+      )
+    );
 }
+
 
 function roadY(z){
 
-  const t = Math.max(0,Math.min(1.12,1-z));
+  const t =
+    Math.max(
+      0,
+      Math.min(
+        1.12,
+        1-z
+      )
+    );
 
   return horizonY() +
-    (roadBottomY()-horizonY()) *
-    Math.pow(t,1.45);
+    (
+      roadBottomY() -
+      horizonY()
+    ) *
+    Math.pow(
+      t,
+      1.45
+    );
 }
+
 
 function laneX(l,z){
 
-  const half = roadHalfWidth(z);
+  const half =
+    roadHalfWidth(z);
 
-  const spacing = half * .66;
+  const spacing =
+    half * .66;
 
   return W/2 +
-    (l-1) * spacing;
+    (l-1) *
+    spacing;
 }
 
+
 /* =========================================================
-   DESENHO DO CENÁRIO
+   FUNDO
 ========================================================= */
 
 function drawBackground(){
 
-  const grad = ctx.createLinearGradient(0,0,0,H);
+  const grad =
+    ctx.createLinearGradient(
+      0,
+      0,
+      0,
+      H
+    );
 
-  grad.addColorStop(0,"#05061a");
-  grad.addColorStop(.45,"#07152c");
-  grad.addColorStop(1,"#02050d");
+  grad.addColorStop(
+    0,
+    "#05061a"
+  );
 
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,W,H);
+  grad.addColorStop(
+    .45,
+    "#07152c"
+  );
 
-  /* lua */
+  grad.addColorStop(
+    1,
+    "#02050d"
+  );
+
+  ctx.fillStyle =
+    grad;
+
+  ctx.fillRect(
+    0,
+    0,
+    W,
+    H
+  );
+
+
+  /* LUA */
 
   ctx.beginPath();
 
@@ -895,8 +1291,11 @@ function drawBackground(){
     Math.PI*2
   );
 
-  ctx.fillStyle = "rgba(100,220,255,.10)";
+  ctx.fillStyle =
+    "rgba(100,220,255,.10)";
+
   ctx.fill();
+
 
   ctx.beginPath();
 
@@ -908,28 +1307,41 @@ function drawBackground(){
     Math.PI*2
   );
 
-  ctx.fillStyle = "rgba(150,240,255,.18)";
+  ctx.fillStyle =
+    "rgba(150,240,255,.18)";
+
   ctx.fill();
 
-  /* prédios */
 
-  const horizon = horizonY();
+  /* PRÉDIOS */
 
-  for(let i=0;i<22;i++){
+  const horizon =
+    horizonY();
+
+  for(
+    let i=0;
+    i<22;
+    i++
+  ){
 
     const x =
       (i/22)*W;
 
     const bw =
-      W/25 + (i%3)*5;
+      W/25 +
+      (i%3)*5;
 
     const bh =
-      H*.08 + ((i*37)%100)/100*H*.20;
+      H*.08 +
+      (
+        ((i*37)%100)/100
+      ) *
+      H*.20;
 
     ctx.fillStyle =
       i%2
-      ? "rgba(10,28,55,.90)"
-      : "rgba(7,20,43,.95)";
+        ? "rgba(10,28,55,.90)"
+        : "rgba(7,20,43,.95)";
 
     ctx.fillRect(
       x,
@@ -938,11 +1350,16 @@ function drawBackground(){
       bh
     );
 
-    /* janelas */
 
-    for(let wy=horizon-bh+10;wy<horizon-5;wy+=15){
+    for(
+      let wy=horizon-bh+10;
+      wy<horizon-5;
+      wy+=15
+    ){
 
-      if((i+Math.floor(wy))%3===0){
+      if(
+        (i+Math.floor(wy))%3===0
+      ){
 
         ctx.fillStyle =
           "rgba(0,220,255,.18)";
@@ -957,12 +1374,15 @@ function drawBackground(){
     }
   }
 
-  /* brilho do horizonte */
+
+  /* BRILHO HORIZONTE */
 
   const glow =
     ctx.createLinearGradient(
-      0,horizon-40,
-      0,horizon+50
+      0,
+      horizon-40,
+      0,
+      horizon+50
     );
 
   glow.addColorStop(
@@ -980,7 +1400,8 @@ function drawBackground(){
     "rgba(0,220,255,0)"
   );
 
-  ctx.fillStyle = glow;
+  ctx.fillStyle =
+    glow;
 
   ctx.fillRect(
     0,
@@ -990,63 +1411,134 @@ function drawBackground(){
   );
 }
 
+
 /* =========================================================
-   DESENHO DA PISTA
+   PISTA
 ========================================================= */
 
 function drawRoad(){
 
-  const hy = horizonY();
-  const by = roadBottomY();
+  const hy =
+    horizonY();
 
-  const topHalf = roadHalfWidth(1);
-  const bottomHalf = roadHalfWidth(0);
+  const by =
+    roadBottomY();
 
-  /* pista */
+  const topHalf =
+    roadHalfWidth(1);
+
+  const bottomHalf =
+    roadHalfWidth(0);
+
+
+  /* PISTA */
 
   ctx.beginPath();
 
-  ctx.moveTo(W/2-topHalf,hy);
-  ctx.lineTo(W/2+topHalf,hy);
-  ctx.lineTo(W/2+bottomHalf,by);
-  ctx.lineTo(W/2-bottomHalf,by);
+  ctx.moveTo(
+    W/2-topHalf,
+    hy
+  );
+
+  ctx.lineTo(
+    W/2+topHalf,
+    hy
+  );
+
+  ctx.lineTo(
+    W/2+bottomHalf,
+    by
+  );
+
+  ctx.lineTo(
+    W/2-bottomHalf,
+    by
+  );
+
   ctx.closePath();
 
+
   const roadGrad =
-    ctx.createLinearGradient(0,hy,0,by);
+    ctx.createLinearGradient(
+      0,
+      hy,
+      0,
+      by
+    );
 
-  roadGrad.addColorStop(0,"#07101e");
-  roadGrad.addColorStop(1,"#0a0e18");
+  roadGrad.addColorStop(
+    0,
+    "#07101e"
+  );
 
-  ctx.fillStyle = roadGrad;
+  roadGrad.addColorStop(
+    1,
+    "#0a0e18"
+  );
+
+  ctx.fillStyle =
+    roadGrad;
+
   ctx.fill();
 
-  /* laterais neon */
+
+  /* LATERAIS */
 
   ctx.strokeStyle =
     "rgba(0,220,255,.65)";
 
   ctx.lineWidth = 2;
 
-  ctx.beginPath();
-  ctx.moveTo(W/2-topHalf,hy);
-  ctx.lineTo(W/2-bottomHalf,by);
-  ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo(W/2+topHalf,hy);
-  ctx.lineTo(W/2+bottomHalf,by);
+
+  ctx.moveTo(
+    W/2-topHalf,
+    hy
+  );
+
+  ctx.lineTo(
+    W/2-bottomHalf,
+    by
+  );
+
   ctx.stroke();
 
-  /* faixas */
 
-  for(let l=1;l<=2;l++){
+  ctx.beginPath();
+
+  ctx.moveTo(
+    W/2+topHalf,
+    hy
+  );
+
+  ctx.lineTo(
+    W/2+bottomHalf,
+    by
+  );
+
+  ctx.stroke();
+
+
+  /* FAIXAS */
+
+  for(
+    let l=1;
+    l<=2;
+    l++
+  ){
 
     const topX =
-      W/2 + (l-1.5) * topHalf * .66;
+      W/2 +
+      (l-1.5) *
+      topHalf *
+      .66;
 
     const bottomX =
-      W/2 + (l-1.5) * bottomHalf * .66;
+      W/2 +
+      (l-1.5) *
+      bottomHalf *
+      .66;
 
     ctx.strokeStyle =
       "rgba(70,220,255,.16)";
@@ -1054,23 +1546,44 @@ function drawRoad(){
     ctx.lineWidth = 1.5;
 
     ctx.beginPath();
-    ctx.moveTo(topX,hy);
-    ctx.lineTo(bottomX,by);
+
+    ctx.moveTo(
+      topX,
+      hy
+    );
+
+    ctx.lineTo(
+      bottomX,
+      by
+    );
+
     ctx.stroke();
   }
 
-  /* linhas de movimento */
+
+  /* LINHAS DE MOVIMENTO */
 
   const offset =
-    (gameTime * getPhaseData(phase).speed * 1.8)%1;
+    (
+      gameTime *
+      getPhaseData(phase).speed *
+      1.8
+    ) % 1;
 
-  for(let i=0;i<16;i++){
+  for(
+    let i=0;
+    i<16;
+    i++
+  ){
 
     let t =
-      (i/16 + offset)%1;
+      (
+        i/16 +
+        offset
+      ) % 1;
 
     let z =
-      1 - t;
+      1-t;
 
     let y =
       roadY(z);
@@ -1079,15 +1592,25 @@ function drawRoad(){
       roadHalfWidth(z);
 
     const lineLength =
-      Math.max(3,8*t);
+      Math.max(
+        3,
+        8*t
+      );
 
     ctx.strokeStyle =
       "rgba(0,220,255," +
-      (.05 + t*.20) +
+      (
+        .05 +
+        t*.20
+      ) +
       ")";
 
     ctx.lineWidth =
-      Math.max(1,t*4);
+      Math.max(
+        1,
+        t*4
+      );
+
 
     ctx.beginPath();
 
@@ -1102,6 +1625,7 @@ function drawRoad(){
     );
 
     ctx.stroke();
+
 
     ctx.beginPath();
 
@@ -1119,14 +1643,18 @@ function drawRoad(){
   }
 }
 
+
 /* =========================================================
-   RUNNER
+   PERSONAGEM
 ========================================================= */
 
 function drawRunner(){
 
   const x =
-    laneX(laneVisual,.035);
+    laneX(
+      laneVisual,
+      .035
+    );
 
   const ground =
     roadY(.035);
@@ -1136,32 +1664,52 @@ function drawRunner(){
   if(jumpTime > 0){
 
     const t =
-      1 - jumpTime/.72;
+      1 -
+      jumpTime/.72;
 
     jumpOffset =
-      -Math.sin(t*Math.PI) * H*.16;
+      -Math.sin(
+        t*Math.PI
+      ) *
+      H*.16;
   }
 
   const sliding =
     slideTime > 0;
 
   const bob =
-    running && !sliding
-      ? Math.sin(gameTime*14)*3
+    running &&
+    !sliding
+      ? Math.sin(
+          gameTime*14
+        )*3
       : 0;
 
   const y =
-    ground - H*.065 + jumpOffset + bob;
+    ground -
+    H*.065 +
+    jumpOffset +
+    bob;
 
   const lean =
-    (lane-laneVisual)*-.18;
+    (
+      lane -
+      laneVisual
+    ) * -.18;
 
   ctx.save();
 
-  ctx.translate(x,y);
-  ctx.rotate(lean);
+  ctx.translate(
+    x,
+    y
+  );
 
-  /* sombra */
+  ctx.rotate(
+    lean
+  );
+
+
+  /* SOMBRA */
 
   ctx.beginPath();
 
@@ -1180,6 +1728,7 @@ function drawRunner(){
 
   ctx.fill();
 
+
   if(sliding){
 
     drawRunnerSlide();
@@ -1192,33 +1741,72 @@ function drawRunner(){
   ctx.restore();
 }
 
+
 function drawRunnerStanding(){
 
   const s =
     Math.min(W,H)/390;
 
-  /* pernas */
-
   const legMove =
-    Math.sin(gameTime*18)*7*s;
+    Math.sin(
+      gameTime*18
+    ) *
+    7*s;
 
-  ctx.strokeStyle="#63f5ff";
-  ctx.lineWidth=7*s;
-  ctx.lineCap="round";
+
+  /* PERNAS */
+
+  ctx.strokeStyle =
+    "#63f5ff";
+
+  ctx.lineWidth =
+    7*s;
+
+  ctx.lineCap =
+    "round";
+
 
   ctx.beginPath();
-  ctx.moveTo(-7*s,24*s);
-  ctx.lineTo(-12*s+legMove,48*s);
-  ctx.lineTo(-19*s-legMove,62*s);
+
+  ctx.moveTo(
+    -7*s,
+    24*s
+  );
+
+  ctx.lineTo(
+    -12*s+legMove,
+    48*s
+  );
+
+  ctx.lineTo(
+    -19*s-legMove,
+    62*s
+  );
+
   ctx.stroke();
+
 
   ctx.beginPath();
-  ctx.moveTo(7*s,24*s);
-  ctx.lineTo(12*s-legMove,48*s);
-  ctx.lineTo(19*s+legMove,62*s);
+
+  ctx.moveTo(
+    7*s,
+    24*s
+  );
+
+  ctx.lineTo(
+    12*s-legMove,
+    48*s
+  );
+
+  ctx.lineTo(
+    19*s+legMove,
+    62*s
+  );
+
   ctx.stroke();
 
-  /* corpo */
+
+  /* CORPO */
 
   const body =
     ctx.createLinearGradient(
@@ -1228,11 +1816,23 @@ function drawRunnerStanding(){
       30*s
     );
 
-  body.addColorStop(0,"#e8fbff");
-  body.addColorStop(.45,"#2be6ff");
-  body.addColorStop(1,"#0875c9");
+  body.addColorStop(
+    0,
+    "#e8fbff"
+  );
 
-  ctx.fillStyle=body;
+  body.addColorStop(
+    .45,
+    "#2be6ff"
+  );
+
+  body.addColorStop(
+    1,
+    "#0875c9"
+  );
+
+  ctx.fillStyle =
+    body;
 
   ctx.beginPath();
 
@@ -1246,29 +1846,66 @@ function drawRunnerStanding(){
 
   ctx.fill();
 
-  /* braços */
 
-  ctx.strokeStyle="#baf9ff";
-  ctx.lineWidth=6*s;
+  /* BRAÇOS */
+
+  ctx.strokeStyle =
+    "#baf9ff";
+
+  ctx.lineWidth =
+    6*s;
 
   const arm =
-    Math.sin(gameTime*18)*10*s;
+    Math.sin(
+      gameTime*18
+    ) *
+    10*s;
+
 
   ctx.beginPath();
-  ctx.moveTo(-12*s,3*s);
-  ctx.lineTo(-24*s,17*s+arm);
-  ctx.lineTo(-30*s,10*s+arm);
+
+  ctx.moveTo(
+    -12*s,
+    3*s
+  );
+
+  ctx.lineTo(
+    -24*s,
+    17*s+arm
+  );
+
+  ctx.lineTo(
+    -30*s,
+    10*s+arm
+  );
+
   ctx.stroke();
+
 
   ctx.beginPath();
-  ctx.moveTo(12*s,3*s);
-  ctx.lineTo(24*s,17*s-arm);
-  ctx.lineTo(30*s,10*s-arm);
+
+  ctx.moveTo(
+    12*s,
+    3*s
+  );
+
+  ctx.lineTo(
+    24*s,
+    17*s-arm
+  );
+
+  ctx.lineTo(
+    30*s,
+    10*s-arm
+  );
+
   ctx.stroke();
 
-  /* cabeça */
 
-  ctx.fillStyle="#dffaff";
+  /* CABEÇA */
+
+  ctx.fillStyle =
+    "#dffaff";
 
   ctx.beginPath();
 
@@ -1282,9 +1919,11 @@ function drawRunnerStanding(){
 
   ctx.fill();
 
-  /* visor */
 
-  ctx.fillStyle="#06152c";
+  /* VISOR */
+
+  ctx.fillStyle =
+    "#06152c";
 
   ctx.beginPath();
 
@@ -1298,7 +1937,9 @@ function drawRunnerStanding(){
 
   ctx.fill();
 
-  ctx.fillStyle="#57efff";
+
+  ctx.fillStyle =
+    "#57efff";
 
   ctx.fillRect(
     -6*s,
@@ -1308,6 +1949,7 @@ function drawRunnerStanding(){
   );
 }
 
+
 function drawRunnerSlide(){
 
   const s =
@@ -1315,23 +1957,58 @@ function drawRunnerSlide(){
 
   ctx.rotate(-.10);
 
-  ctx.strokeStyle="#63f5ff";
-  ctx.lineWidth=7*s;
-  ctx.lineCap="round";
+  ctx.strokeStyle =
+    "#63f5ff";
+
+  ctx.lineWidth =
+    7*s;
+
+  ctx.lineCap =
+    "round";
+
 
   ctx.beginPath();
-  ctx.moveTo(-5*s,12*s);
-  ctx.lineTo(-28*s,31*s);
-  ctx.lineTo(-45*s,32*s);
+
+  ctx.moveTo(
+    -5*s,
+    12*s
+  );
+
+  ctx.lineTo(
+    -28*s,
+    31*s
+  );
+
+  ctx.lineTo(
+    -45*s,
+    32*s
+  );
+
   ctx.stroke();
+
 
   ctx.beginPath();
-  ctx.moveTo(7*s,13*s);
-  ctx.lineTo(28*s,30*s);
-  ctx.lineTo(45*s,29*s);
+
+  ctx.moveTo(
+    7*s,
+    13*s
+  );
+
+  ctx.lineTo(
+    28*s,
+    30*s
+  );
+
+  ctx.lineTo(
+    45*s,
+    29*s
+  );
+
   ctx.stroke();
 
-  ctx.fillStyle="#28dcff";
+
+  ctx.fillStyle =
+    "#28dcff";
 
   ctx.beginPath();
 
@@ -1345,7 +2022,9 @@ function drawRunnerSlide(){
 
   ctx.fill();
 
-  ctx.fillStyle="#e7fbff";
+
+  ctx.fillStyle =
+    "#e7fbff";
 
   ctx.beginPath();
 
@@ -1359,7 +2038,9 @@ function drawRunnerSlide(){
 
   ctx.fill();
 
-  ctx.fillStyle="#06152c";
+
+  ctx.fillStyle =
+    "#06152c";
 
   ctx.fillRect(
     22*s,
@@ -1369,6 +2050,7 @@ function drawRunnerSlide(){
   );
 }
 
+
 /* =========================================================
    OBSTÁCULOS
 ========================================================= */
@@ -1376,19 +2058,36 @@ function drawRunnerSlide(){
 function obstacleScale(z){
 
   const t =
-    Math.max(0,Math.min(1.1,1-z));
+    Math.max(
+      0,
+      Math.min(
+        1.1,
+        1-z
+      )
+    );
 
-  return .72 + t*.78;
+  return .72 +
+    t*.78;
 }
+
 
 function drawObstacle(o){
 
-  const z = o.z;
+  const z =
+    o.z;
 
-  if(z > 1.2 || z < -.25) return;
+  if(
+    z > 1.2 ||
+    z < -.25
+  ){
+    return;
+  }
 
   const x =
-    laneX(o.lane,z);
+    laneX(
+      o.lane,
+      z
+    );
 
   const y =
     roadY(z);
@@ -1404,14 +2103,22 @@ function drawObstacle(o){
 
   ctx.save();
 
-  ctx.translate(x,y);
+  ctx.translate(
+    x,
+    y
+  );
+
 
   if(o.type === "bar"){
 
-    ctx.fillStyle="#ff2d72";
+    ctx.fillStyle =
+      "#ff2d72";
 
-    ctx.shadowColor="#ff155e";
-    ctx.shadowBlur=18;
+    ctx.shadowColor =
+      "#ff155e";
+
+    ctx.shadowBlur =
+      18;
 
     ctx.fillRect(
       -w*1.15,
@@ -1420,9 +2127,11 @@ function drawObstacle(o){
       h*.55
     );
 
-    ctx.shadowBlur=0;
+    ctx.shadowBlur =
+      0;
 
-    ctx.fillStyle="#7b153e";
+    ctx.fillStyle =
+      "#7b153e";
 
     ctx.fillRect(
       -w*1.05,
@@ -1442,15 +2151,16 @@ function drawObstacle(o){
 
     ctx.fillStyle =
       o.type === "wall"
-      ? "#8a2dff"
-      : "#ff4d45";
+        ? "#8a2dff"
+        : "#ff4d45";
 
     ctx.shadowColor =
       o.type === "wall"
-      ? "#8a2dff"
-      : "#ff3344";
+        ? "#8a2dff"
+        : "#ff3344";
 
-    ctx.shadowBlur=16;
+    ctx.shadowBlur =
+      16;
 
     ctx.beginPath();
 
@@ -1464,9 +2174,11 @@ function drawObstacle(o){
 
     ctx.fill();
 
-    ctx.shadowBlur=0;
+    ctx.shadowBlur =
+      0;
 
-    ctx.fillStyle="rgba(255,255,255,.22)";
+    ctx.fillStyle =
+      "rgba(255,255,255,.22)";
 
     ctx.fillRect(
       -w*.72,
@@ -1479,32 +2191,48 @@ function drawObstacle(o){
   ctx.restore();
 }
 
+
 /* =========================================================
    MOEDAS
 ========================================================= */
 
 function drawCoin(o){
 
-  if(o.z > 1.2 || o.z < -.25) return;
+  if(
+    o.z > 1.2 ||
+    o.z < -.25
+  ){
+    return;
+  }
 
   const x =
-    laneX(o.lane,o.z);
+    laneX(
+      o.lane,
+      o.z
+    );
 
   const y =
     roadY(o.z) -
-    H*.045*obstacleScale(o.z);
+    H*.045 *
+    obstacleScale(o.z);
 
   const r =
     Math.max(
       3,
-      W*.014*obstacleScale(o.z)
+      W*.014 *
+      obstacleScale(o.z)
     );
 
   ctx.save();
 
-  ctx.translate(x,y);
+  ctx.translate(
+    x,
+    y
+  );
 
-  ctx.rotate(gameTime*4);
+  ctx.rotate(
+    gameTime*4
+  );
 
   ctx.beginPath();
 
@@ -1516,15 +2244,22 @@ function drawCoin(o){
     Math.PI*2
   );
 
-  ctx.fillStyle="#ffe85c";
-  ctx.shadowColor="#ffd400";
-  ctx.shadowBlur=12;
+  ctx.fillStyle =
+    "#ffe85c";
+
+  ctx.shadowColor =
+    "#ffd400";
+
+  ctx.shadowBlur =
+    12;
 
   ctx.fill();
 
-  ctx.shadowBlur=0;
+  ctx.shadowBlur =
+    0;
 
-  ctx.fillStyle="#fff6a5";
+  ctx.fillStyle =
+    "#fff6a5";
 
   ctx.fillRect(
     -r*.15,
@@ -1536,52 +2271,95 @@ function drawCoin(o){
   ctx.restore();
 }
 
+
 /* =========================================================
    PARTÍCULAS
 ========================================================= */
 
-function spawnParticles(x,y,count=8){
+function spawnParticles(
+  x,
+  y,
+  count=8
+){
 
-  for(let i=0;i<count;i++){
+  for(
+    let i=0;
+    i<count;
+    i++
+  ){
 
     particles.push({
-      x,
-      y,
-      vx:(Math.random()-.5)*90,
-      vy:(Math.random()-.7)*90,
-      life:.35+Math.random()*.35,
+
+      x:x,
+
+      y:y,
+
+      vx:
+        (Math.random()-.5)*90,
+
+      vy:
+        (Math.random()-.7)*90,
+
+      life:
+        .35 +
+        Math.random()*.35,
+
       max:.7
+
     });
   }
 }
 
+
 function updateParticles(dt){
 
-  for(let i=particles.length-1;i>=0;i--){
+  for(
+    let i=particles.length-1;
+    i>=0;
+    i--
+  ){
 
-    const p=particles[i];
+    const p =
+      particles[i];
 
-    p.life-=dt;
+    p.life -= dt;
 
-    p.x+=p.vx*dt;
-    p.y+=p.vy*dt;
+    p.x +=
+      p.vx*dt;
 
-    p.vy+=80*dt;
+    p.y +=
+      p.vy*dt;
 
-    if(p.life<=0){
-      particles.splice(i,1);
+    p.vy +=
+      80*dt;
+
+    if(
+      p.life <= 0
+    ){
+
+      particles.splice(
+        i,
+        1
+      );
     }
   }
 }
 
+
 function drawParticles(){
 
-  for(const p of particles){
+  for(
+    const p of particles
+  ){
 
     ctx.globalAlpha =
-      Math.max(0,p.life/p.max);
+      Math.max(
+        0,
+        p.life/p.max
+      );
 
-    ctx.fillStyle="#55edff";
+    ctx.fillStyle =
+      "#55edff";
 
     ctx.beginPath();
 
@@ -1596,52 +2374,41 @@ function drawParticles(){
     ctx.fill();
   }
 
-  ctx.globalAlpha=1;
+  ctx.globalAlpha = 1;
 }
+
 
 /* =========================================================
-   GERADOR DE OBSTÁCULOS
+   SISTEMA DE OBSTÁCULOS
 ========================================================= */
-
-/*
-  REGRA PRINCIPAL:
-
-  O próximo obstáculo só aparece quando o anterior
-  já avançou bastante.
-
-  Isso impede aquela aparência de vários obstáculos
-  formando uma parede.
-*/
-
-function nearestObstacleZ(){
-
-  let nearest = -999;
-
-  for(const o of objects){
-
-    if(o.kind === "obstacle"){
-
-      if(o.z > nearest){
-        nearest = o.z;
-      }
-    }
-  }
-
-  return nearest;
-}
 
 function canSpawnObstacle(){
 
-  for(const o of objects){
+  /*
+    Regra de segurança:
 
-    if(o.kind !== "obstacle") continue;
+    Se ainda existe um obstáculo
+    muito perto do jogador,
+    não cria outro.
 
-    /*
-      Enquanto houver obstáculo acima desta profundidade,
-      esperamos antes de colocar outro.
-    */
+    Isso evita a "parede".
+  */
 
-    if(o.z > .48){
+  for(
+    const o of objects
+  ){
+
+    if(
+      o.kind !==
+      "obstacle"
+    ){
+      continue;
+    }
+
+    if(
+      o.z > .48
+    ){
+
       return false;
     }
   }
@@ -1649,164 +2416,290 @@ function canSpawnObstacle(){
   return true;
 }
 
+
 function chooseSafeLane(){
 
-  /*
-    Evita repetir a mesma faixa muitas vezes.
-  */
-
-  const choices=[0,1,2];
+  const choices =
+    [0,1,2];
 
   const filtered =
-    choices.filter(x => x !== lane);
+    choices.filter(
+      x => x !== lane
+    );
 
   return filtered[
-    Math.floor(Math.random()*filtered.length)
+    Math.floor(
+      Math.random() *
+      filtered.length
+    )
   ];
 }
 
+
 function spawnObstacle(){
 
-  if(!running) return;
-
-  if(!canSpawnObstacle()) return;
-
-  const data = getPhaseData(phase);
-
-  const l = chooseSafeLane();
-
-  let type = "block";
-
-  if(phase >= 6 && Math.random() < .18){
-    type = "bar";
+  if(!running){
+    return;
   }
 
-  if(phase >= 20 && Math.random() < .16){
-    type = "wall";
+  if(
+    !canSpawnObstacle()
+  ){
+    return;
   }
+
+  const data =
+    getPhaseData(phase);
+
+  const l =
+    chooseSafeLane();
+
+  let type =
+    "block";
+
+
+  if(
+    phase >= 6 &&
+    Math.random() < .18
+  ){
+
+    type =
+      "bar";
+  }
+
+
+  if(
+    phase >= 20 &&
+    Math.random() < .16
+  ){
+
+    type =
+      "wall";
+  }
+
 
   objects.push({
-    kind:"obstacle",
-    lane:l,
-    z:1.16,
-    type
+
+    kind:
+      "obstacle",
+
+    lane:
+      l,
+
+    z:
+      1.16,
+
+    type:
+      type
   });
 
+
   /*
-    Moedas aparecem separadas do obstáculo.
+    Moedas ficam separadas
+    do obstáculo.
   */
 
-  if(Math.random() < .72){
+  if(
+    Math.random() < .72
+  ){
 
     const coinLane =
       Math.random() < .55
-      ? l
-      : Math.floor(Math.random()*3);
+        ? l
+        : Math.floor(
+            Math.random()*3
+          );
 
     objects.push({
-      kind:"coin",
-      lane:coinLane,
-      z:1.34
+
+      kind:
+        "coin",
+
+      lane:
+        coinLane,
+
+      z:
+        1.34
     });
   }
 
-  spawnTimer = data.spawnGap;
+
+  spawnTimer =
+    data.spawnGap;
 }
 
+
 /* =========================================================
-   MOVIMENTO DO PLAYER
+   CONTROLES
 ========================================================= */
 
 function moveLeft(){
 
-  if(!running) return;
+  if(!running){
+    return;
+  }
 
-  lane = Math.max(0,lane-1);
+  lane =
+    Math.max(
+      0,
+      lane-1
+    );
 
-  beep(330,.045,"square",.018);
+  beep(
+    330,
+    .045,
+    "square",
+    .018
+  );
 }
+
 
 function moveRight(){
 
-  if(!running) return;
+  if(!running){
+    return;
+  }
 
-  lane = Math.min(2,lane+1);
+  lane =
+    Math.min(
+      2,
+      lane+1
+    );
 
-  beep(420,.045,"square",.018);
+  beep(
+    420,
+    .045,
+    "square",
+    .018
+  );
 }
+
 
 function jump(){
 
-  if(!running) return;
+  if(!running){
+    return;
+  }
 
-  if(jumpTime <= 0 && slideTime <= 0){
+  if(
+    jumpTime <= 0 &&
+    slideTime <= 0
+  ){
 
-    jumpTime=.72;
+    jumpTime =
+      .72;
 
-    beep(620,.08,"triangle",.025);
+    beep(
+      620,
+      .08,
+      "triangle",
+      .025
+    );
   }
 }
+
 
 function slide(){
 
-  if(!running) return;
+  if(!running){
+    return;
+  }
 
-  if(slideTime <= 0 && jumpTime <= 0){
+  if(
+    slideTime <= 0 &&
+    jumpTime <= 0
+  ){
 
-    slideTime=.55;
+    slideTime =
+      .55;
 
-    beep(250,.07,"triangle",.022);
+    beep(
+      250,
+      .07,
+      "triangle",
+      .022
+    );
   }
 }
 
+
 /* =========================================================
-   CONTROLES TOUCH
+   TOUCH
 ========================================================= */
 
 window.addEventListener(
   "touchstart",
   function(e){
 
-    if(!running) return;
+    if(!running){
+      return;
+    }
 
-    const t=e.changedTouches[0];
+    const t =
+      e.changedTouches[0];
 
-    swipeStartX=t.clientX;
-    swipeStartY=t.clientY;
+    swipeStartX =
+      t.clientX;
+
+    swipeStartY =
+      t.clientY;
 
   },
   {passive:true}
 );
 
+
 window.addEventListener(
   "touchend",
   function(e){
 
-    if(!running) return;
+    if(!running){
+      return;
+    }
 
-    const t=e.changedTouches[0];
+    const t =
+      e.changedTouches[0];
 
-    const dx=t.clientX-swipeStartX;
-    const dy=t.clientY-swipeStartY;
+    const dx =
+      t.clientX -
+      swipeStartX;
 
-    const ax=Math.abs(dx);
-    const ay=Math.abs(dy);
+    const dy =
+      t.clientY -
+      swipeStartY;
 
-    if(Math.max(ax,ay)<25) return;
+    const ax =
+      Math.abs(dx);
 
-    if(ax>ay){
+    const ay =
+      Math.abs(dy);
 
-      if(dx>0){
+    if(
+      Math.max(ax,ay) < 25
+    ){
+      return;
+    }
+
+
+    if(ax > ay){
+
+      if(dx > 0){
+
         moveRight();
+
       }else{
+
         moveLeft();
       }
 
     }else{
 
-      if(dy<0){
+      if(dy < 0){
+
         jump();
+
       }else{
+
         slide();
       }
     }
@@ -1814,6 +2707,7 @@ window.addEventListener(
   },
   {passive:true}
 );
+
 
 /* =========================================================
    TECLADO
@@ -1823,38 +2717,53 @@ window.addEventListener(
   "keydown",
   function(e){
 
-    if(!running) return;
+    if(!running){
+      return;
+    }
+
 
     if(
       e.key === "ArrowLeft" ||
       e.key.toLowerCase() === "a"
     ){
+
       moveLeft();
     }
+
 
     if(
       e.key === "ArrowRight" ||
       e.key.toLowerCase() === "d"
     ){
+
       moveRight();
     }
+
 
     if(
       e.key === "ArrowUp" ||
       e.key === " "
     ){
+
       e.preventDefault();
+
       jump();
     }
 
-    if(e.key === "ArrowDown"){
+
+    if(
+      e.key === "ArrowDown"
+    ){
+
       slide();
     }
+
   }
 );
 
+
 /* =========================================================
-   COLISÃO
+   COLISÕES
 ========================================================= */
 
 function checkCollisions(){
@@ -1862,16 +2771,28 @@ function checkCollisions(){
   const playerLane =
     lane;
 
-  for(let i=objects.length-1;i>=0;i--){
 
-    const o=objects[i];
+  for(
+    let i=objects.length-1;
+    i>=0;
+    i--
+  ){
 
-    if(o.kind === "coin"){
+    const o =
+      objects[i];
+
+
+    /* MOEDA */
+
+    if(
+      o.kind === "coin"
+    ){
 
       if(
         o.z < .16 &&
         o.z > -.02 &&
-        o.lane === playerLane
+        o.lane ===
+          playerLane
       ){
 
         coins++;
@@ -1879,49 +2800,71 @@ function checkCollisions(){
         score += 35;
 
         const x =
-          laneX(o.lane,o.z);
+          laneX(
+            o.lane,
+            o.z
+          );
 
         const y =
           roadY(o.z);
 
-        spawnParticles(x,y,7);
+        spawnParticles(
+          x,
+          y,
+          7
+        );
 
-        objects.splice(i,1);
+        objects.splice(
+          i,
+          1
+        );
 
-        beep(900,.06,"square",.025);
+        beep(
+          900,
+          .06,
+          "square",
+          .025
+        );
       }
 
       continue;
     }
 
-    /*
-      Colisão somente na área realmente próxima do jogador.
-    */
+
+    /* OBSTÁCULO */
 
     if(
       o.z < .13 &&
       o.z > -.04 &&
-      o.lane === playerLane
+      o.lane ===
+        playerLane
     ){
 
       /*
-        Pulo pode passar por obstáculos baixos.
+        Pulo evita obstáculos.
       */
 
-      if(jumpTime > .12){
+      if(
+        jumpTime > .12
+      ){
+
         continue;
       }
 
+
       /*
-        Deslize passa por barras altas.
+        Deslize passa
+        pelas barras.
       */
 
       if(
         slideTime > .10 &&
         o.type === "bar"
       ){
+
         continue;
       }
+
 
       gameOver();
 
@@ -1929,6 +2872,7 @@ function checkCollisions(){
     }
   }
 }
+
 
 /* =========================================================
    ATUALIZA OBJETOS
@@ -1939,40 +2883,51 @@ function updateObjects(dt){
   const data =
     getPhaseData(phase);
 
-  /*
-    Velocidade controlada.
-  */
-
   const movement =
     data.speed * dt;
 
-  for(const o of objects){
 
-    o.z -= movement;
+  for(
+    const o of objects
+  ){
 
+    o.z -=
+      movement;
   }
+
 
   checkCollisions();
 
-  /*
-    Remove objetos que passaram.
-  */
 
-  for(let i=objects.length-1;i>=0;i--){
+  for(
+    let i=objects.length-1;
+    i>=0;
+    i--
+  ){
 
-    if(objects[i].z < -.30){
+    if(
+      objects[i].z < -.30
+    ){
 
-      if(objects[i].kind === "obstacle"){
+      if(
+        objects[i].kind ===
+        "obstacle"
+      ){
+
         score += 20;
       }
 
-      objects.splice(i,1);
+      objects.splice(
+        i,
+        1
+      );
     }
   }
 }
 
+
 /* =========================================================
-   LOOP
+   UPDATE
 ========================================================= */
 
 function update(dt){
@@ -1982,23 +2937,40 @@ function update(dt){
   const data =
     getPhaseData(phase);
 
+
   /*
-    Movimento de faixa MUITO mais rápido.
+    Troca de faixa rápida.
   */
 
   laneVisual +=
-    (lane-laneVisual) *
-    Math.min(1,dt*32);
+    (
+      lane -
+      laneVisual
+    ) *
+    Math.min(
+      1,
+      dt*32
+    );
 
-  if(jumpTime>0){
+
+  if(
+    jumpTime > 0
+  ){
+
     jumpTime -= dt;
   }
 
-  if(slideTime>0){
+
+  if(
+    slideTime > 0
+  ){
+
     slideTime -= dt;
   }
 
+
   spawnTimer -= dt;
+
 
   if(
     spawnTimer <= 0 &&
@@ -2008,11 +2980,14 @@ function update(dt){
     spawnObstacle();
   }
 
+
   updateObjects(dt);
+
   updateParticles(dt);
 
+
   /*
-    Pontuação contínua.
+    Pontuação.
   */
 
   score +=
@@ -2020,20 +2995,24 @@ function update(dt){
     55 *
     dt;
 
+
   /*
-    Pequeno aumento visual de velocidade,
-    sem tornar o começo injusto.
+    Chegou na meta?
   */
 
-  if(score >= data.target){
+  if(
+    score >= data.target
+  ){
 
     winPhase();
 
     return;
   }
 
+
   updateHUD();
 }
+
 
 /* =========================================================
    DESENHO
@@ -2041,77 +3020,125 @@ function update(dt){
 
 function draw(){
 
-  ctx.clearRect(0,0,W,H);
+  ctx.clearRect(
+    0,
+    0,
+    W,
+    H
+  );
 
   drawBackground();
 
   drawRoad();
 
+
   /*
-    Ordena pela profundidade.
     Mais distante primeiro.
   */
 
   const sorted =
     [...objects].sort(
-      (a,b)=>b.z-a.z
+      (a,b) =>
+        b.z-a.z
     );
 
-  for(const o of sorted){
 
-    if(o.kind === "coin"){
+  for(
+    const o of sorted
+  ){
+
+    if(
+      o.kind === "coin"
+    ){
+
       drawCoin(o);
+
     }else{
+
       drawObstacle(o);
     }
   }
+
 
   drawRunner();
 
   drawParticles();
 
-  if(shake>0){
+
+  if(
+    shake > 0
+  ){
 
     shake -= .016;
   }
 }
 
+
 /* =========================================================
-   LOOP PRINCIPAL
+   LOOP
 ========================================================= */
 
 function loop(now){
 
-  if(!running) return;
+  if(!running){
+    return;
+  }
+
 
   let dt =
     (now-lastTime)/1000;
 
-  lastTime=now;
+  lastTime =
+    now;
 
-  dt=Math.min(dt,.033);
+
+  dt =
+    Math.min(
+      dt,
+      .033
+    );
+
 
   update(dt);
 
-  if(!running) return;
+
+  if(!running){
+    return;
+  }
+
 
   draw();
 
-  requestAnimationFrame(loop);
+
+  requestAnimationFrame(
+    loop
+  );
 }
 
+
 /* =========================================================
-   BOTÕES
+   BOTÃO JOGAR
 ========================================================= */
+
+/*
+  IMPORTANTE:
+
+  JOGAR SEMPRE COMEÇA NA FASE 1.
+*/
 
 playBtn.addEventListener(
   "click",
   function(){
 
-    startGame(selectedPhase);
+    startGame(1);
 
   }
 );
+
+
+/* =========================================================
+   BOTÃO FASES
+========================================================= */
 
 phasesBtn.addEventListener(
   "click",
@@ -2119,10 +3146,16 @@ phasesBtn.addEventListener(
 
     buildPhaseMenu();
 
-    showScreen(phaseScreen);
-
+    showScreen(
+      phaseScreen
+    );
   }
 );
+
+
+/* =========================================================
+   VOLTAR
+========================================================= */
 
 phaseBackBtn.addEventListener(
   "click",
@@ -2130,19 +3163,42 @@ phaseBackBtn.addEventListener(
 
     updateMenu();
 
-    showScreen(menu);
-
+    showScreen(
+      menu
+    );
   }
 );
+
+
+/* =========================================================
+   TENTAR NOVAMENTE
+========================================================= */
+
+/*
+  IMPORTANTE:
+
+  Se morreu na Fase 7,
+  volta para a Fase 1.
+
+  Se morreu na Fase 30,
+  volta para a Fase 1.
+
+  Nunca reinicia na fase onde perdeu.
+*/
 
 retryBtn.addEventListener(
   "click",
   function(){
 
-    startGame(phase);
+    startGame(1);
 
   }
 );
+
+
+/* =========================================================
+   MENU APÓS RESULTADO
+========================================================= */
 
 resultMenuBtn.addEventListener(
   "click",
@@ -2150,31 +3206,44 @@ resultMenuBtn.addEventListener(
 
     updateMenu();
 
-    showScreen(menu);
-
+    showScreen(
+      menu
+    );
   }
 );
+
+
+/* =========================================================
+   PRÓXIMA FASE
+========================================================= */
 
 nextBtn.addEventListener(
   "click",
   function(){
 
-    if(phase < 50){
+    if(
+      phase < 50
+    ){
 
-      startGame(phase+1);
-
+      startGame(
+        phase + 1
+      );
     }
   }
 );
+
 
 /* =========================================================
    INICIALIZAÇÃO
 ========================================================= */
 
 updateMenu();
+
 buildPhaseMenu();
 
-showScreen(menu);
+showScreen(
+  menu
+);
 
 </script>
 
