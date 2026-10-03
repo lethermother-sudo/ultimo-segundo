@@ -17,44 +17,93 @@ html,body{
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#030308;
+  background:#02030a;
   font-family:Arial,sans-serif;
   touch-action:none;
 }
 
 #game{
   position:relative;
-  width:100%;
-  height:100%;
+  width:100vw;
+  height:100dvh;
   overflow:hidden;
   background:
-    radial-gradient(circle at 50% 25%,#18284b 0%,#080b18 38%,#020207 100%);
+    radial-gradient(circle at 50% 25%,#18345c 0%,#090d1d 42%,#02030a 100%);
 }
 
-/* FUNDO */
+/* CÉU */
 
-.grid{
+.sky{
   position:absolute;
-  width:160%;
-  height:80%;
-  left:-30%;
-  bottom:-10%;
-  opacity:.35;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 25%,rgba(0,180,255,.12),transparent 20%),
+    radial-gradient(circle at 80% 35%,rgba(255,0,100,.10),transparent 22%);
+}
+
+/* PRÉDIOS */
+
+.buildings{
+  position:absolute;
+  left:-10%;
+  right:-10%;
+  bottom:38%;
+  height:34%;
+  opacity:.7;
+  background:
+    linear-gradient(90deg,
+      transparent 0 4%,
+      #10172b 4% 10%,
+      transparent 10% 13%,
+      #111a31 13% 20%,
+      transparent 20% 24%,
+      #0d1629 24% 31%,
+      transparent 31% 36%,
+      #131b35 36% 44%,
+      transparent 44% 48%,
+      #0c1529 48% 57%,
+      transparent 57% 62%,
+      #121a31 62% 69%,
+      transparent 69% 74%,
+      #0d1529 74% 82%,
+      transparent 82% 87%,
+      #121a32 87% 94%,
+      transparent 94%);
+}
+
+/* CHÃO */
+
+.road{
+  position:absolute;
+  left:-45%;
+  width:190%;
+  height:70%;
+  bottom:-30%;
   transform:perspective(500px) rotateX(58deg);
-  background-image:
-    linear-gradient(rgba(0,180,255,.18) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,180,255,.18) 1px,transparent 1px);
-  background-size:50px 50px;
+  background:
+    linear-gradient(90deg,
+      transparent 0 32.8%,
+      rgba(0,200,255,.35) 32.9% 33.2%,
+      transparent 33.3% 66.5%,
+      rgba(0,200,255,.35) 66.6% 66.9%,
+      transparent 67%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,180,255,.14) 0 2px,
+      transparent 2px 70px
+    ),
+    #050817;
+  box-shadow:0 -30px 80px rgba(0,120,255,.12);
 }
 
 /* HUD */
 
 #hud{
   position:absolute;
-  top:25px;
-  left:20px;
-  right:20px;
-  z-index:20;
+  top:20px;
+  left:18px;
+  right:18px;
+  z-index:30;
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
@@ -63,129 +112,180 @@ html,body{
 .score{
   font-size:34px;
   font-weight:900;
+  color:#fff;
+}
+
+.coins{
+  margin-top:4px;
+  color:#ffd000;
+  font-weight:900;
 }
 
 .record{
-  margin-top:5px;
-  font-size:13px;
-  color:#ffc400;
+  margin-top:4px;
+  color:#8c98aa;
+  font-size:12px;
 }
 
 .level{
   padding:8px 13px;
-  border:1px solid rgba(255,255,255,.15);
   border-radius:20px;
-  background:rgba(0,0,0,.25);
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.12);
   font-size:12px;
-  font-weight:bold;
+  font-weight:900;
 }
 
-/* FAIXAS */
-
-.lane{
-  position:absolute;
-  top:0;
-  bottom:0;
-  width:33.333%;
-  border-left:1px solid rgba(0,190,255,.08);
-}
-
-.lane:nth-child(1){left:0}
-.lane:nth-child(2){left:33.333%}
-.lane:nth-child(3){left:66.666%}
-
-/* PERSONAGEM */
+/* PLAYER */
 
 #player{
   position:absolute;
-  width:48px;
-  height:48px;
-  bottom:17%;
+  width:52px;
+  height:64px;
   left:50%;
+  bottom:17%;
   transform:translateX(-50%);
-  z-index:10;
-  border-radius:14px;
-  background:linear-gradient(135deg,#fff,#ffc400);
+  z-index:20;
+  transition:left .14s ease,transform .12s ease;
+}
+
+.body{
+  position:absolute;
+  left:7px;
+  top:12px;
+  width:38px;
+  height:44px;
+  border-radius:14px 14px 10px 10px;
+  background:linear-gradient(145deg,#fff,#ffc400 65%,#ff7600);
   box-shadow:
-    0 0 15px #ffc400,
-    0 0 40px rgba(255,190,0,.65);
-  transition:left .12s ease;
+    0 0 18px #ffc400,
+    0 0 45px rgba(255,190,0,.55);
 }
 
-#player:before{
+.body:before{
   content:"";
   position:absolute;
-  width:12px;
-  height:12px;
+  width:10px;
+  height:10px;
   border-radius:50%;
-  background:#090b14;
-  left:9px;
+  background:#080b15;
+  left:8px;
   top:10px;
-  box-shadow:18px 0 #090b14;
+  box-shadow:13px 0 #080b15;
 }
 
-#player:after{
+.body:after{
   content:"";
   position:absolute;
-  width:22px;
+  width:18px;
   height:4px;
   border-radius:5px;
-  background:#090b14;
-  left:13px;
-  bottom:10px;
+  background:#080b15;
+  left:10px;
+  bottom:9px;
+}
+
+.shadow{
+  position:absolute;
+  width:55px;
+  height:12px;
+  left:-2px;
+  bottom:-3px;
+  border-radius:50%;
+  background:rgba(0,0,0,.55);
+  filter:blur(5px);
+}
+
+.jump{
+  animation:jump .55s ease;
+}
+
+@keyframes jump{
+  0%{bottom:17%}
+  50%{bottom:31%}
+  100%{bottom:17%}
+}
+
+.slide .body{
+  height:27px;
+  top:28px;
 }
 
 /* OBSTÁCULOS */
 
 .obstacle{
   position:absolute;
-  width:54px;
-  height:54px;
-  z-index:8;
-  transform:translateX(-50%);
+  z-index:15;
+  width:58px;
+  height:58px;
   border-radius:12px;
-  background:linear-gradient(135deg,#ff164f,#ff5b00);
+  background:linear-gradient(145deg,#ff1744,#ff6500);
   box-shadow:
-    0 0 18px #ff164f,
-    0 0 45px rgba(255,30,70,.45);
-}
-
-.obstacle.diamond{
-  border-radius:5px;
-  transform:translateX(-50%) rotate(45deg);
-  background:linear-gradient(135deg,#a500ff,#ff167d);
+    0 0 18px #ff1744,
+    0 0 45px rgba(255,30,70,.5);
+  transform:translateX(-50%);
 }
 
 .obstacle.blue{
-  border-radius:50%;
-  background:linear-gradient(135deg,#00c6ff,#0072ff);
+  background:linear-gradient(145deg,#00d5ff,#006cff);
   box-shadow:
-    0 0 20px #00aaff,
-    0 0 45px rgba(0,150,255,.5);
+    0 0 20px #00caff,
+    0 0 45px rgba(0,150,255,.45);
 }
 
-/* EFEITO */
+.barrier{
+  width:95px;
+  height:38px;
+  border-radius:8px;
+}
+
+/* MOEDAS */
+
+.coin{
+  position:absolute;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  border:5px solid #ffd000;
+  background:#fff1a0;
+  box-shadow:
+    0 0 12px #ffd000,
+    0 0 30px rgba(255,210,0,.6);
+  z-index:14;
+  transform:translateX(-50%);
+  animation:spin .55s linear infinite;
+}
+
+@keyframes spin{
+  0%{transform:translateX(-50%) rotateY(0)}
+  100%{transform:translateX(-50%) rotateY(360deg)}
+}
+
+/* COMBO */
+
+#combo{
+  position:absolute;
+  top:105px;
+  left:0;
+  right:0;
+  text-align:center;
+  color:#ffd000;
+  font-size:22px;
+  font-weight:1000;
+  z-index:35;
+  opacity:0;
+  transition:.2s;
+}
+
+/* FLASH */
 
 #flash{
   position:absolute;
   inset:0;
-  z-index:30;
-  pointer-events:none;
   background:#ff1744;
+  z-index:80;
   opacity:0;
-}
-
-#combo{
-  position:absolute;
-  top:110px;
-  left:0;
-  right:0;
-  text-align:center;
-  z-index:15;
-  font-size:22px;
-  font-weight:900;
-  color:#ffc400;
-  opacity:0;
+  pointer-events:none;
 }
 
 /* TELAS */
@@ -193,14 +293,13 @@ html,body{
 .screen{
   position:absolute;
   inset:0;
-  z-index:50;
+  z-index:100;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:25px;
-  background:rgba(2,2,8,.88);
+  background:rgba(2,3,10,.9);
   backdrop-filter:blur(12px);
 }
 
@@ -209,35 +308,34 @@ html,body{
 }
 
 .logo{
-  font-size:clamp(55px,15vw,90px);
+  font-size:clamp(58px,15vw,92px);
   line-height:.82;
   font-weight:1000;
   font-style:italic;
-  text-transform:uppercase;
   color:#fff;
   text-shadow:
-    4px 4px 0 #ff9800,
-    0 0 30px rgba(255,170,0,.5);
+    4px 4px 0 #ff8c00,
+    0 0 35px rgba(255,180,0,.45);
 }
 
-.subtitle{
+.tagline{
   margin-top:22px;
-  color:#aaa;
+  color:#aeb8c8;
   letter-spacing:3px;
-  font-size:12px;
+  font-size:11px;
 }
 
 button{
-  width:min(310px,85vw);
+  width:min(320px,82vw);
   margin-top:38px;
   padding:19px;
   border:0;
   border-radius:16px;
-  background:linear-gradient(135deg,#ffd000,#ff8a00);
-  color:#111;
+  background:linear-gradient(135deg,#ffd400,#ff8500);
+  color:#101010;
   font-size:20px;
   font-weight:1000;
-  box-shadow:0 8px 35px rgba(255,170,0,.35);
+  box-shadow:0 10px 35px rgba(255,170,0,.35);
 }
 
 button:active{
@@ -249,37 +347,35 @@ button:active{
   font-size:55px;
   font-weight:1000;
   font-style:italic;
-  text-shadow:0 0 30px rgba(255,0,30,.45);
 }
 
 .finalLabel{
-  margin-top:30px;
-  color:#aaa;
-  font-size:15px;
+  margin-top:28px;
+  color:#9ca5b4;
 }
 
 .finalScore{
   margin-top:5px;
+  color:#fff;
   font-size:65px;
   font-weight:1000;
 }
 
-.newRecord{
-  margin-top:10px;
-  color:#ffc400;
+.best{
+  margin-top:8px;
+  color:#ffd000;
   font-weight:900;
-  opacity:0;
 }
 
 .hint{
   position:absolute;
-  bottom:6%;
+  bottom:5%;
   left:0;
   right:0;
-  z-index:15;
+  z-index:40;
   text-align:center;
   color:rgba(255,255,255,.4);
-  font-size:11px;
+  font-size:10px;
 }
 </style>
 </head>
@@ -288,33 +384,33 @@ button:active{
 
 <div id="game">
 
-  <div class="grid"></div>
-
-  <div class="lane"></div>
-  <div class="lane"></div>
-  <div class="lane"></div>
+  <div class="sky"></div>
+  <div class="buildings"></div>
+  <div class="road"></div>
 
   <div id="hud">
     <div>
       <div class="score" id="score">0</div>
+      <div class="coins">🪙 <span id="coinCount">0</span></div>
       <div class="record">
-        🏆 RECORDE <span id="record">0</span>
+        RECORDE: <span id="record">0</span>
       </div>
     </div>
 
-    <div class="level" id="level">
-      NÍVEL 1
-    </div>
+    <div class="level" id="level">NÍVEL 1</div>
   </div>
 
-  <div id="combo">+ COMBO</div>
+  <div id="combo"></div>
 
-  <div id="player"></div>
+  <div id="player">
+    <div class="body"></div>
+    <div class="shadow"></div>
+  </div>
 
   <div id="flash"></div>
 
   <div class="hint">
-    TOQUE NA ESQUERDA OU DIREITA PARA DESVIAR
+    DESLIZE ← → PARA MUDAR • ↑ PULAR • ↓ DESLIZAR
   </div>
 
   <!-- INÍCIO -->
@@ -325,8 +421,8 @@ button:active{
       ÚLTIMO<br>SEGUNDO
     </div>
 
-    <div class="subtitle">
-      REFLEXO • ESTRATÉGIA • SOBREVIVÊNCIA
+    <div class="tagline">
+      CORRA • DESVIE • SOBREVIVA
     </div>
 
     <button onclick="startGame()">
@@ -351,8 +447,8 @@ button:active{
       0
     </div>
 
-    <div class="newRecord" id="newRecord">
-      👑 NOVO RECORDE!
+    <div class="best">
+      🏆 RECORDE: <span id="finalRecord">0</span>
     </div>
 
     <button onclick="startGame()">
@@ -368,96 +464,158 @@ button:active{
 const game=document.getElementById("game");
 const player=document.getElementById("player");
 const scoreEl=document.getElementById("score");
+const coinEl=document.getElementById("coinCount");
 const recordEl=document.getElementById("record");
-const finalScoreEl=document.getElementById("finalScore");
 const levelEl=document.getElementById("level");
 const comboEl=document.getElementById("combo");
 const flash=document.getElementById("flash");
 
 let lane=1;
 let score=0;
-let record=Number(localStorage.getItem("ultimoSegundoRecorde")||0);
+let coins=0;
+let combo=0;
+
+let record=Number(
+  localStorage.getItem("ultimoSegundoRecorde")||0
+);
 
 let running=false;
 let startTime=0;
 let lastSpawn=0;
+let lastCoin=0;
+
 let obstacles=[];
-let combo=0;
+let coinObjects=[];
+
+let startX=0;
+let startY=0;
 
 recordEl.textContent=record.toFixed(1);
+
+const lanes=[
+  "16.666%",
+  "50%",
+  "83.333%"
+];
 
 function setLane(value){
 
   lane=Math.max(0,Math.min(2,value));
 
-  const positions=["16.666%","50%","83.333%"];
-
-  player.style.left=positions[lane];
+  player.style.left=lanes[lane];
 }
 
-function createObstacle(){
+function jump(){
+
+  if(player.classList.contains("jump"))return;
+
+  player.classList.add("jump");
+
+  setTimeout(()=>{
+    player.classList.remove("jump");
+  },550);
+}
+
+function slide(){
+
+  if(player.classList.contains("slide"))return;
+
+  player.classList.add("slide");
+
+  setTimeout(()=>{
+    player.classList.remove("slide");
+  },650);
+}
+
+function spawnObstacle(){
 
   const el=document.createElement("div");
 
-  const types=["","diamond","blue"];
-  const type=types[Math.floor(Math.random()*types.length)];
+  el.className="obstacle";
 
-  if(type){
-    el.classList.add(type);
+  if(Math.random()>.65){
+    el.classList.add("blue");
+  }
+
+  if(Math.random()>.78){
+    el.classList.add("barrier");
   }
 
   const obstacleLane=Math.floor(Math.random()*3);
 
-  const positions=["16.666%","50%","83.333%"];
-
-  el.style.left=positions[obstacleLane];
-  el.style.top="-70px";
+  el.style.left=lanes[obstacleLane];
+  el.style.top="-90px";
 
   game.appendChild(el);
 
   obstacles.push({
     element:el,
     lane:obstacleLane,
-    y:-70
+    y:-90
   });
 }
 
-function hitTest(obstacle){
+function spawnCoin(){
 
-  const a=player.getBoundingClientRect();
-  const b=obstacle.element.getBoundingClientRect();
+  const el=document.createElement("div");
+
+  el.className="coin";
+
+  const coinLane=Math.floor(Math.random()*3);
+
+  el.style.left=lanes[coinLane];
+  el.style.top="-60px";
+
+  game.appendChild(el);
+
+  coinObjects.push({
+    element:el,
+    lane:coinLane,
+    y:-60
+  });
+}
+
+function hit(a,b){
+
+  const r1=a.getBoundingClientRect();
+  const r2=b.getBoundingClientRect();
 
   return !(
-    a.right<b.left+8 ||
-    a.left>b.right-8 ||
-    a.bottom<b.top+8 ||
-    a.top>b.bottom-8
+    r1.right<r2.left+8 ||
+    r1.left>r2.right-8 ||
+    r1.bottom<r2.top+8 ||
+    r1.top>r2.bottom-8
   );
 }
 
-function showCombo(){
+function collectCoin(c){
+
+  c.element.remove();
+
+  const index=coinObjects.indexOf(c);
+
+  if(index>=0){
+    coinObjects.splice(index,1);
+  }
+
+  coins++;
 
   combo++;
 
-  if(combo<2)return;
+  coinEl.textContent=coins;
 
   comboEl.textContent="🔥 COMBO x"+combo;
   comboEl.style.opacity="1";
 
-  clearTimeout(showCombo.timer);
+  clearTimeout(window.comboTimer);
 
-  showCombo.timer=setTimeout(()=>{
+  window.comboTimer=setTimeout(()=>{
     comboEl.style.opacity="0";
-  },500);
-}
+  },600);
 
-function flashScreen(){
-
-  flash.style.opacity=".35";
-
-  setTimeout(()=>{
-    flash.style.opacity="0";
-  },80);
+  if(navigator.vibrate){
+    navigator.vibrate(20);
+  }
 }
 
 function gameLoop(time){
@@ -468,19 +626,29 @@ function gameLoop(time){
 
   scoreEl.textContent=score.toFixed(1);
 
-  const level=Math.floor(score/10)+1;
+  const level=Math.floor(score/15)+1;
 
   levelEl.textContent="NÍVEL "+level;
 
-  const speed=3.5+(score*.075);
+  const speed=5+(score*.075);
 
-  const spawnDelay=Math.max(300,850-score*7);
+  const spawnDelay=Math.max(
+    320,
+    900-(score*7)
+  );
 
   if(time-lastSpawn>spawnDelay){
 
-    createObstacle();
+    spawnObstacle();
 
     lastSpawn=time;
+  }
+
+  if(time-lastCoin>650){
+
+    spawnCoin();
+
+    lastCoin=time;
   }
 
   for(let i=obstacles.length-1;i>=0;i--){
@@ -491,19 +659,48 @@ function gameLoop(time){
 
     o.element.style.top=o.y+"px";
 
-    if(o.lane===lane && hitTest(o)){
+    if(
+      o.lane===lane &&
+      hit(player,o.element) &&
+      !player.classList.contains("jump")
+    ){
 
       endGame();
+
       return;
     }
 
-    if(o.y>window.innerHeight+100){
+    if(o.y>window.innerHeight+120){
 
       o.element.remove();
 
       obstacles.splice(i,1);
+    }
+  }
 
-      showCombo();
+  for(let i=coinObjects.length-1;i>=0;i--){
+
+    const c=coinObjects[i];
+
+    c.y+=speed;
+
+    c.element.style.top=c.y+"px";
+
+    if(
+      c.lane===lane &&
+      hit(player,c.element)
+    ){
+
+      collectCoin(c);
+
+      continue;
+    }
+
+    if(c.y>window.innerHeight+100){
+
+      c.element.remove();
+
+      coinObjects.splice(i,1);
     }
   }
 
@@ -513,25 +710,29 @@ function gameLoop(time){
 function startGame(){
 
   obstacles.forEach(o=>o.element.remove());
+  coinObjects.forEach(c=>c.element.remove());
 
   obstacles=[];
+  coinObjects=[];
 
+  lane=1;
   score=0;
+  coins=0;
   combo=0;
 
   setLane(1);
 
-  scoreEl.textContent="0.0";
+  scoreEl.textContent="0";
+  coinEl.textContent="0";
 
   document.getElementById("startScreen").style.display="none";
   document.getElementById("gameOver").style.display="none";
-
-  document.getElementById("newRecord").style.opacity="0";
 
   running=true;
 
   startTime=performance.now();
   lastSpawn=performance.now();
+  lastCoin=performance.now();
 
   requestAnimationFrame(gameLoop);
 }
@@ -542,20 +743,17 @@ function endGame(){
 
   running=false;
 
-  flashScreen();
+  flash.style.opacity=".35";
+
+  setTimeout(()=>{
+    flash.style.opacity="0";
+  },100);
 
   if(navigator.vibrate){
-
     navigator.vibrate([
-      100,
-      50,
-      180
+      100,50,180
     ]);
   }
-
-  finalScoreEl.textContent=score.toFixed(1);
-
-  const recordElement=document.getElementById("newRecord");
 
   if(score>record){
 
@@ -565,48 +763,72 @@ function endGame(){
       "ultimoSegundoRecorde",
       record.toString()
     );
-
-    recordEl.textContent=record.toFixed(1);
-
-    recordElement.style.opacity="1";
   }
 
-  document.getElementById("gameOver").style.display="flex";
+  document.getElementById("finalScore")
+    .textContent=score.toFixed(1);
+
+  document.getElementById("finalRecord")
+    .textContent=record.toFixed(1);
+
+  recordEl.textContent=record.toFixed(1);
+
+  document.getElementById("gameOver")
+    .style.display="flex";
 }
 
-/* CONTROLES */
+/* SWIPE */
 
-game.addEventListener("touchstart",function(e){
+game.addEventListener(
+  "touchstart",
+  e=>{
 
-  if(!running)return;
+    if(!running)return;
 
-  const x=e.touches[0].clientX;
+    startX=e.touches[0].clientX;
+    startY=e.touches[0].clientY;
+  },
+  {passive:true}
+);
 
-  if(x<window.innerWidth/2){
+game.addEventListener(
+  "touchend",
+  e=>{
 
-    setLane(lane-1);
+    if(!running)return;
 
-  }else{
+    const endX=e.changedTouches[0].clientX;
+    const endY=e.changedTouches[0].clientY;
 
-    setLane(lane+1);
-  }
+    const dx=endX-startX;
+    const dy=endY-startY;
 
-},{passive:true});
+    if(
+      Math.abs(dx)<30 &&
+      Math.abs(dy)<30
+    ){
+      return;
+    }
 
-game.addEventListener("mousedown",function(e){
+    if(Math.abs(dx)>Math.abs(dy)){
 
-  if(!running)return;
+      if(dx>0){
+        setLane(lane+1);
+      }else{
+        setLane(lane-1);
+      }
 
-  if(e.clientX<window.innerWidth/2){
+    }else{
 
-    setLane(lane-1);
-
-  }else{
-
-    setLane(lane+1);
-  }
-
-});
+      if(dy<0){
+        jump();
+      }else{
+        slide();
+      }
+    }
+  },
+  {passive:true}
+);
 
 </script>
 
