@@ -1466,12 +1466,12 @@ function drawCoin(o){
 
 function drawRunner(){
 
-  /* =========================================
-     POSIÇÃO DO PERSONAGEM
-     ========================================= */
-
   var x = laneX(lane,.98);
   var ground = H*.91;
+
+  /* =========================
+     SALTO
+     ========================= */
 
   var lift = jump>0
     ? Math.sin(((.38-jump)/.38)*Math.PI)*H*.15
@@ -1479,28 +1479,28 @@ function drawRunner(){
 
   var y = ground-lift;
 
-  /* =========================================
-     MOVIMENTO DE CORRIDA
-     ========================================= */
+  var jumping = jump>0;
+
+  /* =========================
+     CORRIDA
+     ========================= */
 
   var run = Math.sin(gameTime*18);
 
-  var armA = run*16;
-  var armB = -run*16;
+  var armA = run*18;
+  var armB = -run*18;
 
   var legA = run*20;
   var legB = -run*20;
 
-  var jumping = jump>0;
+  /* =========================
+     INCLINAÇÃO
+     ========================= */
 
-  /* =========================================
-     INCLINAÇÃO AO TROCAR DE FAIXA
-     ========================================= */
-
-  var lean = (targetLane-lane)*.22;
+  var lean=(targetLane-lane)*.20;
 
   if(jumping){
-    lean *= .35;
+    lean*=.35;
   }
 
   ctx.save();
@@ -1509,23 +1509,18 @@ function drawRunner(){
 
   ctx.rotate(lean);
 
-  /*
-     PERSONAGEM UM POUCO MENOR
-     para ficar mais integrado à pista
-  */
+  /* personagem um pouco menor */
 
-  ctx.scale(.82,.82);
+  ctx.scale(.80,.80);
 
-  /* =========================================
-     SOMBRA NO CHÃO
-     ========================================= */
+
+  /* =========================
+     SOMBRA
+     ========================= */
 
   ctx.save();
 
-  ctx.globalAlpha=.22;
-
-  ctx.shadowBlur=10;
-  ctx.shadowColor="#000";
+  ctx.globalAlpha=jumping?.12:.25;
 
   ctx.fillStyle="#000";
 
@@ -1534,8 +1529,8 @@ function drawRunner(){
   ctx.ellipse(
     0,
     31,
-    jumping ? 12 : 23,
-    jumping ? 5 : 7,
+    jumping?13:22,
+    jumping?4:7,
     0,
     0,
     Math.PI*2
@@ -1546,92 +1541,113 @@ function drawRunner(){
   ctx.restore();
 
 
-  /* =========================================
-     RASTRO DE ENERGIA
-     ========================================= */
+  /* =========================
+     RASTRO DE VELOCIDADE
+     ========================= */
 
-  ctx.save();
+  if(!jumping){
 
-  ctx.globalAlpha=jumping ? .28 : .18;
+    ctx.save();
 
-  ctx.shadowBlur=22;
-  ctx.shadowColor="#ff27d8";
+    ctx.globalAlpha=.20;
 
-  ctx.strokeStyle="#ff27d8";
-  ctx.lineWidth=5;
+    ctx.shadowBlur=18;
+    ctx.shadowColor="#ff28d8";
 
-  ctx.beginPath();
+    ctx.strokeStyle="#ff28d8";
+    ctx.lineWidth=4;
 
-  ctx.moveTo(-5,24);
-  ctx.lineTo(-9,40+Math.abs(run)*5);
+    ctx.beginPath();
 
-  ctx.stroke();
+    ctx.moveTo(-7,22);
+    ctx.lineTo(-10,37+Math.abs(run)*7);
 
-  ctx.beginPath();
+    ctx.stroke();
 
-  ctx.moveTo(5,24);
-  ctx.lineTo(9,40+Math.abs(run)*5);
+    ctx.beginPath();
 
-  ctx.stroke();
+    ctx.moveTo(7,22);
+    ctx.lineTo(10,37+Math.abs(run)*7);
 
-  ctx.restore();
+    ctx.stroke();
+
+    ctx.restore();
+
+  }
 
 
-  /* =========================================
-     PERNAS
-     ========================================= */
+  /* =========================
+     PERNAS HUMANAS
+     ========================= */
 
   ctx.save();
 
   ctx.lineCap="round";
 
-  ctx.shadowBlur=12;
-  ctx.shadowColor="#142b50";
+  ctx.strokeStyle="#182c4b";
 
-  ctx.strokeStyle="#14294a";
-  ctx.lineWidth=10;
+  ctx.lineWidth=11;
+
+  ctx.shadowBlur=8;
+  ctx.shadowColor="#08101f";
+
 
   if(jumping){
 
-    /*
-       PERNAS RECOLHIDAS NO SALTO
-    */
+    /* joelhos recolhidos */
 
     ctx.beginPath();
 
-    ctx.moveTo(-6,13);
-    ctx.lineTo(-13,25);
-    ctx.lineTo(-21,22);
+    ctx.moveTo(-6,12);
+    ctx.lineTo(-13,23);
+    ctx.lineTo(-22,21);
 
     ctx.stroke();
 
     ctx.beginPath();
 
-    ctx.moveTo(6,13);
-    ctx.lineTo(13,25);
-    ctx.lineTo(21,22);
+    ctx.moveTo(6,12);
+    ctx.lineTo(13,23);
+    ctx.lineTo(22,21);
 
     ctx.stroke();
 
   }else{
 
-    /*
-       CORRIDA ALTERNADA
-    */
+    /* perna esquerda */
 
     ctx.beginPath();
 
     ctx.moveTo(-6,13);
-    ctx.lineTo(-9+legA*.35,28);
-    ctx.lineTo(-16+legA*.55,34);
+
+    ctx.lineTo(
+      -9+legA*.30,
+      25
+    );
+
+    ctx.lineTo(
+      -15+legA*.55,
+      34
+    );
 
     ctx.stroke();
+
+
+    /* perna direita */
 
     ctx.beginPath();
 
     ctx.moveTo(6,13);
-    ctx.lineTo(9+legB*.35,28);
-    ctx.lineTo(16+legB*.55,34);
+
+    ctx.lineTo(
+      9+legB*.30,
+      25
+    );
+
+    ctx.lineTo(
+      15+legB*.55,
+      34
+    );
 
     ctx.stroke();
 
@@ -1640,101 +1656,159 @@ function drawRunner(){
   ctx.restore();
 
 
-  /* =========================================
-     BOTAS
-     ========================================= */
+  /* =========================
+     TÊNIS
+     ========================= */
 
   ctx.save();
 
   ctx.lineCap="round";
+
+  ctx.shadowBlur=13;
+  ctx.shadowColor="#20eaff";
+
+  ctx.strokeStyle="#20eaff";
+
+  ctx.lineWidth=7;
+
+
+  if(jumping){
+
+    ctx.beginPath();
+
+    ctx.moveTo(-22,21);
+    ctx.lineTo(-31,19);
+
+    ctx.stroke();
+
+    ctx.beginPath();
+
+    ctx.moveTo(22,21);
+    ctx.lineTo(31,19);
+
+    ctx.stroke();
+
+  }else{
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      -15+legA*.55,
+      34
+    );
+
+    ctx.lineTo(
+      -26+legA*.55,
+      34
+    );
+
+    ctx.stroke();
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      15+legB*.55,
+      34
+    );
+
+    ctx.lineTo(
+      26+legB*.55,
+      34
+    );
+
+    ctx.stroke();
+
+  }
+
+  ctx.restore();
+
+
+  /* =========================
+     CORPO / JAQUETA
+     ========================= */
+
+  ctx.save();
+
+  var body=ctx.createLinearGradient(
+    -18,-10,
+    18,27
+  );
+
+  body.addColorStop(
+    0,
+    "#28486d"
+  );
+
+  body.addColorStop(
+    .45,
+    "#102540"
+  );
+
+  body.addColorStop(
+    1,
+    "#081121"
+  );
+
+  ctx.fillStyle=body;
 
   ctx.shadowBlur=18;
   ctx.shadowColor="#20eaff";
 
-  ctx.strokeStyle="#20eaff";
-  ctx.lineWidth=7;
-
-  if(jumping){
-
-    ctx.beginPath();
-
-    ctx.moveTo(-21,22);
-    ctx.lineTo(-29,20);
-
-    ctx.stroke();
-
-    ctx.beginPath();
-
-    ctx.moveTo(21,22);
-    ctx.lineTo(29,20);
-
-    ctx.stroke();
-
-  }else{
-
-    ctx.beginPath();
-
-    ctx.moveTo(-16+legA*.55,34);
-    ctx.lineTo(-25+legA*.55,34);
-
-    ctx.stroke();
-
-    ctx.beginPath();
-
-    ctx.moveTo(16+legB*.55,34);
-    ctx.lineTo(25+legB*.55,34);
-
-    ctx.stroke();
-
-  }
-
-  ctx.restore();
-
-
-  /* =========================================
-     CORPO
-     ========================================= */
-
-  ctx.save();
-
-  ctx.shadowBlur=20;
-  ctx.shadowColor="#20eaff";
-
-  var body=ctx.createLinearGradient(
-    -18,-10,
-    18,25
-  );
-
-  body.addColorStop(0,"#1d3b67");
-  body.addColorStop(.5,"#0c1d39");
-  body.addColorStop(1,"#071020");
-
-  ctx.fillStyle=body;
-
   ctx.beginPath();
 
   ctx.roundRect(
-    -17,
-    -9,
-    34,
-    35,
+    -18,
+    -10,
+    36,
+    37,
     11
   );
 
   ctx.fill();
 
-  /* borda */
 
-  ctx.strokeStyle="#16395b";
+  /* gola */
+
+  ctx.fillStyle="#0a1528";
+
+  ctx.beginPath();
+
+  ctx.roundRect(
+    -8,
+    -14,
+    16,
+    8,
+    3
+  );
+
+  ctx.fill();
+
+
+  /* detalhe da jaqueta */
+
+  ctx.strokeStyle="#31577e";
+
   ctx.lineWidth=2;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    0,
+    -6
+  );
+
+  ctx.lineTo(
+    0,
+    22
+  );
 
   ctx.stroke();
 
-  /* =========================================
-     DETALHE DO PEITO
-     ========================================= */
 
-  ctx.shadowBlur=16;
+  /* núcleo */
+
+  ctx.shadowBlur=15;
   ctx.shadowColor="#ff27d8";
 
   ctx.fillStyle="#ff27d8";
@@ -1743,93 +1817,109 @@ function drawRunner(){
 
   ctx.roundRect(
     -5,
-    3,
+    2,
     10,
-    6,
+    7,
     2
   );
 
   ctx.fill();
 
-  /* pequeno brilho */
-
-  ctx.shadowBlur=8;
-
-  ctx.fillStyle="#ff9bea";
-
-  ctx.fillRect(
-    -2,
-    4,
-    4,
-    2
-  );
 
   ctx.restore();
 
 
-  /* =========================================
+  /* =========================
      BRAÇOS
-     ========================================= */
+     ========================= */
 
   ctx.save();
 
   ctx.lineCap="round";
 
-  ctx.shadowBlur=13;
-  ctx.shadowColor="#152b4d";
+  ctx.strokeStyle="#172c4c";
 
-  ctx.strokeStyle="#152c50";
   ctx.lineWidth=9;
 
-  ctx.beginPath();
+  ctx.shadowBlur=8;
+  ctx.shadowColor="#08101f";
 
-  ctx.moveTo(-13,-3);
 
   if(jumping){
 
-    ctx.lineTo(-22,9);
+    /* braços levantados */
+
+    ctx.beginPath();
+
+    ctx.moveTo(-15,-3);
+    ctx.lineTo(-24,8);
+
+    ctx.stroke();
+
+    ctx.beginPath();
+
+    ctx.moveTo(15,-3);
+    ctx.lineTo(24,8);
+
+    ctx.stroke();
 
   }else{
 
-    ctx.lineTo(-22-armA*.35,10);
+    /* braço esquerdo */
+
+    ctx.beginPath();
+
+    ctx.moveTo(-14,-3);
+
+    ctx.lineTo(
+      -23-armA*.30,
+      10
+    );
+
+    ctx.stroke();
+
+
+    /* braço direito */
+
+    ctx.beginPath();
+
+    ctx.moveTo(14,-3);
+
+    ctx.lineTo(
+      23-armB*.30,
+      10
+    );
+
+    ctx.stroke();
 
   }
-
-  ctx.stroke();
-
-
-  ctx.beginPath();
-
-  ctx.moveTo(13,-3);
-
-  if(jumping){
-
-    ctx.lineTo(22,9);
-
-  }else{
-
-    ctx.lineTo(22-armB*.35,10);
-
-  }
-
-  ctx.stroke();
 
 
   /* mãos */
 
-  ctx.shadowBlur=14;
+  ctx.shadowBlur=13;
   ctx.shadowColor="#20eaff";
 
   ctx.fillStyle="#20eaff";
 
-  var handA = jumping ? 9 : 10-armA*.35;
-  var handB = jumping ? 9 : 10-armB*.35;
+
+  var handLeft=
+    jumping
+    ? 8
+    : 10;
+
+
+  var handRight=
+    jumping
+    ? 8
+    : 10;
+
 
   ctx.beginPath();
 
   ctx.arc(
-    -22-armA*.35,
-    handA,
+    -23-armA*.30,
+    handLeft,
     4,
     0,
     Math.PI*2
@@ -1837,61 +1927,77 @@ function drawRunner(){
 
   ctx.fill();
 
+
   ctx.beginPath();
 
   ctx.arc(
-    22-armB*.35,
-    handB,
+    23-armB*.30,
+    handRight,
     4,
     0,
     Math.PI*2
   );
 
   ctx.fill();
+
 
   ctx.restore();
 
 
-  /* =========================================
+  /* =========================
      PESCOÇO
-     ========================================= */
+     ========================= */
 
-  ctx.fillStyle="#101d35";
+  ctx.fillStyle="#15243c";
 
   ctx.fillRect(
     -6,
-    -16,
+    -17,
     12,
     8
   );
 
 
-  /* =========================================
-     CABEÇA / CAPACETE
-     ========================================= */
+  /* =========================
+     CABEÇA
+     ========================= */
 
   ctx.save();
 
-  ctx.shadowBlur=22;
+  ctx.shadowBlur=20;
   ctx.shadowColor="#20eaff";
 
+
   var head=ctx.createLinearGradient(
-    -18,-44,
-    18,-14
+    -17,-45,
+    17,-15
   );
 
-  head.addColorStop(0,"#29496f");
-  head.addColorStop(.45,"#10233f");
-  head.addColorStop(1,"#050c19");
+  head.addColorStop(
+    0,
+    "#355579"
+  );
+
+  head.addColorStop(
+    .45,
+    "#142b48"
+  );
+
+  head.addColorStop(
+    1,
+    "#071120"
+  );
+
 
   ctx.fillStyle=head;
+
 
   ctx.beginPath();
 
   ctx.roundRect(
-    -18,
-    -43,
-    36,
+    -17,
+    -44,
+    34,
     30,
     12
   );
@@ -1899,48 +2005,48 @@ function drawRunner(){
   ctx.fill();
 
 
-  /* =========================================
+  /* =========================
      VISOR
-     ========================================= */
+     ========================= */
 
-  ctx.shadowBlur=10;
+  ctx.shadowBlur=9;
   ctx.shadowColor="#ff27d8";
 
-  ctx.fillStyle="#040812";
+  ctx.fillStyle="#030812";
+
 
   ctx.beginPath();
 
   ctx.roundRect(
-    -15,
+    -14,
     -36,
-    30,
-    12,
+    28,
+    11,
     5
   );
 
   ctx.fill();
 
 
-  /* reflexo */
+  /* brilho */
 
-  ctx.fillStyle="#17344f";
+  ctx.fillStyle="#244765";
 
   ctx.fillRect(
-    -11,
+    -10,
     -34,
-    22,
+    20,
     3
   );
 
 
-  /* =========================================
-     OLHOS / LEDs
-     ========================================= */
+  /* olhos */
 
-  ctx.shadowBlur=15;
+  ctx.shadowBlur=14;
   ctx.shadowColor="#20eaff";
 
   ctx.fillStyle="#20eaff";
+
 
   ctx.beginPath();
 
@@ -1968,47 +2074,51 @@ function drawRunner(){
   ctx.fill();
 
 
-  /* =========================================
-     ARO DO CAPACETE
-     ========================================= */
+  /* =========================
+     CAPACETE
+     ========================= */
 
   ctx.strokeStyle="#20eaff";
+
   ctx.lineWidth=4;
 
-  ctx.shadowBlur=20;
+  ctx.shadowBlur=18;
   ctx.shadowColor="#20eaff";
+
 
   ctx.beginPath();
 
   ctx.arc(
     0,
     -28,
-    21,
+    20,
     Math.PI*1.08,
     Math.PI*1.92
   );
 
   ctx.stroke();
 
+
   ctx.restore();
 
 
-  /* =========================================
-     MOCHILA DE ENERGIA
-     ========================================= */
+  /* =========================
+     MOCHILA
+     ========================= */
 
   ctx.save();
 
-  ctx.shadowBlur=18;
+  ctx.shadowBlur=15;
   ctx.shadowColor="#20eaff";
 
-  ctx.fillStyle="#0d1d38";
+  ctx.fillStyle="#0b1b34";
+
 
   ctx.beginPath();
 
   ctx.roundRect(
     -11,
-    -3,
+    -2,
     22,
     21,
     6
@@ -2016,15 +2126,17 @@ function drawRunner(){
 
   ctx.fill();
 
-  ctx.strokeStyle="#20eaff";
+
+  ctx.strokeStyle="#1edfff";
+
   ctx.lineWidth=2;
 
   ctx.stroke();
 
 
-  /* núcleo */
+  /* núcleo traseiro */
 
-  ctx.shadowBlur=16;
+  ctx.shadowBlur=14;
   ctx.shadowColor="#ff27d8";
 
   ctx.fillStyle="#ff27d8";
@@ -2041,93 +2153,87 @@ function drawRunner(){
 
   ctx.fill();
 
+
   ctx.restore();
 
 
-  /* =========================================
+  /* =========================
      PROPULSORES
-     ========================================= */
+     ========================= */
 
   ctx.save();
 
-  ctx.shadowBlur=20;
+  ctx.shadowBlur=18;
   ctx.shadowColor="#ff27d8";
 
   ctx.strokeStyle="#ff27d8";
+
   ctx.lineWidth=4;
 
-  if(jumping){
 
-    ctx.beginPath();
+  var flame=
+    jumping
+    ? 10
+    : 6+Math.abs(run)*8;
 
-    ctx.moveTo(-7,25);
-    ctx.lineTo(-12,38);
 
-    ctx.stroke();
+  ctx.beginPath();
 
-    ctx.beginPath();
+  ctx.moveTo(-7,24);
 
-    ctx.moveTo(7,25);
-    ctx.lineTo(12,38);
+  ctx.lineTo(
+    -10,
+    24+flame
+  );
 
-    ctx.stroke();
+  ctx.stroke();
 
-  }else{
 
-    var flame=Math.abs(run);
+  ctx.beginPath();
 
-    ctx.beginPath();
+  ctx.moveTo(7,24);
 
-    ctx.moveTo(-7,24);
-    ctx.lineTo(
-      -10,
-      34+flame*8
-    );
+  ctx.lineTo(
+    10,
+    24+flame
+  );
 
-    ctx.stroke();
+  ctx.stroke();
 
-    ctx.beginPath();
-
-    ctx.moveTo(7,24);
-    ctx.lineTo(
-      10,
-      34+flame*8
-    );
-
-    ctx.stroke();
-
-  }
 
   ctx.restore();
 
 
-  /* =========================================
-     BRILHO EXTRA NO SALTO
-     ========================================= */
+  /* =========================
+     BRILHO DO SALTO
+     ========================= */
 
   if(jumping){
 
     ctx.save();
 
-    ctx.globalAlpha=.55;
+    ctx.globalAlpha=.35;
 
     ctx.shadowBlur=25;
     ctx.shadowColor="#20eaff";
 
     ctx.strokeStyle="#20eaff";
+
     ctx.lineWidth=2;
+
 
     ctx.beginPath();
 
     ctx.arc(
       0,
-      2,
+      1,
       29,
       0,
       Math.PI*2
     );
 
     ctx.stroke();
+
 
     ctx.restore();
 
