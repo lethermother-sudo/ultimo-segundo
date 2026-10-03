@@ -1466,356 +1466,157 @@ function drawCoin(o){
 
 function drawRunner(){
 
-  var x=
-    laneX(
-      lane,
-      .98
-    );
+  var x=laneX(lane,.98);
+  var ground=H*.91;
 
-  var ground=
-    H*.91;
+  var lift=jump>0
+    ? Math.sin(((.38-jump)/.38)*Math.PI)*H*.14
+    : 0;
 
-  var lift=
-    jump>0
-    ?
-    Math.sin(
-      ((.38-jump)/.38)*
-      Math.PI
-    )*
-    H*.14
-    :0;
+  var y=ground-lift+Math.sin(gameTime*15)*2;
 
-  var y=
-    ground-
-    lift;
+  var run=Math.sin(gameTime*15);
 
-  /*
-    movimento real de corrida
-  */
-
-  var run=
-    Math.sin(
-      gameTime*15
-    );
-
-  var arm=
-    run*13;
-
-  var leg=
-    run*18;
+  var arm=run*13;
+  var leg=run*18;
 
   ctx.save();
+  ctx.translate(x,y);
 
-  ctx.translate(
-    x,
-    y
-  );
-
-
-  /* sombra */
-
+  /* SOMBRA */
   ctx.globalAlpha=.25;
-
   ctx.fillStyle="#000";
-
   ctx.beginPath();
-
-  ctx.ellipse(
-    0,
-    7,
-    30,
-    9,
-    0,
-    0,
-    Math.PI*2
-  );
-
+  ctx.ellipse(0,5,28,8,0,0,Math.PI*2);
   ctx.fill();
-
   ctx.globalAlpha=1;
 
-
-  /* pernas */
-
-  ctx.strokeStyle="#111b30";
-
-  ctx.lineWidth=13;
+  /* PERNAS */
+  ctx.strokeStyle="#101827";
+  ctx.lineWidth=11;
   ctx.lineCap="round";
 
   ctx.beginPath();
-
-  ctx.moveTo(
-    -8,
-    -18
-  );
-
-  ctx.lineTo(
-    -14+leg,
-    20
-  );
-
+  ctx.moveTo(-7,-20);
+  ctx.lineTo(-13+leg,18);
   ctx.stroke();
 
-
   ctx.beginPath();
-
-  ctx.moveTo(
-    8,
-    -18
-  );
-
-  ctx.lineTo(
-    14-leg,
-    20
-  );
-
+  ctx.moveTo(7,-20);
+  ctx.lineTo(13-leg,18);
   ctx.stroke();
 
-
-  /* tênis */
-
-  ctx.strokeStyle="#36eaff";
-
-  ctx.lineWidth=8;
+  /* LUZ DAS BOTAS */
+  ctx.strokeStyle="#27eaff";
+  ctx.lineWidth=6;
 
   ctx.beginPath();
-
-  ctx.moveTo(
-    -14+leg,
-    20
-  );
-
-  ctx.lineTo(
-    -25+leg,
-    21
-  );
-
+  ctx.moveTo(-13+leg,18);
+  ctx.lineTo(-23+leg,20);
   ctx.stroke();
 
-
   ctx.beginPath();
-
-  ctx.moveTo(
-    14-leg,
-    20
-  );
-
-  ctx.lineTo(
-    25-leg,
-    21
-  );
-
+  ctx.moveTo(13-leg,18);
+  ctx.lineTo(23-leg,20);
   ctx.stroke();
 
-
-  /* corpo */
-
-  var body=
-    ctx.createLinearGradient(
-      -18,-75,
-      18,-10
-    );
-
-  body.addColorStop(
-    0,
-    "#182d50"
-  );
-
-  body.addColorStop(
-    1,
-    "#071120"
-  );
-
-  ctx.fillStyle=body;
-
-  ctx.shadowColor="#20eaff";
-  ctx.shadowBlur=15;
+  /* CORPO */
+  ctx.fillStyle="#101d35";
+  ctx.shadowBlur=16;
+  ctx.shadowColor="#19eaff";
 
   ctx.beginPath();
-
-  ctx.roundRect(
-    -18,
-    -72,
-    36,
-    57,
-    11
-  );
-
+  ctx.roundRect(-18,-72,36,53,12);
   ctx.fill();
 
   ctx.shadowBlur=0;
 
+  /* DETALHE NAS COSTAS */
+  ctx.fillStyle="#24eaff";
+  ctx.fillRect(-11,-61,22,5);
 
-  /* mochila */
-
-  ctx.fillStyle="#0a1628";
-
-  ctx.beginPath();
-
-  ctx.roundRect(
-    -14,
-    -66,
-    28,
-    38,
-    8
-  );
-
-  ctx.fill();
-
-
-  /* luz da mochila */
-
-  ctx.fillStyle="#ff35d0";
-
-  ctx.shadowColor="#ff35d0";
+  /* LUZ CENTRAL */
+  ctx.fillStyle="#ff28d7";
   ctx.shadowBlur=14;
-
-  ctx.fillRect(
-    -7,
-    -49,
-    14,
-    6
-  );
-
+  ctx.shadowColor="#ff28d7";
+  ctx.fillRect(-5,-42,10,6);
   ctx.shadowBlur=0;
 
-
-  /* cabeça / capacete */
-
-  ctx.fillStyle="#070c18";
-
-  ctx.beginPath();
-
-  ctx.arc(
-    0,
-    -91,
-    21,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  ctx.strokeStyle="#54eaff";
-
-  ctx.lineWidth=4;
-
-  ctx.stroke();
-
-
-  /* visor */
-
-  ctx.fillStyle=
-    "rgba(60,235,255,.18)";
-
-  ctx.beginPath();
-
-  ctx.arc(
-    0,
-    -91,
-    15,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /* braços */
-
-  ctx.strokeStyle="#243958";
-
+  /* BRAÇO ESQUERDO */
+  ctx.strokeStyle="#182944";
   ctx.lineWidth=9;
 
   ctx.beginPath();
-
-  ctx.moveTo(
-    -15,
-    -57
-  );
-
-  ctx.lineTo(
-    -27+arm,
-    -27
-  );
-
+  ctx.moveTo(-15,-57);
+  ctx.lineTo(-27+arm,-29);
   ctx.stroke();
 
-
+  /* BRAÇO DIREITO */
   ctx.beginPath();
-
-  ctx.moveTo(
-    15,
-    -57
-  );
-
-  ctx.lineTo(
-    27-arm,
-    -27
-  );
-
+  ctx.moveTo(15,-57);
+  ctx.lineTo(27-arm,-29);
   ctx.stroke();
 
-
-  /* luvas */
-
-  ctx.fillStyle="#46eaff";
+  /* LUZ NAS MÃOS */
+  ctx.fillStyle="#65f5ff";
 
   ctx.beginPath();
-
-  ctx.arc(
-    -27+arm,
-    -27,
-    4,
-    0,
-    Math.PI*2
-  );
-
+  ctx.arc(-27+arm,-29,4,0,Math.PI*2);
   ctx.fill();
 
   ctx.beginPath();
-
-  ctx.arc(
-    27-arm,
-    -27,
-    4,
-    0,
-    Math.PI*2
-  );
-
+  ctx.arc(27-arm,-29,4,0,Math.PI*2);
   ctx.fill();
 
+  /* CABEÇA / CAPACETE */
+  ctx.fillStyle="#050b16";
+  ctx.beginPath();
+  ctx.arc(0,-86,19,0,Math.PI*2);
+  ctx.fill();
 
-  /* efeito de energia */
+  /* CONTORNO DO CAPACETE */
+  ctx.strokeStyle="#58efff";
+  ctx.lineWidth=4;
+  ctx.shadowBlur=12;
+  ctx.shadowColor="#20eaff";
 
-  if(speed>.62){
+  ctx.beginPath();
+  ctx.arc(0,-86,19,0,Math.PI*2);
+  ctx.stroke();
 
-    ctx.strokeStyle=
-      "rgba(255,45,210,.7)";
+  ctx.shadowBlur=0;
 
-    ctx.lineWidth=3;
+  /* VISOR */
+  ctx.fillStyle="rgba(20,40,65,.9)";
+  ctx.beginPath();
+  ctx.roundRect(-15,-91,30,12,6);
+  ctx.fill();
 
-    ctx.beginPath();
+  /* LUZES DO VISOR */
+  ctx.fillStyle="#51efff";
+  ctx.shadowBlur=10;
+  ctx.shadowColor="#51efff";
 
-    ctx.ellipse(
-      0,
-      27,
-      20+run*4,
-      7,
-      0,
-      0,
-      Math.PI*2
-    );
+  ctx.beginPath();
+  ctx.arc(-10,-85,3,0,Math.PI*2);
+  ctx.fill();
 
-    ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(10,-85,3,0,Math.PI*2);
+  ctx.fill();
 
-  }
+  ctx.shadowBlur=0;
+
+  /* EFEITO DE ENERGIA NAS COSTAS */
+  ctx.strokeStyle="rgba(255,40,220,.75)";
+  ctx.lineWidth=4;
+
+  ctx.beginPath();
+  ctx.ellipse(0,25,23,7,0,0,Math.PI*2);
+  ctx.stroke();
 
   ctx.restore();
-
 }
-
 
 /* =========================
    PARTICLES
