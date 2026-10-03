@@ -2,19 +2,26 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+
 <title>Último Segundo</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
 html,body{
   margin:0;
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#02040b;
-  font-family:Arial,sans-serif;
+  background:#02030a;
+  font-family:Arial,Helvetica,sans-serif;
   touch-action:none;
 }
 
@@ -26,6 +33,10 @@ canvas{
   display:block;
 }
 
+/* =========================
+   TELAS
+========================= */
+
 .screen{
   position:fixed;
   inset:0;
@@ -34,29 +45,40 @@ canvas{
   align-items:center;
   justify-content:center;
   padding:18px;
-  background:linear-gradient(
-    180deg,
-    rgba(1,4,15,.45),
-    rgba(1,2,8,.94)
-  );
+
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(32,170,255,.12),
+      transparent 45%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(1,4,15,.45),
+      rgba(1,2,8,.96)
+    );
 }
 
 .card{
   width:min(430px,94vw);
   max-height:92vh;
   overflow:auto;
-  padding:27px 20px;
+
+  padding:28px 20px;
+
   text-align:center;
-  border:1px solid rgba(100,225,255,.35);
-  border-radius:27px;
+
+  border-radius:28px;
+  border:1px solid rgba(80,220,255,.32);
+
   background:rgba(4,9,25,.91);
+
   box-shadow:
-    0 0 55px rgba(0,190,255,.18),
-    inset 0 0 30px rgba(50,150,255,.04);
+    0 0 55px rgba(0,190,255,.17),
+    inset 0 0 35px rgba(50,150,255,.035);
+
   backdrop-filter:blur(16px);
 }
-
-#menu{display:flex}
 
 .logo{
   color:#61eaff;
@@ -69,91 +91,118 @@ canvas{
 h1{
   margin:0 0 9px;
   color:#fff;
+
   font-size:43px;
   line-height:.94;
   letter-spacing:-2px;
-  text-shadow:0 0 26px #16dfff;
+
+  text-shadow:
+    0 0 10px #16dfff,
+    0 0 30px rgba(22,223,255,.35);
 }
 
 .sub{
-  color:#9eb3cf;
+  color:#9eb4cf;
   font-size:13px;
   margin-bottom:22px;
 }
 
 button{
+  width:100%;
+
   border:0;
   border-radius:17px;
+
   padding:15px 20px;
+
   color:#fff;
   font-size:16px;
   font-weight:900;
-  background:linear-gradient(90deg,#15dfff,#7a43ff);
-  box-shadow:0 10px 30px rgba(20,190,255,.20);
+
+  background:
+    linear-gradient(
+      90deg,
+      #14dfff,
+      #7a42ff
+    );
+
+  box-shadow:
+    0 10px 30px rgba(20,190,255,.20);
+
   touch-action:manipulation;
-  -webkit-tap-highlight-color:transparent;
 }
 
 button:active{
   transform:scale(.97);
 }
 
-.mainBtn,
-.nextBtn,
-.secondaryBtn{
-  width:100%;
-  margin-top:9px;
-}
+.secondary{
+  margin-top:10px;
 
-.secondaryBtn{
-  background:rgba(16,30,58,.85);
-  border:1px solid rgba(94,234,255,.27);
+  background:
+    rgba(13,28,55,.86);
+
+  border:1px solid rgba(94,234,255,.25);
+
   box-shadow:none;
 }
 
 .bestLabel{
   color:#ffd83d;
-  font-size:11px;
+  font-size:10px;
   font-weight:900;
   margin-top:18px;
 }
 
-#menuBest{
+#bestValue{
   color:#fff;
   font-size:20px;
   font-weight:900;
   margin-top:4px;
 }
 
+/* =========================
+   FASES
+========================= */
+
 .phaseGrid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:9px;
-  margin:16px 0;
+  margin:17px 0;
 }
 
-.phaseBtn{
+.phase{
   position:relative;
+
   min-height:86px;
+
   padding:9px 5px;
-  background:rgba(9,22,46,.92);
-  border:1px solid rgba(94,234,255,.2);
+
+  border-radius:17px;
+
+  background:
+    rgba(9,22,46,.92);
+
+  border:1px solid rgba(94,234,255,.19);
+
   box-shadow:none;
 }
 
-.phaseBtn.selected{
+.phase.selected{
   border-color:#5eeaff;
+
   box-shadow:
-    0 0 22px rgba(94,234,255,.2),
+    0 0 22px rgba(94,234,255,.20),
     inset 0 0 18px rgba(94,234,255,.04);
 }
 
-.phaseBtn.locked{
+.phase.locked{
   opacity:.38;
-  filter:grayscale(.5);
+  filter:grayscale(.55);
 }
 
-.phaseNum{
+.phaseNumber{
   display:block;
   color:#5eeaff;
   font-size:25px;
@@ -161,7 +210,7 @@ button:active{
 
 .phaseName{
   display:block;
-  color:#c0cde0;
+  color:#b8c9df;
   font-size:9px;
   margin-top:3px;
 }
@@ -175,10 +224,14 @@ button:active{
 
 .lock{
   position:absolute;
-  right:7px;
   top:6px;
+  right:7px;
   font-size:12px;
 }
+
+/* =========================
+   RESULTADOS
+========================= */
 
 .resultTitle{
   color:#5eeaff;
@@ -190,110 +243,177 @@ button:active{
 
 .resultStats{
   color:#dbe9f7;
-  line-height:1.8;
-  margin-bottom:16px;
+  line-height:1.9;
+  margin-bottom:17px;
 }
+
+/* =========================
+   HUD
+========================= */
 
 #hud{
   position:fixed;
   inset:0;
   z-index:10;
+
   pointer-events:none;
+
   color:#fff;
 }
 
 #score{
   position:absolute;
+
   left:25px;
-  top:calc(env(safe-area-inset-top) + 10px);
-  font-size:41px;
+  top:calc(env(safe-area-inset-top) + 12px);
+
+  font-size:42px;
   line-height:1;
+
   font-weight:900;
-  text-shadow:0 3px 16px #000;
+
+  text-shadow:
+    0 3px 16px #000;
 }
 
 #coins{
   position:absolute;
+
   left:27px;
-  top:calc(env(safe-area-inset-top) + 58px);
+  top:calc(env(safe-area-inset-top) + 61px);
+
   color:#ffd83d;
+
   font-size:17px;
   font-weight:900;
 }
 
 #target{
   position:absolute;
+
   left:27px;
-  top:calc(env(safe-area-inset-top) + 89px);
-  color:rgba(255,255,255,.65);
+  top:calc(env(safe-area-inset-top) + 91px);
+
+  color:rgba(255,255,255,.62);
+
   font-size:10px;
   font-weight:900;
 }
 
 #progressWrap{
   position:absolute;
+
   left:27px;
   right:27px;
-  top:calc(env(safe-area-inset-top) + 108px);
+
+  top:calc(env(safe-area-inset-top) + 110px);
+
   height:4px;
-  border-radius:10px;
+
+  border-radius:20px;
+
   overflow:hidden;
-  background:rgba(255,255,255,.13);
+
+  background:rgba(255,255,255,.12);
 }
 
 #progress{
   width:0;
   height:100%;
-  background:linear-gradient(90deg,#1be2ff,#9144ff);
-  box-shadow:0 0 14px #20dcff;
+
+  background:
+    linear-gradient(
+      90deg,
+      #1ce2ff,
+      #9143ff
+    );
+
+  box-shadow:
+    0 0 13px #1ce2ff;
 }
 
 #speed{
   position:absolute;
+
   right:24px;
   top:calc(env(safe-area-inset-top) + 12px);
+
   color:#61eaff;
+
   font-size:14px;
   font-weight:900;
 }
 
-#phase{
+#phaseHud{
   position:absolute;
+
   right:24px;
-  top:calc(env(safe-area-inset-top) + 42px);
+  top:calc(env(safe-area-inset-top) + 40px);
+
   color:#ffd83d;
-  font-size:12px;
+
+  font-size:11px;
   font-weight:900;
+
+  text-align:right;
 }
 
 #sound{
   position:absolute;
+
   right:19px;
-  top:calc(env(safe-area-inset-top) + 72px);
+  top:calc(env(safe-area-inset-top) + 69px);
+
+  width:auto;
+
+  padding:7px 11px;
+
   pointer-events:auto;
-  padding:7px 10px;
+
   border-radius:13px;
-  background:rgba(3,12,28,.82);
-  border:1px solid rgba(94,234,255,.4);
+
+  background:
+    rgba(3,12,28,.84);
+
+  border:1px solid rgba(94,234,255,.38);
+
   color:#5eeaff;
+
   font-size:11px;
+
   box-shadow:none;
 }
 
 #hint{
   position:absolute;
+
   left:0;
   right:0;
-  bottom:18px;
+  bottom:19px;
+
   text-align:center;
-  color:rgba(255,255,255,.48);
+
+  color:rgba(255,255,255,.46);
+
   font-size:10px;
 }
 
+/* =========================
+   MOBILE
+========================= */
+
 @media(max-width:380px){
-  h1{font-size:36px}
-  #score{font-size:36px}
+
+  h1{
+    font-size:36px;
+  }
+
+  #score{
+    font-size:36px;
+  }
+
 }
+
 </style>
 </head>
 
@@ -301,95 +421,245 @@ button:active{
 
 <canvas id="game"></canvas>
 
+<!-- =========================
+     HUD
+========================= -->
+
 <div id="hud">
+
   <div id="score">0</div>
-  <div id="coins">● 0</div>
-  <div id="target">META 1000</div>
-  <div id="progressWrap"><div id="progress"></div></div>
-  <div id="speed">VELOCIDADE 1.0x</div>
-  <div id="phase">FASE 1</div>
-  <button id="sound">🔊 SOM</button>
-  <div id="hint">DESLIZE ← → FAIXA • ↑ PULAR • ↓ DESLIZAR</div>
+
+  <div id="coins">
+    ● 0
+  </div>
+
+  <div id="target">
+    META 1000
+  </div>
+
+  <div id="progressWrap">
+    <div id="progress"></div>
+  </div>
+
+  <div id="speed">
+    VELOCIDADE 1.0x
+  </div>
+
+  <div id="phaseHud">
+    FASE 1<br>
+    CIDADE NEON
+  </div>
+
+  <button id="sound">
+    🔊 SOM
+  </button>
+
+  <div id="hint">
+    DESLIZE ← → FAIXA • ↑ PULAR • ↓ DESLIZAR
+  </div>
+
 </div>
+
+
+<!-- =========================
+     MENU
+========================= -->
 
 <div id="menu" class="screen">
+
   <div class="card">
-    <div class="logo">RUNNER EXPERIENCE</div>
-    <h1>ÚLTIMO<br>SEGUNDO</h1>
-    <div class="sub">CORRA. DESVIE. SOBREVIVA.</div>
 
-    <button id="play" class="mainBtn">▶ JOGAR</button>
-    <button id="openPhases" class="secondaryBtn">🎮 FASES</button>
+    <div class="logo">
+      RUNNER EXPERIENCE
+    </div>
 
-    <div class="bestLabel">MELHOR PONTUAÇÃO</div>
-    <div id="menuBest">0</div>
+    <h1>
+      ÚLTIMO<br>
+      SEGUNDO
+    </h1>
+
+    <div class="sub">
+      CORRA. DESVIE. SOBREVIVA.
+    </div>
+
+    <button id="play">
+      ▶ JOGAR
+    </button>
+
+    <button id="openPhases" class="secondary">
+      🎮 FASES
+    </button>
+
+    <div class="bestLabel">
+      MELHOR PONTUAÇÃO
+    </div>
+
+    <div id="bestValue">
+      0
+    </div>
+
   </div>
+
 </div>
 
+
+<!-- =========================
+     FASES
+========================= -->
+
 <div id="phaseMenu" class="screen">
+
   <div class="card">
-    <div class="logo">SELEÇÃO DE FASE</div>
-    <h1 style="font-size:31px">ESCOLHA A FASE</h1>
-    <div class="sub">Complete uma fase para desbloquear a próxima.</div>
+
+    <div class="logo">
+      SELEÇÃO DE FASE
+    </div>
+
+    <h1 style="font-size:31px">
+      ESCOLHA A FASE
+    </h1>
+
+    <div class="sub">
+      Complete uma fase para desbloquear a próxima.
+    </div>
 
     <div id="phaseGrid" class="phaseGrid"></div>
 
-    <button id="backMenu" class="secondaryBtn">← VOLTAR</button>
+    <button id="backMenu" class="secondary">
+      ← VOLTAR
+    </button>
+
   </div>
+
 </div>
+
+
+<!-- =========================
+     GAME OVER
+========================= -->
 
 <div id="gameover" class="screen">
+
   <div class="card">
-    <div class="resultTitle">CORRIDA ENCERRADA</div>
-    <h1>FIM DE JOGO</h1>
+
+    <div class="resultTitle">
+      CORRIDA ENCERRADA
+    </div>
+
+    <h1>
+      FIM DE JOGO
+    </h1>
+
     <div id="finalStats" class="resultStats"></div>
-    <button id="again" class="nextBtn">🔄 JOGAR NOVAMENTE</button>
-    <button id="overMenu" class="secondaryBtn">🏠 MENU</button>
+
+    <button id="again">
+      🔄 JOGAR NOVAMENTE
+    </button>
+
+    <button id="overMenu" class="secondary">
+      🏠 MENU
+    </button>
+
   </div>
+
 </div>
+
+
+<!-- =========================
+     VITÓRIA
+========================= -->
 
 <div id="victory" class="screen">
+
   <div class="card">
-    <div class="resultTitle">FASE CONCLUÍDA</div>
-    <h1>🏆 VITÓRIA</h1>
+
+    <div class="resultTitle">
+      FASE CONCLUÍDA
+    </div>
+
+    <h1>
+      🏆 VITÓRIA
+    </h1>
+
     <div id="victoryStats" class="resultStats"></div>
-    <button id="nextPhase" class="nextBtn">🚀 PRÓXIMA FASE</button>
-    <button id="victoryMenu" class="secondaryBtn">🏠 MENU</button>
+
+    <button id="nextPhase">
+      🚀 PRÓXIMA FASE
+    </button>
+
+    <button id="victoryMenu" class="secondary">
+      🏠 MENU
+    </button>
+
   </div>
+
 </div>
 
+
 <script>
+
 (function(){
 
 "use strict";
+
 
 /* =========================================================
    ELEMENTOS
 ========================================================= */
 
-var canvas=document.getElementById("game");
-var ctx=canvas.getContext("2d");
+var canvas=
+  document.getElementById("game");
 
-var hud=document.getElementById("hud");
-var menu=document.getElementById("menu");
-var phaseMenu=document.getElementById("phaseMenu");
-var gameover=document.getElementById("gameover");
-var victory=document.getElementById("victory");
+var ctx=
+  canvas.getContext("2d");
 
-var scoreEl=document.getElementById("score");
-var coinsEl=document.getElementById("coins");
-var targetEl=document.getElementById("target");
-var progressEl=document.getElementById("progress");
-var speedEl=document.getElementById("speed");
-var phaseEl=document.getElementById("phase");
+var hud=
+  document.getElementById("hud");
 
-var phaseGrid=document.getElementById("phaseGrid");
-var menuBest=document.getElementById("menuBest");
+var menu=
+  document.getElementById("menu");
 
-var finalStats=document.getElementById("finalStats");
-var victoryStats=document.getElementById("victoryStats");
+var phaseMenu=
+  document.getElementById("phaseMenu");
 
-var soundBtn=document.getElementById("sound");
+var gameover=
+  document.getElementById("gameover");
+
+var victory=
+  document.getElementById("victory");
+
+var scoreEl=
+  document.getElementById("score");
+
+var coinsEl=
+  document.getElementById("coins");
+
+var targetEl=
+  document.getElementById("target");
+
+var progressEl=
+  document.getElementById("progress");
+
+var speedEl=
+  document.getElementById("speed");
+
+var phaseHud=
+  document.getElementById("phaseHud");
+
+var soundBtn=
+  document.getElementById("sound");
+
+var phaseGrid=
+  document.getElementById("phaseGrid");
+
+var bestValue=
+  document.getElementById("bestValue");
+
+var finalStats=
+  document.getElementById("finalStats");
+
+var victoryStats=
+  document.getElementById("victoryStats");
 
 
 /* =========================================================
@@ -398,11 +668,11 @@ var soundBtn=document.getElementById("sound");
 
 var W=0;
 var H=0;
-var dpr=1;
+var DPR=1;
 
 function resize(){
 
-  dpr=Math.min(
+  DPR=Math.min(
     window.devicePixelRatio||1,
     2
   );
@@ -410,18 +680,33 @@ function resize(){
   W=window.innerWidth;
   H=window.innerHeight;
 
-  canvas.width=Math.floor(W*dpr);
-  canvas.height=Math.floor(H*dpr);
+  canvas.width=
+    Math.floor(W*DPR);
 
-  canvas.style.width=W+"px";
-  canvas.style.height=H+"px";
+  canvas.height=
+    Math.floor(H*DPR);
+
+  canvas.style.width=
+    W+"px";
+
+  canvas.style.height=
+    H+"px";
 
   ctx.setTransform(
-    dpr,0,0,dpr,0,0
+    DPR,
+    0,
+    0,
+    DPR,
+    0,
+    0
   );
 }
 
-window.addEventListener("resize",resize);
+window.addEventListener(
+  "resize",
+  resize
+);
+
 resize();
 
 
@@ -429,7 +714,8 @@ resize();
    FASES
 ========================================================= */
 
-var phaseData=[
+var phases=[
+
   {
     name:"CIDADE NEON",
     target:1000,
@@ -439,6 +725,7 @@ var phaseData=[
     sky2:"#092b4a",
     road:"#071321"
   },
+
   {
     name:"CENTRO FUTURISTA",
     target:1500,
@@ -448,6 +735,7 @@ var phaseData=[
     sky2:"#24104a",
     road:"#10091d"
   },
+
   {
     name:"VIA NOTURNA",
     target:2200,
@@ -457,6 +745,7 @@ var phaseData=[
     sky2:"#102e3a",
     road:"#061218"
   },
+
   {
     name:"ZONA INDUSTRIAL",
     target:3000,
@@ -466,6 +755,7 @@ var phaseData=[
     sky2:"#4a1c08",
     road:"#160b08"
   },
+
   {
     name:"CYBER CITY",
     target:4000,
@@ -475,6 +765,7 @@ var phaseData=[
     sky2:"#30104f",
     road:"#10051b"
   },
+
   {
     name:"DISTRITO VERMELHO",
     target:5200,
@@ -484,6 +775,7 @@ var phaseData=[
     sky2:"#52101d",
     road:"#19070c"
   },
+
   {
     name:"MEGA TÚNEL",
     target:6500,
@@ -493,6 +785,7 @@ var phaseData=[
     sky2:"#16264c",
     road:"#050914"
   },
+
   {
     name:"CIDADE AÉREA",
     target:8000,
@@ -502,6 +795,7 @@ var phaseData=[
     sky2:"#07506a",
     road:"#031017"
   },
+
   {
     name:"ZONA ZERO",
     target:10000,
@@ -511,6 +805,7 @@ var phaseData=[
     sky2:"#360015",
     road:"#100007"
   },
+
   {
     name:"ÚLTIMO SEGUNDO",
     target:12500,
@@ -520,22 +815,354 @@ var phaseData=[
     sky2:"#26005c",
     road:"#07000e"
   }
+
 ];
 
 
 var currentPhase=
-  Number(localStorage.getItem("ultimoSegundoPhase")||1);
+  Number(
+    localStorage.getItem(
+      "ultimoSegundoPhase"
+    )||1
+  );
 
 var unlockedPhase=
-  Number(localStorage.getItem("ultimoSegundoUnlocked")||1);
+  Number(
+    localStorage.getItem(
+      "ultimoSegundoUnlocked"
+    )||1
+  );
 
 var best=
-  Number(localStorage.getItem("ultimoSegundoBest")||0);
+  Number(
+    localStorage.getItem(
+      "ultimoSegundoBest"
+    )||0
+  );
 
-unlockedPhase=Math.max(1,Math.min(10,unlockedPhase));
-currentPhase=Math.max(1,Math.min(unlockedPhase,10));
+unlockedPhase=
+  Math.max(
+    1,
+    Math.min(
+      10,
+      unlockedPhase
+    )
+  );
 
-menuBest.textContent=best;
+currentPhase=
+  Math.max(
+    1,
+    Math.min(
+      unlockedPhase,
+      Math.min(
+        10,
+        currentPhase
+      )
+    )
+  );
+
+bestValue.textContent=best;
+
+
+/* =========================================================
+   ÁUDIO
+========================================================= */
+
+var audio=null;
+
+var master=null;
+
+var musicGain=null;
+
+var musicOsc1=null;
+
+var musicOsc2=null;
+
+var musicLfo=null;
+
+var musicLfoGain=null;
+
+var soundOn=true;
+
+
+/*
+  O áudio é criado somente depois
+  de uma interação do usuário.
+*/
+
+function initAudio(){
+
+  try{
+
+    var AC=
+      window.AudioContext||
+      window.webkitAudioContext;
+
+    if(!AC)return;
+
+    if(!audio){
+
+      audio=
+        new AC();
+
+      master=
+        audio.createGain();
+
+      master.gain.value=
+        .55;
+
+      master.connect(
+        audio.destination
+      );
+
+      /*
+        Ambiente futurista.
+      */
+
+      musicGain=
+        audio.createGain();
+
+      musicGain.gain.value=
+        .018;
+
+      musicOsc1=
+        audio.createOscillator();
+
+      musicOsc2=
+        audio.createOscillator();
+
+      musicLfo=
+        audio.createOscillator();
+
+      musicLfoGain=
+        audio.createGain();
+
+      musicOsc1.type=
+        "sine";
+
+      musicOsc2.type=
+        "triangle";
+
+      musicLfo.type=
+        "sine";
+
+      musicOsc1.frequency.value=
+        82;
+
+      musicOsc2.frequency.value=
+        123;
+
+      musicLfo.frequency.value=
+        .12;
+
+      musicLfoGain.gain.value=
+        7;
+
+      musicLfo.connect(
+        musicLfoGain
+      );
+
+      musicLfoGain.connect(
+        musicOsc2.frequency
+      );
+
+      musicOsc1.connect(
+        musicGain
+      );
+
+      musicOsc2.connect(
+        musicGain
+      );
+
+      musicGain.connect(
+        master
+      );
+
+      musicOsc1.start();
+
+      musicOsc2.start();
+
+      musicLfo.start();
+
+    }
+
+    if(
+      audio.state==="suspended"
+    ){
+
+      audio.resume();
+
+    }
+
+  }catch(e){}
+
+}
+
+
+function setAudioEnabled(){
+
+  if(!audio)return;
+
+  master.gain.setTargetAtTime(
+    soundOn?.55:0,
+    audio.currentTime,
+    .08
+  );
+
+}
+
+
+function tone(
+  type,
+  startFreq,
+  endFreq,
+  duration,
+  volume
+){
+
+  if(!soundOn)return;
+
+  try{
+
+    initAudio();
+
+    if(!audio)return;
+
+    var osc=
+      audio.createOscillator();
+
+    var gain=
+      audio.createGain();
+
+    osc.type=
+      type;
+
+    osc.frequency.setValueAtTime(
+      startFreq,
+      audio.currentTime
+    );
+
+    osc.frequency.exponentialRampToValueAtTime(
+      Math.max(
+        20,
+        endFreq
+      ),
+      audio.currentTime+
+      duration
+    );
+
+    gain.gain.setValueAtTime(
+      .001,
+      audio.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      volume,
+      audio.currentTime+
+      .02
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      .001,
+      audio.currentTime+
+      duration
+    );
+
+    osc.connect(gain);
+
+    gain.connect(master);
+
+    osc.start();
+
+    osc.stop(
+      audio.currentTime+
+      duration+
+      .03
+    );
+
+  }catch(e){}
+
+}
+
+
+function playCoinSound(){
+
+  tone(
+    "sine",
+    620,
+    1100,
+    .13,
+    .13
+  );
+
+}
+
+
+function playJumpSound(){
+
+  tone(
+    "triangle",
+    180,
+    520,
+    .22,
+    .10
+  );
+
+}
+
+
+function playSlideSound(){
+
+  tone(
+    "sawtooth",
+    280,
+    110,
+    .18,
+    .055
+  );
+
+}
+
+
+function playHitSound(){
+
+  tone(
+    "sawtooth",
+    120,
+    45,
+    .32,
+    .18
+  );
+
+}
+
+
+function playVictorySound(){
+
+  tone(
+    "sine",
+    420,
+    840,
+    .25,
+    .13
+  );
+
+  setTimeout(
+    function(){
+
+      tone(
+        "sine",
+        620,
+        1240,
+        .3,
+        .13
+      );
+
+    },
+    120
+  );
+
+}
 
 
 /* =========================================================
@@ -548,29 +1175,44 @@ function buildPhaseMenu(){
 
   for(
     var i=0;
-    i<phaseData.length;
+    i<phases.length;
     i++
   ){
 
     (function(){
 
       var n=i+1;
-      var p=phaseData[i];
 
-      var b=document.createElement("button");
+      var p=phases[i];
 
-      b.className="phaseBtn";
+      var b=
+        document.createElement(
+          "button"
+        );
 
-      if(n>unlockedPhase){
-        b.className+=" locked";
+      b.className=
+        "phase";
+
+      if(
+        n>unlockedPhase
+      ){
+
+        b.className+=
+          " locked";
+
       }
 
-      if(n===currentPhase){
-        b.className+=" selected";
+      if(
+        n===currentPhase
+      ){
+
+        b.className+=
+          " selected";
+
       }
 
       b.innerHTML=
-        '<span class="phaseNum">'+
+        '<span class="phaseNumber">'+
         String(n).padStart(2,"0")+
         '</span>'+
         '<span class="phaseName">'+
@@ -581,64 +1223,88 @@ function buildPhaseMenu(){
         '</span>'+
         (
           n>unlockedPhase
-          ?'<span class="lock">🔒</span>'
-          :""
+          ?
+          '<span class="lock">🔒</span>'
+          :
+          ""
         );
 
-      b.onclick=function(){
+      b.onclick=
+        function(){
 
-        if(n>unlockedPhase)return;
+          if(
+            n>unlockedPhase
+          ){
 
-        currentPhase=n;
+            tone(
+              "square",
+              120,
+              70,
+              .12,
+              .04
+            );
 
-        localStorage.setItem(
-          "ultimoSegundoPhase",
-          currentPhase
-        );
+            return;
 
-        startGame();
-      };
+          }
+
+          currentPhase=n;
+
+          localStorage.setItem(
+            "ultimoSegundoPhase",
+            currentPhase
+          );
+
+          startGame();
+
+        };
 
       phaseGrid.appendChild(b);
 
     })();
 
   }
+
 }
 
 buildPhaseMenu();
 
 
 /* =========================================================
-   ESTADO DO JOGO
+   ESTADO
 ========================================================= */
 
 var running=false;
 
 var last=0;
-var time=0;
+
+var gameTime=0;
 
 var score=0;
+
 var coins=0;
 
 var speed=.5;
 
 var lane=1;
+
 var targetLane=1;
 
 var laneVisual=1;
 
-var jump=0;
-var slide=0;
+var jumpTime=0;
 
-var spawnTimer=.7;
-var coinTimer=.4;
+var slideTime=0;
+
+var obstacleTimer=.65;
+
+var coinTimer=.35;
 
 var objects=[];
-var particles=[];
-var speedLines=[];
 
-var soundOn=true;
+var particles=[];
+
+var streak=0;
 
 
 /* =========================================================
@@ -646,11 +1312,18 @@ var soundOn=true;
 ========================================================= */
 
 function show(el){
-  el.style.display="flex";
+
+  el.style.display=
+    "flex";
+
 }
 
+
 function hide(el){
-  el.style.display="none";
+
+  el.style.display=
+    "none";
+
 }
 
 
@@ -660,21 +1333,30 @@ function hide(el){
 
 function updateHUD(){
 
-  var p=phaseData[currentPhase-1];
+  var p=
+    phases[
+      currentPhase-1
+    ];
 
-  scoreEl.textContent=Math.floor(score);
+  scoreEl.textContent=
+    Math.floor(score);
 
-  coinsEl.textContent="● "+coins;
+  coinsEl.textContent=
+    "● "+coins;
 
-  targetEl.textContent="META "+p.target;
+  targetEl.textContent=
+    "META "+p.target;
 
-  phaseEl.textContent=
-    "FASE "+currentPhase+
-    " • "+p.name;
+  phaseHud.innerHTML=
+    "FASE "+
+    currentPhase+
+    "<br>"+
+    p.name;
 
   speedEl.textContent=
     "VELOCIDADE "+
-    (speed/.5).toFixed(1)+"x";
+    (speed/.5).toFixed(1)+
+    "x";
 
   progressEl.style.width=
     Math.min(
@@ -682,58 +1364,78 @@ function updateHUD(){
       score/p.target*100
     )+"%";
 
-  menuBest.textContent=best;
+  bestValue.textContent=
+    best;
+
 }
 
 
 /* =========================================================
-   COMEÇAR
+   INICIAR
 ========================================================= */
 
 function startGame(){
 
+  initAudio();
+
+  setAudioEnabled();
+
   running=true;
 
-  var p=phaseData[currentPhase-1];
-
   score=0;
+
   coins=0;
 
   speed=.5;
 
   lane=1;
+
   targetLane=1;
+
   laneVisual=1;
 
-  jump=0;
-  slide=0;
+  jumpTime=0;
 
-  time=0;
+  slideTime=0;
 
-  spawnTimer=.6;
-  coinTimer=.25;
+  obstacleTimer=.65;
+
+  coinTimer=.3;
+
+  gameTime=0;
 
   objects=[];
+
   particles=[];
-  speedLines=[];
 
   hide(menu);
+
   hide(phaseMenu);
+
   hide(gameover);
+
   hide(victory);
 
   show(hud);
 
   updateHUD();
 
-  createSpeedLines();
+  tone(
+    "sine",
+    380,
+    760,
+    .22,
+    .10
+  );
 
-  last=performance.now();
+  last=
+    performance.now();
+
 }
 
 
 /* =========================================================
-   FIM DE JOGO
+   GAME OVER
 ========================================================= */
 
 function endGame(){
@@ -742,16 +1444,22 @@ function endGame(){
 
   running=false;
 
+  playHitSound();
+
   hide(hud);
 
-  if(score>best){
+  if(
+    score>best
+  ){
 
-    best=Math.floor(score);
+    best=
+      Math.floor(score);
 
     localStorage.setItem(
       "ultimoSegundoBest",
       best
     );
+
   }
 
   finalStats.innerHTML=
@@ -765,9 +1473,16 @@ function endGame(){
     currentPhase+
     "</b>";
 
-  menuBest.textContent=best;
+  bestValue.textContent=
+    best;
 
-  show(gameover);
+  setTimeout(
+    function(){
+      show(gameover);
+    },
+    180
+  );
+
 }
 
 
@@ -775,35 +1490,45 @@ function endGame(){
    VITÓRIA
 ========================================================= */
 
-function finishPhase(){
+function completePhase(){
 
   if(!running)return;
 
   running=false;
 
+  playVictorySound();
+
   hide(hud);
 
-  if(score>best){
+  if(
+    score>best
+  ){
 
-    best=Math.floor(score);
+    best=
+      Math.floor(score);
 
     localStorage.setItem(
       "ultimoSegundoBest",
       best
     );
+
   }
 
-  if(currentPhase<10){
+  if(
+    currentPhase<10
+  ){
 
-    unlockedPhase=Math.max(
-      unlockedPhase,
-      currentPhase+1
-    );
+    unlockedPhase=
+      Math.max(
+        unlockedPhase,
+        currentPhase+1
+      );
 
     localStorage.setItem(
       "ultimoSegundoUnlocked",
       unlockedPhase
     );
+
   }
 
   localStorage.setItem(
@@ -811,11 +1536,16 @@ function finishPhase(){
     currentPhase
   );
 
-  var p=phaseData[currentPhase-1];
+  var p=
+    phases[
+      currentPhase-1
+    ];
 
   victoryStats.innerHTML=
-    "FASE "+currentPhase+
-    " • "+p.name+
+    "FASE "+
+    currentPhase+
+    " • "+
+    p.name+
     "<br>"+
     "Pontuação: <b>"+
     Math.floor(score)+
@@ -829,24 +1559,31 @@ function finishPhase(){
       "<br><span style='color:#5eeaff'>"+
       "FASE "+
       (currentPhase+1)+
-      " DESBLOQUEADA!</span>"
+      " DESBLOQUEADA!"+
+      "</span>"
       :
       "<br><span style='color:#ffd83d'>"+
-      "TODAS AS FASES CONCLUÍDAS!</span>"
+      "TODAS AS FASES CONCLUÍDAS!"+
+      "</span>"
     );
 
-  var next=document.getElementById("nextPhase");
+  var next=
+    document.getElementById(
+      "nextPhase"
+    );
 
   next.textContent=
     currentPhase<10
     ?
-    "🚀 IR PARA FASE "+(currentPhase+1)
+    "🚀 IR PARA FASE "+
+    (currentPhase+1)
     :
     "🏆 VOLTAR AO MENU";
 
   buildPhaseMenu();
 
   show(victory);
+
 }
 
 
@@ -854,35 +1591,63 @@ function finishPhase(){
    CONTROLES
 ========================================================= */
 
-function changeLane(dir){
+function moveLane(dir){
 
-  targetLane=Math.max(
-    0,
-    Math.min(
-      2,
-      targetLane+dir
-    )
-  );
+  targetLane=
+    Math.max(
+      0,
+      Math.min(
+        2,
+        targetLane+dir
+      )
+    );
+
 }
 
-function doJump(){
 
-  if(jump<=0 && slide<=0){
-    jump=0.001;
+function jump(){
+
+  if(
+    jumpTime<=0 &&
+    slideTime<=0
+  ){
+
+    jumpTime=
+      0.001;
+
+    playJumpSound();
+
   }
+
 }
 
-function doSlide(){
 
-  if(jump<=0){
-    slide=.62;
+function slide(){
+
+  if(
+    jumpTime<=0
+  ){
+
+    slideTime=
+      .58;
+
+    playSlideSound();
+
   }
+
 }
 
 
-var touchX=0;
-var touchY=0;
-var touchActive=false;
+/* =========================================================
+   TOUCH
+========================================================= */
+
+var touchStartX=0;
+
+var touchStartY=0;
+
+var touching=false;
+
 
 window.addEventListener(
   "touchstart",
@@ -890,46 +1655,78 @@ window.addEventListener(
 
     if(!running)return;
 
-    var t=e.touches[0];
+    var t=
+      e.touches[0];
 
-    touchX=t.clientX;
-    touchY=t.clientY;
-    touchActive=true;
+    touchStartX=
+      t.clientX;
+
+    touchStartY=
+      t.clientY;
+
+    touching=true;
 
   },
   {passive:true}
 );
 
+
 window.addEventListener(
   "touchend",
   function(e){
 
-    if(!running || !touchActive)return;
+    if(
+      !running||
+      !touching
+    ){
 
-    var t=e.changedTouches[0];
+      return;
 
-    var dx=t.clientX-touchX;
-    var dy=t.clientY-touchY;
+    }
 
-    touchActive=false;
+    var t=
+      e.changedTouches[0];
+
+    var dx=
+      t.clientX-touchStartX;
+
+    var dy=
+      t.clientY-touchStartY;
+
+    touching=false;
 
     if(
       Math.max(
         Math.abs(dx),
         Math.abs(dy)
       )<28
-    )return;
+    ){
 
-    if(Math.abs(dx)>Math.abs(dy)){
+      return;
 
-      changeLane(dx>0?1:-1);
+    }
+
+    if(
+      Math.abs(dx)>
+      Math.abs(dy)
+    ){
+
+      moveLane(
+        dx>0?1:-1
+      );
 
     }else{
 
-      if(dy<0){
-        doJump();
+      if(
+        dy<0
+      ){
+
+        jump();
+
       }else{
-        doSlide();
+
+        slide();
+
       }
 
     }
@@ -938,26 +1735,48 @@ window.addEventListener(
   {passive:true}
 );
 
+
+/* =========================================================
+   TECLADO
+========================================================= */
+
 window.addEventListener(
   "keydown",
   function(e){
 
     if(!running)return;
 
-    if(e.key==="ArrowLeft"){
-      changeLane(-1);
+    if(
+      e.key==="ArrowLeft"
+    ){
+
+      moveLane(-1);
+
     }
 
-    if(e.key==="ArrowRight"){
-      changeLane(1);
+    if(
+      e.key==="ArrowRight"
+    ){
+
+      moveLane(1);
+
     }
 
-    if(e.key==="ArrowUp" || e.key===" "){
-      doJump();
+    if(
+      e.key==="ArrowUp"||
+      e.key===" "
+    ){
+
+      jump();
+
     }
 
-    if(e.key==="ArrowDown"){
-      doSlide();
+    if(
+      e.key==="ArrowDown"
+    ){
+
+      slide();
+
     }
 
   }
@@ -965,60 +1784,87 @@ window.addEventListener(
 
 
 /* =========================================================
-   PERSPECTIVA DA PISTA
+   PERSPECTIVA
 ========================================================= */
 
 function horizon(){
-  return H*.30;
+
+  return H*.315;
+
 }
 
+
 function ground(){
-  return H*.94;
+
+  return H*.93;
+
 }
+
 
 function roadY(z){
 
-  var h=horizon();
-  var g=ground();
+  return horizon()+
+    (
+      ground()-
+      horizon()
+    )*
+    z;
 
-  return h+(g-h)*z;
 }
+
 
 function roadHalf(z){
 
-  return W*.055+
-    W*.40*Math.pow(z,1.08);
+  return W*.045+
+    W*.405*
+    Math.pow(
+      z,
+      1.08
+    );
+
 }
 
-function laneX(l,z){
+
+function laneX(
+  l,
+  z
+){
 
   var spread=
-    roadHalf(z)*.62;
+    roadHalf(z)*
+    .62;
 
   return W/2+
-    (l-1)*spread;
+    (
+      l-1
+    )*
+    spread;
+
 }
 
 
 /* =========================================================
-   VELOCIDADE / CÂMERA
+   CÂMERA
 ========================================================= */
 
 function cameraBob(){
 
   if(!running)return 0;
 
-  if(jump>0)return 0;
+  if(jumpTime>0)return 0;
 
   return Math.sin(
-    time*13*
-    (speed/.5)
+    gameTime*
+    (
+      10+
+      speed*8
+    )
   )*
-  Math.min(
-    3.2,
-    1.2+
-    speed*2
+  (
+    1.1+
+    speed*1.7
   );
+
 }
 
 
@@ -1026,38 +1872,56 @@ function cameraBob(){
    OBSTÁCULOS
 ========================================================= */
 
-function addObject(
-  lane,
+function addObstacle(
+  l,
   type,
   z
 ){
 
   objects.push({
-    lane:lane,
+
+    lane:l,
+
     type:type,
+
     z:z,
+
     hit:false,
-    rot:Math.random()*6
+
+    rotation:
+      Math.random()*
+      Math.PI*2
+
   });
+
 }
 
 
 function spawnObstacle(){
 
-  var hard=currentPhase>=5;
-  var veryHard=currentPhase>=7;
+  var hard=
+    currentPhase>=5;
 
-  var r=Math.random();
+  var extreme=
+    currentPhase>=7;
+
+  var r=
+    Math.random();
+
 
   /*
-    Nas fases 7-10:
-    dois obstáculos deixam uma pista livre.
+    Dupla nas fases altas.
   */
 
-  if(veryHard && r<.34){
+  if(
+    extreme&&
+    r<.33
+  ){
 
     var safe=
-      Math.floor(Math.random()*3);
+      Math.floor(
+        Math.random()*3
+      );
 
     for(
       var l=0;
@@ -1067,49 +1931,67 @@ function spawnObstacle(){
 
       if(l!==safe){
 
-        addObject(
+        addObstacle(
           l,
           Math.random()<.5
           ?"gate"
           :"car",
-          -.05
+          -.04
         );
+
       }
+
     }
 
     return;
+
   }
 
+
   /*
-    Fases 5+ começam a criar
-    combinações.
+    Combinação.
   */
 
-  if(hard && r<.30){
+  if(
+    hard&&
+    r<.27
+  ){
 
     var a=
-      Math.floor(Math.random()*3);
+      Math.floor(
+        Math.random()*3
+      );
 
-    var b=(a+1+Math.floor(Math.random()*2))%3;
+    var b=
+      (a+
+      1+
+      Math.floor(
+        Math.random()*2
+      ))%3;
 
-    addObject(
+    addObstacle(
       a,
       Math.random()<.5
       ?"gate"
       :"car",
-      -.05
+      -.03
     );
 
-    addObject(
+    addObstacle(
       b,
       "drone",
-      -.24
+      -.25
     );
 
     return;
+
   }
 
-  var lane=Math.floor(Math.random()*3);
+
+  var laneIndex=
+    Math.floor(
+      Math.random()*3
+    );
 
   var types=[
     "gate",
@@ -1118,15 +2000,17 @@ function spawnObstacle(){
     "drone"
   ];
 
-  addObject(
-    lane,
+  addObstacle(
+    laneIndex,
     types[
       Math.floor(
-        Math.random()*types.length
+        Math.random()*
+        types.length
       )
     ],
     -.03
   );
+
 }
 
 
@@ -1136,25 +2020,31 @@ function spawnObstacle(){
 
 function spawnCoins(){
 
-  var lane=Math.floor(Math.random()*3);
+  var l=
+    Math.floor(
+      Math.random()*3
+    );
 
-  var amount=
+  var count=
     currentPhase>=7
     ?5
     :4;
 
   for(
     var i=0;
-    i<amount;
+    i<count;
     i++
   ){
 
-    addObject(
-      lane,
+    addObstacle(
+      l,
       "coin",
-      -.08-i*.115
+      -.08-
+      i*.11
     );
+
   }
+
 }
 
 
@@ -1162,14 +2052,17 @@ function spawnCoins(){
    PARTÍCULAS
 ========================================================= */
 
-function particle(
+function particlesAt(
   x,
   y,
   amount,
   power
 ){
 
-  var p=phaseData[currentPhase-1];
+  var p=
+    phases[
+      currentPhase-1
+    ];
 
   for(
     var i=0;
@@ -1178,35 +2071,38 @@ function particle(
   ){
 
     particles.push({
+
       x:x,
+
       y:y,
-      vx:(Math.random()-.5)*power,
-      vy:(Math.random()-.5)*power,
-      life:.35+Math.random()*.55,
-      size:1+Math.random()*3,
-      color:p.accent
+
+      vx:
+        (
+          Math.random()-.5
+        )*
+        power,
+
+      vy:
+        (
+          Math.random()-.5
+        )*
+        power,
+
+      life:
+        .35+
+        Math.random()*.55,
+
+      size:
+        1+
+        Math.random()*3,
+
+      color:
+        p.accent
+
     });
+
   }
-}
 
-
-function createSpeedLines(){
-
-  speedLines=[];
-
-  for(
-    var i=0;
-    i<35;
-    i++
-  ){
-
-    speedLines.push({
-      x:Math.random()*W,
-      y:Math.random()*H,
-      length:10+Math.random()*30,
-      z:.1+Math.random()*.9
-    });
-  }
 }
 
 
@@ -1216,56 +2112,79 @@ function createSpeedLines(){
 
 function update(dt){
 
-  var p=phaseData[currentPhase-1];
+  var p=
+    phases[
+      currentPhase-1
+    ];
 
-  time+=dt;
+  gameTime+=dt;
 
-  var progress=Math.min(
-    1,
-    score/p.target
-  );
+
+  /*
+    Progressão de velocidade.
+  */
+
+  var progress=
+    Math.min(
+      1,
+      score/p.target
+    );
 
   var targetSpeed=
     .5+
-    (p.max-.5)*
+    (
+      p.max-.5
+    )*
     Math.min(
       1,
-      progress+.12
+      progress+.1
     );
 
   speed+=
-    (targetSpeed-speed)*
+    (
+      targetSpeed-
+      speed
+    )*
     Math.min(
       1,
-      dt*2.2
+      dt*2
     );
 
 
   /*
-    Movimento suave da faixa.
+    Troca suave de faixa.
   */
 
   laneVisual+=
-    (targetLane-laneVisual)*
+    (
+      targetLane-
+      laneVisual
+    )*
     Math.min(
       1,
-      dt*11
+      dt*12
     );
 
 
   /*
-    PULO REAL:
-    acelera para cima,
-    depois volta.
+    PULO.
   */
 
-  if(jump>0){
+  if(
+    jumpTime>0
+  ){
 
-    jump+=dt*2.9;
+    jumpTime+=
+      dt*2.85;
 
-    if(jump>=2.75){
-      jump=0;
+    if(
+      jumpTime>=2.75
+    ){
+
+      jumpTime=0;
+
     }
+
   }
 
 
@@ -1273,177 +2192,245 @@ function update(dt){
     DESLIZE.
   */
 
-  if(slide>0){
+  if(
+    slideTime>0
+  ){
 
-    slide=Math.max(
-      0,
-      slide-dt
-    );
+    slideTime=
+      Math.max(
+        0,
+        slideTime-dt
+      );
+
   }
 
 
   /*
-    Spawn mais rápido nas fases altas.
+    Obstáculos mais rápidos
+    conforme a fase sobe.
   */
 
-  var spawnRate=Math.max(
-    .30,
-    .88-
-    (currentPhase-1)*.052-
-    progress*.17
-  );
+  var obstacleRate=
+    Math.max(
+      .30,
+      .88-
+      (
+        currentPhase-1
+      )*.052-
+      progress*.16
+    );
 
-  spawnTimer-=dt;
+  obstacleTimer-=dt;
 
-  if(spawnTimer<=0){
+  if(
+    obstacleTimer<=0
+  ){
 
-    spawnTimer=spawnRate;
+    obstacleTimer=
+      obstacleRate;
 
     spawnObstacle();
+
   }
 
+
+  /*
+    Moedas.
+  */
 
   coinTimer-=dt;
 
-  if(coinTimer<=0){
+  if(
+    coinTimer<=0
+  ){
 
-    coinTimer=Math.max(
-      .43,
-      .72-
-      (currentPhase-1)*.018
-    );
+    coinTimer=
+      Math.max(
+        .44,
+        .74-
+        (
+          currentPhase-1
+        )*.018
+      );
 
     spawnCoins();
+
   }
 
 
   /*
-    Objetos avançam pela pista.
+    Objetos.
   */
 
   for(
-    var i=objects.length-1;
+    var i=
+      objects.length-1;
     i>=0;
     i--
   ){
 
-    var o=objects[i];
+    var o=
+      objects[i];
 
     o.z+=
       dt*
       (
         .34+
-        speed*.72
+        speed*.70
       );
 
-    o.rot+=dt*7;
+    o.rotation+=
+      dt*7;
 
 
-    if(o.z>1.08){
+    if(
+      o.z>1.08
+    ){
 
-      objects.splice(i,1);
+      objects.splice(
+        i,
+        1
+      );
+
       continue;
+
     }
 
 
     /*
-      COLISÃO NA ZONA DO JOGADOR.
+      Zona de colisão.
     */
 
     if(
-      o.z>.79 &&
-      o.z<.98 &&
+      o.z>.80&&
+      o.z<.98&&
       !o.hit
     ){
 
       var sameLane=
         Math.abs(
-          o.lane-laneVisual
+          o.lane-
+          laneVisual
         )<.34;
 
 
-      if(o.type==="coin"){
+      /*
+        MOEDA
+      */
 
-        if(sameLane){
+      if(
+        o.type==="coin"
+      ){
+
+        if(
+          sameLane
+        ){
 
           o.hit=true;
 
           coins++;
+
           score+=55;
 
-          particle(
-            laneX(o.lane,o.z),
+          particlesAt(
+            laneX(
+              o.lane,
+              o.z
+            ),
             roadY(o.z)-25,
             12,
             2.8
           );
+
+          playCoinSound();
+
         }
 
-      }else if(sameLane){
+      }
+
+
+      /*
+        OBSTÁCULO
+      */
+
+      else if(
+        sameLane
+      ){
 
         var jumping=
-          jump>.28 &&
-          jump<2.5;
+          jumpTime>.28&&
+          jumpTime<2.5;
 
         var sliding=
-          slide>0;
+          slideTime>0;
 
         var safe=false;
 
+
         if(
-          o.type==="gate" ||
-          o.type==="car" ||
+          o.type==="gate"||
+          o.type==="car"||
           o.type==="column"
         ){
-          safe=jumping;
+
+          safe=
+            jumping;
+
         }
+
 
         if(
           o.type==="drone"
         ){
-          safe=sliding;
+
+          safe=
+            sliding;
+
         }
+
 
         if(!safe){
 
-          particle(
-            laneX(o.lane,o.z),
-            roadY(o.z)-40,
+          particlesAt(
+            laneX(
+              o.lane,
+              o.z
+            ),
+            roadY(o.z)-35,
             28,
             5
           );
 
           endGame();
+
           return;
 
-        }else{
-
-          o.hit=true;
-          score+=25;
-
-          particle(
-            laneX(o.lane,o.z),
-            roadY(o.z)-50,
-            8,
-            2
-          );
         }
+
+
+        o.hit=true;
+
       }
+
     }
+
   }
 
 
   /*
-    Pontuação por distância.
+    Pontuação.
   */
 
   score+=
     dt*
     (
-      42+
+      43+
       currentPhase*5
     )*
-    (1+speed);
+    (
+      1+
+      speed
+    );
 
 
   /*
@@ -1451,58 +2438,54 @@ function update(dt){
   */
 
   for(
-    i=particles.length-1;
+    i=
+      particles.length-1;
     i>=0;
     i--
   ){
 
-    var q=particles[i];
+    var q=
+      particles[i];
 
     q.x+=q.vx;
+
     q.y+=q.vy;
 
     q.vy+=.045;
 
     q.life-=dt;
 
-    if(q.life<=0){
-      particles.splice(i,1);
+    if(
+      q.life<=0
+    ){
+
+      particles.splice(
+        i,
+        1
+      );
+
     }
+
   }
 
 
   /*
-    Linhas de velocidade.
+    Meta.
   */
 
-  for(
-    i=0;
-    i<speedLines.length;
-    i++
+  if(
+    score>=p.target
   ){
 
-    var s=speedLines[i];
+    completePhase();
 
-    s.y+=
-      (8+
-      speed*17)*
-      dt*
-      (0.5+s.z);
-
-    if(s.y>H){
-      s.y=horizon();
-      s.x=Math.random()*W;
-    }
-  }
-
-
-  if(score>=p.target){
-
-    finishPhase();
     return;
+
   }
+
 
   updateHUD();
+
 }
 
 
@@ -1512,29 +2495,48 @@ function update(dt){
 
 function drawCity(p){
 
-  var g=ctx.createLinearGradient(
-    0,0,0,H
+  var gradient=
+    ctx.createLinearGradient(
+      0,
+      0,
+      0,
+      H
+    );
+
+  gradient.addColorStop(
+    0,
+    p.sky1
   );
 
-  g.addColorStop(0,p.sky1);
-  g.addColorStop(1,p.sky2);
+  gradient.addColorStop(
+    1,
+    p.sky2
+  );
 
-  ctx.fillStyle=g;
-  ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=
+    gradient;
+
+  ctx.fillRect(
+    0,
+    0,
+    W,
+    H
+  );
 
 
   /*
-    Lua/luz no céu.
+    Luz da cidade.
   */
 
-  ctx.globalAlpha=.28;
+  ctx.globalAlpha=.25;
 
-  ctx.fillStyle=p.accent;
+  ctx.fillStyle=
+    p.accent;
 
   ctx.beginPath();
 
   ctx.arc(
-    W*.78,
+    W*.79,
     H*.17,
     Math.min(W,H)*.055,
     0,
@@ -1550,31 +2552,42 @@ function drawCity(p){
     Prédios.
   */
 
-  var base=horizon()+8;
+  var base=
+    horizon()+12;
 
   for(
     var i=0;
-    i<30;
+    i<32;
     i++
   ){
 
     var bw=
       15+
-      ((i*29)%48);
+      (
+        i*29
+      )%48;
 
     var bh=
       35+
-      ((i*47)%145);
+      (
+        i*47
+      )%145;
 
     var x=
-      ((i*91)%(
+      (
+        i*91
+      )%
+      (
         W+80
-      ))-40;
+      )-
+      40;
 
     ctx.fillStyle=
       i%3===0
-      ?"rgba(9,24,48,.95)"
-      :"rgba(3,12,28,.93)";
+      ?
+      "rgba(9,24,48,.96)"
+      :
+      "rgba(3,12,28,.95)";
 
     ctx.fillRect(
       x,
@@ -1589,17 +2602,22 @@ function drawCity(p){
     */
 
     for(
-      var yy=base-bh+12;
-      yy<base-7;
+      var yy=
+        base-bh+12;
+      yy<
+        base-7;
       yy+=15
     ){
 
       if(
-        ((i+Math.floor(yy))%4)!==0
+        (
+          i+
+          Math.floor(yy)
+        )%4!==0
       ){
 
         ctx.fillStyle=
-          p.accent+"77";
+          p.accent+"75";
 
         ctx.fillRect(
           x+5,
@@ -1608,7 +2626,9 @@ function drawCity(p){
           5
         );
 
-        if(bw>28){
+        if(
+          bw>28
+        ){
 
           ctx.fillRect(
             x+bw-10,
@@ -1616,24 +2636,31 @@ function drawCity(p){
             4,
             5
           );
+
         }
+
       }
+
     }
+
   }
 
 
   /*
-    Névoa na linha do horizonte.
+    Horizonte iluminado.
   */
 
-  var fog=ctx.createLinearGradient(
-    0,horizon()-20,
-    0,horizon()+100
-  );
+  var fog=
+    ctx.createLinearGradient(
+      0,
+      horizon()-20,
+      0,
+      horizon()+110
+    );
 
   fog.addColorStop(
     0,
-    p.accent+"18"
+    p.accent+"20"
   );
 
   fog.addColorStop(
@@ -1647,8 +2674,9 @@ function drawCity(p){
     0,
     horizon()-20,
     W,
-    120
+    130
   );
+
 }
 
 
@@ -1658,16 +2686,23 @@ function drawCity(p){
 
 function drawRoad(p){
 
-  var h=horizon()+cameraBob()*.15;
-  var g=ground();
+  var bob=
+    cameraBob();
+
+  var h=
+    horizon()+
+    bob*.12;
+
+  var g=
+    ground();
 
 
   /*
-    Área externa.
+    Área fora da pista.
   */
 
   ctx.fillStyle=
-    "rgba(1,4,12,.9)";
+    "#02040c";
 
   ctx.fillRect(
     0,
@@ -1678,20 +2713,21 @@ function drawRoad(p){
 
 
   /*
-    Pista.
+    PISTA.
   */
 
-  ctx.fillStyle=p.road;
+  ctx.fillStyle=
+    p.road;
 
   ctx.beginPath();
 
   ctx.moveTo(
-    W/2-W*.05,
+    W/2-W*.045,
     h
   );
 
   ctx.lineTo(
-    W/2+W*.05,
+    W/2+W*.045,
     h
   );
 
@@ -1711,16 +2747,18 @@ function drawRoad(p){
 
 
   /*
-    Brilho nas bordas.
+    Bordas.
   */
 
-  ctx.strokeStyle=p.accent+"99";
-  ctx.lineWidth=3;
+  ctx.strokeStyle=
+    p.accent+"b0";
+
+  ctx.lineWidth=2.5;
 
   ctx.beginPath();
 
   ctx.moveTo(
-    W/2-W*.05,
+    W/2-W*.045,
     h
   );
 
@@ -1730,7 +2768,7 @@ function drawRoad(p){
   );
 
   ctx.moveTo(
-    W/2+W*.05,
+    W/2+W*.045,
     h
   );
 
@@ -1743,28 +2781,30 @@ function drawRoad(p){
 
 
   /*
-    Faixas da pista.
+    Linhas horizontais.
   */
 
   for(
-    var z=.08;
+    var z=.07;
     z<1;
-    z+=.10
+    z+=.105
   ){
 
-    var y=roadY(z);
+    var y=
+      roadY(z);
 
     ctx.strokeStyle=
       p.accent+
       (
         z>.45
-        ?"72"
-        :"3c"
+        ?"70"
+        :
+        "3d"
       );
 
     ctx.lineWidth=
       1+
-      z*2.2;
+      z*2;
 
     ctx.beginPath();
 
@@ -1779,42 +2819,46 @@ function drawRoad(p){
     );
 
     ctx.stroke();
+
   }
 
 
   /*
-    Separação das três faixas.
+    Divisórias das faixas.
   */
 
   for(
-    var l=1;
-    l<=2;
-    l++
+    var side=-1;
+    side<=1;
+    side+=2
   ){
 
-    var side=l===1?-1:1;
+    ctx.strokeStyle=
+      p.accent+"95";
 
-    ctx.strokeStyle=p.accent+"8c";
-    ctx.lineWidth=1.7;
+    ctx.lineWidth=1.6;
 
     ctx.beginPath();
 
     ctx.moveTo(
-      W/2+side*W*.018,
+      W/2+
+      side*W*.015,
       h
     );
 
     ctx.lineTo(
-      W/2+side*W*.38,
+      W/2+
+      side*W*.37,
       g
     );
 
     ctx.stroke();
+
   }
 
 
   /*
-    Luzes laterais em movimento.
+    Luzes laterais.
   */
 
   for(
@@ -1832,90 +2876,57 @@ function drawRoad(p){
       var z=
         (
           i/14+
-          time*
+          gameTime*
           speed*
-          .55
+          .58
         )%1;
 
-      var y=roadY(z);
+      var y=
+        roadY(z);
 
       var x=
         W/2+
         side*
-        (
-          roadHalf(z)*1.12
-        );
+        roadHalf(z)*
+        1.12;
 
-      ctx.fillStyle=p.accent+"99";
+      ctx.fillStyle=
+        p.accent+"99";
 
       ctx.shadowBlur=8;
-      ctx.shadowColor=p.accent;
+
+      ctx.shadowColor=
+        p.accent;
 
       ctx.fillRect(
         x-2,
         y-2,
         4,
-        Math.max(2,12*z)
+        Math.max(
+          2,
+          12*z
+        )
       );
 
       ctx.shadowBlur=0;
+
     }
+
   }
 
-
-  /*
-    Linhas de velocidade laterais.
-  */
-
-  ctx.globalAlpha=.18;
-
-  for(
-    i=0;
-    i<speedLines.length;
-    i++
-  ){
-
-    var s=speedLines[i];
-
-    if(i%3!==0)continue;
-
-    ctx.strokeStyle=p.accent;
-    ctx.lineWidth=1;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      s.x,
-      s.y
-    );
-
-    ctx.lineTo(
-      s.x,
-      s.y+s.length*s.z
-    );
-
-    ctx.stroke();
-  }
-
-  ctx.globalAlpha=1;
 }
 
 
 /* =========================================================
-   PERSONAGEM NOVO
+   PERSONAGEM
 ========================================================= */
 
 function drawRunner(p){
 
-  /*
-    O personagem fica sempre no
-    centro inferior da pista.
-  */
-
   var x=
     laneX(
       laneVisual,
-      .99
+      .98
     );
 
   var bob=
@@ -1923,16 +2934,21 @@ function drawRunner(p){
 
   var jumpHeight=0;
 
-  if(jump>0){
+  if(
+    jumpTime>0
+  ){
 
     jumpHeight=
       Math.sin(
-        jump/2.75*Math.PI
+        jumpTime/
+        2.75*
+        Math.PI
       )*
       Math.min(
         H*.17,
         125
       );
+
   }
 
 
@@ -1952,40 +2968,38 @@ function drawRunner(p){
 
 
   /*
-    Animação de corrida:
-    pernas e braços alternados.
+    Ritmo da corrida.
   */
 
-  var runPhase=
-    time*
+  var run=
+    gameTime*
     (
       10+
-      speed*11
+      speed*10
     );
 
-  var stride=
-    Math.sin(runPhase);
+  var legA=
+    Math.sin(run);
 
-  var stride2=
+  var legB=
     Math.sin(
-      runPhase+
+      run+
       Math.PI
     );
 
 
   /*
-    Durante o salto, a animação
-    diminui.
+    No ar, reduz movimento.
   */
 
-  var animFactor=
-    jump>0
-    ? .25
-    : 1;
+  var factor=
+    jumpTime>0
+    ?.25
+    :
+    1;
 
-
-  stride*=animFactor;
-  stride2*=animFactor;
+  legA*=factor;
+  legB*=factor;
 
 
   ctx.save();
@@ -2002,42 +3016,42 @@ function drawRunner(p){
 
 
   /*
-    Inclinação natural do corpo.
+    Inclinação de corrida.
   */
 
   ctx.rotate(
-    slide>0
-    ? -.12
-    : -.035
+    slideTime>0
+    ?-.10
+    :
+    -.035
   );
 
 
   /*
-    SOMBRA no chão.
+    SOMBRA.
   */
 
-  if(jump<=0){
+  if(
+    jumpTime<=0
+  ){
 
     ctx.save();
 
     ctx.scale(
       1,
-      .32
+      .3
     );
 
     ctx.fillStyle=
-      "rgba(0,0,0,.45)";
-
-    ctx.shadowBlur=14;
-    ctx.shadowColor="#000";
+      "rgba(0,0,0,.48)";
 
     ctx.beginPath();
 
     ctx.ellipse(
       0,
-      74,
+      78,
       38,
-      15,
+      14,
       0,
       0,
       Math.PI*2
@@ -2046,48 +3060,48 @@ function drawRunner(p){
     ctx.fill();
 
     ctx.restore();
+
   }
 
 
   /*
-    Aura.
+    DESLIZANDO.
   */
 
-  ctx.shadowBlur=20;
-  ctx.shadowColor=p.accent;
+  if(
+    slideTime>0
+  ){
 
+    ctx.strokeStyle=
+      p.accent;
 
-  /*
-    DESLIZAMENTO.
-  */
+    ctx.lineWidth=9;
 
-  if(slide>0){
+    ctx.lineCap=
+      "round";
+
 
     /*
-      Corpo horizontal.
+      Corpo.
     */
-
-    ctx.strokeStyle=p.accent;
-    ctx.lineWidth=9;
-    ctx.lineCap="round";
 
     ctx.beginPath();
 
     ctx.moveTo(
-      -20,
-      8
+      -18,
+      7
     );
 
     ctx.lineTo(
       22,
-      8
+      7
     );
 
     ctx.stroke();
 
 
     /*
-      Pernas recolhidas.
+      Perna.
     */
 
     ctx.lineWidth=7;
@@ -2096,37 +3110,41 @@ function drawRunner(p){
 
     ctx.moveTo(
       8,
-      15
+      14
     );
 
     ctx.lineTo(
-      26,
-      27
+      28,
+      28
     );
 
     ctx.lineTo(
-      39,
-      25
+      40,
+      26
     );
 
     ctx.stroke();
 
 
+    /*
+      Outra perna.
+    */
+
     ctx.beginPath();
 
     ctx.moveTo(
-      -4,
-      15
+      -5,
+      14
     );
 
     ctx.lineTo(
-      -21,
-      27
+      -23,
+      28
     );
 
     ctx.lineTo(
-      -34,
-      25
+      -36,
+      26
     );
 
     ctx.stroke();
@@ -2136,13 +3154,14 @@ function drawRunner(p){
       Cabeça.
     */
 
-    ctx.fillStyle="#e7fbff";
+    ctx.fillStyle=
+      "#e9fcff";
 
     ctx.beginPath();
 
     ctx.arc(
       -25,
-      -1,
+      -2,
       11,
       0,
       Math.PI*2
@@ -2151,25 +3170,37 @@ function drawRunner(p){
     ctx.fill();
 
 
-    ctx.fillStyle="#18263d";
+    ctx.fillStyle=
+      "#17263d";
 
     ctx.fillRect(
-      -33,
-      -4,
-      17,
+      -34,
+      -5,
+      18,
       6
     );
 
+  }
 
-  }else{
+
+  /*
+    CORRIDA NORMAL.
+  */
+
+  else{
+
+    ctx.strokeStyle=
+      p.accent;
+
+    ctx.lineCap=
+      "round";
+
 
     /*
-      PERNA ESQUERDA.
+      PERNA ESQUERDA
     */
 
-    ctx.strokeStyle=p.accent;
     ctx.lineWidth=8;
-    ctx.lineCap="round";
 
     ctx.beginPath();
 
@@ -2180,13 +3211,13 @@ function drawRunner(p){
 
     ctx.lineTo(
       -10+
-      stride*12,
+      legA*12,
       47
     );
 
     ctx.lineTo(
       -17+
-      stride*22,
+      legA*22,
       70
     );
 
@@ -2194,7 +3225,7 @@ function drawRunner(p){
 
 
     /*
-      Pé esquerdo.
+      PÉ
     */
 
     ctx.lineWidth=6;
@@ -2203,13 +3234,13 @@ function drawRunner(p){
 
     ctx.moveTo(
       -17+
-      stride*22,
+      legA*22,
       70
     );
 
     ctx.lineTo(
-      -25+
-      stride*22,
+      -26+
+      legA*22,
       72
     );
 
@@ -2217,7 +3248,7 @@ function drawRunner(p){
 
 
     /*
-      PERNA DIREITA.
+      PERNA DIREITA
     */
 
     ctx.lineWidth=8;
@@ -2231,13 +3262,13 @@ function drawRunner(p){
 
     ctx.lineTo(
       10+
-      stride2*12,
+      legB*12,
       47
     );
 
     ctx.lineTo(
       17+
-      stride2*22,
+      legB*22,
       70
     );
 
@@ -2245,7 +3276,7 @@ function drawRunner(p){
 
 
     /*
-      Pé direito.
+      PÉ
     */
 
     ctx.lineWidth=6;
@@ -2254,13 +3285,13 @@ function drawRunner(p){
 
     ctx.moveTo(
       17+
-      stride2*22,
+      legB*22,
       70
     );
 
     ctx.lineTo(
-      25+
-      stride2*22,
+      26+
+      legB*22,
       72
     );
 
@@ -2268,7 +3299,7 @@ function drawRunner(p){
 
 
     /*
-      BRAÇO ESQUERDO.
+      BRAÇO ESQUERDO
     */
 
     ctx.lineWidth=7;
@@ -2282,13 +3313,13 @@ function drawRunner(p){
 
     ctx.lineTo(
       -25+
-      stride2*13,
+      legB*13,
       19
     );
 
     ctx.lineTo(
       -31+
-      stride2*18,
+      legB*18,
       36
     );
 
@@ -2296,7 +3327,7 @@ function drawRunner(p){
 
 
     /*
-      BRAÇO DIREITO.
+      BRAÇO DIREITO
     */
 
     ctx.beginPath();
@@ -2308,13 +3339,13 @@ function drawRunner(p){
 
     ctx.lineTo(
       25+
-      stride*13,
+      legA*13,
       19
     );
 
     ctx.lineTo(
       31+
-      stride*18,
+      legA*18,
       36
     );
 
@@ -2322,47 +3353,45 @@ function drawRunner(p){
 
 
     /*
-      Corpo.
+      CORPO
     */
 
-    ctx.fillStyle=p.accent;
+    ctx.fillStyle=
+      p.accent;
 
-    ctx.beginPath();
-
-    ctx.roundRect(
+    ctx.fillRect(
       -12,
       -3,
       24,
-      34,
-      7
+      34
     );
-
-    ctx.fill();
 
 
     /*
-      Detalhe central.
+      Detalhe.
     */
 
-    ctx.fillStyle="#dffcff";
+    ctx.fillStyle=
+      "#e6fcff";
 
-    ctx.globalAlpha=.75;
+    ctx.globalAlpha=.7;
 
     ctx.fillRect(
       -4,
       3,
       8,
-      16
+      15
     );
 
     ctx.globalAlpha=1;
 
 
     /*
-      Cabeça.
+      CABEÇA
     */
 
-    ctx.fillStyle="#e9fcff";
+    ctx.fillStyle=
+      "#ecfdff";
 
     ctx.beginPath();
 
@@ -2378,10 +3407,11 @@ function drawRunner(p){
 
 
     /*
-      Visor.
+      VISOR
     */
 
-    ctx.fillStyle="#14243d";
+    ctx.fillStyle=
+      "#15253d";
 
     ctx.fillRect(
       -9,
@@ -2392,13 +3422,16 @@ function drawRunner(p){
 
 
     /*
-      Pequena luz nas costas.
+      Luz nas costas.
     */
 
-    ctx.fillStyle=p.accent;
+    ctx.fillStyle=
+      p.accent;
 
     ctx.shadowBlur=15;
-    ctx.shadowColor=p.accent;
+
+    ctx.shadowColor=
+      p.accent;
 
     ctx.beginPath();
 
@@ -2411,10 +3444,11 @@ function drawRunner(p){
     );
 
     ctx.fill();
+
   }
 
-
   ctx.restore();
+
 }
 
 
@@ -2422,26 +3456,37 @@ function drawRunner(p){
    OBJETOS
 ========================================================= */
 
-function drawObject(o,p){
+function drawObject(
+  o,
+  p
+){
 
-  var z=Math.max(.01,o.z);
+  var z=
+    Math.max(
+      .01,
+      o.z
+    );
 
-  var x=laneX(
-    o.lane,
-    z
-  );
+  var x=
+    laneX(
+      o.lane,
+      z
+    );
 
-  var y=roadY(z);
+  var y=
+    roadY(z);
 
   /*
-    Escala mais natural:
-    distante pequeno,
-    perto grande.
+    Crescimento progressivo.
   */
 
-  var s=
-    .08+
-    Math.pow(z,1.18)*1.02;
+  var scale=
+    .07+
+    Math.pow(
+      z,
+      1.18
+    )*
+    1.00;
 
 
   ctx.save();
@@ -2452,34 +3497,39 @@ function drawObject(o,p){
   );
 
   ctx.scale(
-    s,
-    s
+    scale,
+    scale
   );
-
-  ctx.shadowBlur=
-    12+
-    z*12;
-
-  ctx.shadowColor=p.accent;
 
 
   /*
     MOEDA
   */
 
-  if(o.type==="coin"){
+  if(
+    o.type==="coin"
+  ){
 
     var spin=
-      Math.sin(o.rot);
+      Math.sin(
+        o.rotation
+      );
 
-    ctx.strokeStyle="#ffd83d";
+    ctx.strokeStyle=
+      "#ffd83d";
+
     ctx.lineWidth=7;
+
+    ctx.shadowBlur=16;
+
+    ctx.shadowColor=
+      "#ffd83d";
 
     ctx.beginPath();
 
     ctx.ellipse(
       0,
-      -31,
+      -30,
       Math.max(
         3,
         14*Math.abs(spin)
@@ -2492,23 +3542,7 @@ function drawObject(o,p){
 
     ctx.stroke();
 
-    ctx.fillStyle="#fff2a2";
-
-    ctx.globalAlpha=.75;
-
-    ctx.beginPath();
-
-    ctx.arc(
-      -4,
-      -39,
-      3,
-      0,
-      Math.PI*2
-    );
-
-    ctx.fill();
-
-    ctx.globalAlpha=1;
+    ctx.shadowBlur=0;
 
   }
 
@@ -2517,16 +3551,25 @@ function drawObject(o,p){
     PORTÃO
   */
 
-  else if(o.type==="gate"){
+  else if(
+    o.type==="gate"
+  ){
 
-    ctx.strokeStyle=p.accent;
+    ctx.strokeStyle=
+      p.accent;
+
     ctx.lineWidth=9;
+
+    ctx.shadowBlur=16;
+
+    ctx.shadowColor=
+      p.accent;
 
     ctx.strokeRect(
       -31,
-      -95,
+      -94,
       62,
-      95
+      94
     );
 
     ctx.lineWidth=5;
@@ -2535,81 +3578,86 @@ function drawObject(o,p){
 
     ctx.moveTo(
       -31,
-      -68
+      -67
     );
 
     ctx.lineTo(
       31,
-      -68
+      -67
     );
 
     ctx.stroke();
 
-    ctx.fillStyle=p.accent+"30";
+    ctx.shadowBlur=0;
 
-    ctx.fillRect(
-      -25,
-      -60,
-      50,
-      54
-    );
   }
 
 
   /*
-    CARRO.
+    CARRO
   */
 
-  else if(o.type==="car"){
+  else if(
+    o.type==="car"
+  ){
 
-    ctx.fillStyle="#a71942";
+    ctx.fillStyle=
+      "#a71942";
 
-    ctx.beginPath();
+    ctx.shadowBlur=12;
 
-    ctx.roundRect(
-      -30,
-      -62,
-      60,
-      62,
-      9
+    ctx.shadowColor=
+      "#ff315a";
+
+    ctx.fillRect(
+      -29,
+      -61,
+      58,
+      61
     );
 
-    ctx.fill();
+    ctx.shadowBlur=0;
 
-    ctx.fillStyle="#79eaff";
+    ctx.fillStyle=
+      "#79eaff";
 
     ctx.fillRect(
       -18,
       -48,
       36,
-      15
+      14
     );
 
-    ctx.fillStyle="#ffdb48";
+    ctx.fillStyle=
+      "#ffdb48";
 
     ctx.fillRect(
-      -23,
+      -22,
       -9,
-      8,
+      7,
       5
     );
 
     ctx.fillRect(
       15,
       -9,
-      8,
+      7,
       5
     );
+
   }
 
 
   /*
-    COLUNA.
+    COLUNA
   */
 
-  else if(o.type==="column"){
+  else if(
+    o.type==="column"
+  ){
 
-    ctx.fillStyle="#334862";
+    ctx.fillStyle=
+      "#334862";
 
     ctx.fillRect(
       -24,
@@ -2618,7 +3666,9 @@ function drawObject(o,p){
       91
     );
 
-    ctx.strokeStyle=p.accent;
+    ctx.strokeStyle=
+      p.accent;
+
     ctx.lineWidth=4;
 
     ctx.strokeRect(
@@ -2628,30 +3678,40 @@ function drawObject(o,p){
       91
     );
 
-    ctx.fillStyle=p.accent+"40";
+    ctx.fillStyle=
+      p.accent+"50";
 
     ctx.fillRect(
       -15,
-      -78,
+      -77,
       30,
       8
     );
+
   }
 
 
   /*
-    DRONE.
+    DRONE
   */
 
-  else if(o.type==="drone"){
+  else if(
+    o.type==="drone"
+  ){
 
-    ctx.fillStyle="#d9f5ff";
+    ctx.fillStyle=
+      "#d9f5ff";
+
+    ctx.shadowBlur=13;
+
+    ctx.shadowColor=
+      p.accent;
 
     ctx.beginPath();
 
     ctx.arc(
       0,
-      -61,
+      -60,
       19,
       0,
       Math.PI*2
@@ -2659,39 +3719,32 @@ function drawObject(o,p){
 
     ctx.fill();
 
-    ctx.strokeStyle=p.accent;
+    ctx.strokeStyle=
+      p.accent;
+
     ctx.lineWidth=6;
 
     ctx.beginPath();
 
     ctx.moveTo(
       -37,
-      -61
+      -60
     );
 
     ctx.lineTo(
       37,
-      -61
+      -60
     );
 
     ctx.stroke();
 
-    ctx.fillStyle=p.accent;
+    ctx.shadowBlur=0;
 
-    ctx.beginPath();
-
-    ctx.arc(
-      0,
-      -61,
-      5,
-      0,
-      Math.PI*2
-    );
-
-    ctx.fill();
   }
 
+
   ctx.restore();
+
 }
 
 
@@ -2707,25 +3760,29 @@ function drawParticles(){
     i++
   ){
 
-    var p=particles[i];
+    var q=
+      particles[i];
 
     ctx.globalAlpha=
       Math.max(
         0,
-        p.life
+        q.life
       );
 
-    ctx.fillStyle=p.color;
+    ctx.fillStyle=
+      q.color;
 
     ctx.fillRect(
-      p.x,
-      p.y,
-      p.size,
-      p.size
+      q.x,
+      q.y,
+      q.size,
+      q.size
     );
+
   }
 
   ctx.globalAlpha=1;
+
 }
 
 
@@ -2735,7 +3792,10 @@ function drawParticles(){
 
 function draw(){
 
-  var p=phaseData[currentPhase-1];
+  var p=
+    phases[
+      currentPhase-1
+    ];
 
   ctx.clearRect(
     0,
@@ -2744,48 +3804,40 @@ function draw(){
     H
   );
 
-
-  /*
-    Fundo.
-  */
-
   drawCity(p);
-
-  /*
-    Estrada.
-  */
 
   drawRoad(p);
 
 
   /*
-    Objetos mais distantes
-    primeiro.
+    Mais longe primeiro.
   */
 
   objects
     .slice()
-    .sort(function(a,b){
-      return a.z-b.z;
-    })
-    .forEach(function(o){
+    .sort(
+      function(a,b){
 
-      drawObject(
-        o,
-        p
-      );
+        return a.z-b.z;
 
-    });
+      }
+    )
+    .forEach(
+      function(o){
 
+        drawObject(
+          o,
+          p
+        );
 
-  /*
-    Corredor por último:
-    fica sempre visualmente na frente.
-  */
+      }
+    );
+
 
   drawRunner(p);
 
   drawParticles();
+
 }
 
 
@@ -2796,87 +3848,122 @@ function draw(){
 function loop(now){
 
   if(!last){
+
     last=now;
+
   }
 
-  var dt=Math.min(
-    .033,
-    (now-last)/1000
-  );
+  var dt=
+    Math.min(
+      .033,
+      (
+        now-last
+      )/1000
+    );
 
   last=now;
 
   if(running){
+
     update(dt);
+
   }
 
   draw();
 
-  requestAnimationFrame(loop);
+  requestAnimationFrame(
+    loop
+  );
+
 }
 
-requestAnimationFrame(loop);
+requestAnimationFrame(
+  loop
+);
 
 
 /* =========================================================
    BOTÕES
 ========================================================= */
 
-document.getElementById("play").onclick=
+document
+  .getElementById("play")
+  .onclick=
   function(){
+
     startGame();
+
   };
 
 
-document.getElementById("openPhases").onclick=
+document
+  .getElementById("openPhases")
+  .onclick=
   function(){
-
-    hide(menu);
 
     buildPhaseMenu();
 
+    hide(menu);
+
     show(phaseMenu);
+
   };
 
 
-document.getElementById("backMenu").onclick=
+document
+  .getElementById("backMenu")
+  .onclick=
   function(){
 
     hide(phaseMenu);
 
     show(menu);
+
   };
 
 
-document.getElementById("again").onclick=
+document
+  .getElementById("again")
+  .onclick=
   function(){
 
     startGame();
+
   };
 
 
-document.getElementById("overMenu").onclick=
+document
+  .getElementById("overMenu")
+  .onclick=
   function(){
 
     hide(gameover);
 
     show(menu);
+
   };
 
 
-document.getElementById("victoryMenu").onclick=
+document
+  .getElementById("victoryMenu")
+  .onclick=
   function(){
 
     hide(victory);
 
     show(menu);
+
   };
 
 
-document.getElementById("nextPhase").onclick=
+document
+  .getElementById("nextPhase")
+  .onclick=
   function(){
 
-    if(currentPhase<10){
+    if(
+      currentPhase<10
+    ){
 
       currentPhase++;
 
@@ -2901,23 +3988,45 @@ document.getElementById("nextPhase").onclick=
       hide(victory);
 
       show(menu);
+
     }
+
   };
 
 
 /* =========================================================
-   SOM
+   BOTÃO DE SOM
 ========================================================= */
 
 soundBtn.onclick=
-  function(){
+  function(e){
 
-    soundOn=!soundOn;
+    e.stopPropagation();
+
+    initAudio();
+
+    soundOn=
+      !soundOn;
+
+    setAudioEnabled();
 
     soundBtn.textContent=
       soundOn
       ?"🔊 SOM"
       :"🔇 MUDO";
+
+    if(soundOn){
+
+      tone(
+        "sine",
+        500,
+        850,
+        .14,
+        .10
+      );
+
+    }
+
   };
 
 
@@ -2926,11 +4035,20 @@ soundBtn.onclick=
 ========================================================= */
 
 hide(phaseMenu);
+
 hide(gameover);
+
 hide(victory);
+
+hide(hud);
+
 show(menu);
 
+bestValue.textContent=
+  best;
+
 })();
+
 </script>
 
 </body>
