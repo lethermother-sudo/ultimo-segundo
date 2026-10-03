@@ -2,31 +2,21 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
->
-
-<title>Último Segundo V80</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Último Segundo V81</title>
 
 <style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-html,
-body{
+html,body{
   margin:0;
   width:100%;
   height:100%;
   overflow:hidden;
   background:#03040b;
+  color:#fff;
   font-family:Arial,Helvetica,sans-serif;
   touch-action:none;
-  color:#fff;
 }
 
 canvas{
@@ -37,9 +27,7 @@ canvas{
   display:block;
 }
 
-.hidden{
-  display:none!important;
-}
+.hidden{display:none!important}
 
 .screen{
   position:fixed;
@@ -50,75 +38,58 @@ canvas{
   align-items:center;
   justify-content:center;
   background:
-    radial-gradient(
-      circle at 50% 25%,
-      rgba(0,220,255,.16),
-      transparent 38%
-    ),
-    linear-gradient(
-      #040512,
-      #09051b
-    );
+    radial-gradient(circle at 50% 20%,rgba(0,220,255,.18),transparent 38%),
+    linear-gradient(#040512,#09051b);
 }
 
 .logo{
-  font-size:11px;
-  letter-spacing:7px;
-  opacity:.6;
-  margin-bottom:15px;
+  font-size:10px;
+  letter-spacing:6px;
+  opacity:.55;
 }
 
 .title{
+  margin-top:15px;
   text-align:center;
-  font-size:44px;
-  line-height:.92;
+  font-size:45px;
+  line-height:.9;
   font-weight:900;
   letter-spacing:1px;
-  text-shadow:
-    0 0 12px rgba(0,230,255,.7),
-    0 0 35px rgba(0,230,255,.35);
+  text-shadow:0 0 15px #00eaff,0 0 35px rgba(0,220,255,.4);
 }
 
 .subtitle{
-  margin-top:17px;
-  font-size:10px;
+  margin-top:18px;
+  font-size:9px;
   letter-spacing:4px;
-  opacity:.65;
+  opacity:.55;
 }
 
 .version{
   margin-top:18px;
+  color:#00eaff;
   font-size:11px;
   letter-spacing:5px;
-  color:#00eaff;
 }
 
 button{
-  color:#fff;
   border:0;
+  color:#fff;
   font-weight:900;
   letter-spacing:2px;
-  border-radius:15px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #00d9ff,
-      #6737ff
-    );
-
-  box-shadow:
-    0 0 25px rgba(0,220,255,.25);
+  border-radius:14px;
+  background:linear-gradient(135deg,#00d9ff,#6737ff);
+  box-shadow:0 0 25px rgba(0,220,255,.25);
 }
 
 button:active{
-  transform:scale(.97);
+  transform:scale(.96);
 }
 
 .mainBtn{
   width:245px;
   padding:18px;
-  margin-top:36px;
+  margin-top:35px;
   font-size:16px;
 }
 
@@ -131,43 +102,33 @@ button:active{
 
 #hud{
   position:fixed;
+  z-index:10;
   top:0;
   left:0;
   right:0;
-  z-index:10;
-  padding:
-    calc(10px + env(safe-area-inset-top))
-    11px
-    0;
+  padding:calc(10px + env(safe-area-inset-top)) 10px 0;
   pointer-events:none;
 }
 
 .hud{
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
   gap:7px;
 }
 
 .hudBox{
-  min-width:76px;
+  min-width:75px;
   padding:7px 9px;
   border-radius:11px;
-
-  background:
-    rgba(0,0,15,.64);
-
-  border:
-    1px solid
-    rgba(0,235,255,.28);
-
+  background:rgba(0,0,15,.65);
+  border:1px solid rgba(0,235,255,.28);
   backdrop-filter:blur(8px);
 }
 
 .hudLabel{
   font-size:7px;
   letter-spacing:2px;
-  opacity:.55;
+  opacity:.5;
 }
 
 .hudValue{
@@ -177,7 +138,7 @@ button:active{
 }
 
 .centerHud{
-  min-width:130px;
+  min-width:135px;
   text-align:center;
 }
 
@@ -201,11 +162,7 @@ button:active{
 
 #phaseMenu{
   justify-content:flex-start;
-  padding:
-    calc(35px + env(safe-area-inset-top))
-    14px
-    30px;
-
+  padding:40px 14px 30px;
   overflow:auto;
 }
 
@@ -215,8 +172,7 @@ button:active{
 }
 
 .phaseSubtitle{
-  margin-top:8px;
-  margin-bottom:20px;
+  margin:8px 0 20px;
   font-size:9px;
   letter-spacing:3px;
   opacity:.5;
@@ -224,12 +180,8 @@ button:active{
 
 .phaseGrid{
   width:min(440px,95vw);
-
   display:grid;
-
-  grid-template-columns:
-    repeat(5,1fr);
-
+  grid-template-columns:repeat(5,1fr);
   gap:7px;
 }
 
@@ -237,38 +189,18 @@ button:active{
   height:52px;
   padding:0;
   margin:0;
-
   border-radius:10px;
-
-  background:
-    rgba(255,255,255,.06);
-
-  border:
-    1px solid
-    rgba(255,255,255,.11);
-
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
   box-shadow:none;
 }
 
 .phaseBtn.open{
-  background:
-    linear-gradient(
-      135deg,
-      #00bde8,
-      #5730d8
-    );
+  background:linear-gradient(135deg,#00bde8,#5730d8);
 }
 
 .phaseBtn.lock{
-  opacity:.22;
-}
-
-.phaseInfo{
-  margin-top:17px;
-  font-size:9px;
-  letter-spacing:2px;
-  opacity:.5;
-  text-align:center;
+  opacity:.2;
 }
 
 .result{
@@ -276,10 +208,9 @@ button:active{
 }
 
 .resultTitle{
-  font-size:38px;
+  font-size:37px;
   font-weight:900;
-  text-shadow:
-    0 0 20px #00eaff;
+  text-shadow:0 0 20px #00eaff;
 }
 
 .resultText{
@@ -288,7 +219,6 @@ button:active{
   line-height:1.9;
   opacity:.75;
 }
-
 </style>
 </head>
 
@@ -296,76 +226,33 @@ button:active{
 
 <canvas id="game"></canvas>
 
-
-<!-- HUD -->
-
 <div id="hud" class="hidden">
-
   <div class="hud">
 
     <div class="hudBox">
-
-      <div class="hudLabel">
-        PONTOS
-      </div>
-
-      <div
-        class="hudValue"
-        id="score"
-      >
-        0
-      </div>
-
+      <div class="hudLabel">PONTOS</div>
+      <div id="score" class="hudValue">0</div>
     </div>
-
 
     <div class="hudBox centerHud">
-
-      <div id="phaseName">
-        FASE 1
-      </div>
-
-      <div id="worldName">
-        CIDADE NEON
-      </div>
-
-      <div id="target">
-        META 1200
-      </div>
-
+      <div id="phaseName">FASE 1</div>
+      <div id="worldName">CIDADE NEON</div>
+      <div id="target">META 1200</div>
     </div>
 
-
     <div class="hudBox">
-
-      <div class="hudLabel">
-        MOEDAS
-      </div>
-
-      <div
-        class="hudValue"
-        id="coins"
-      >
-        0
-      </div>
-
+      <div class="hudLabel">MOEDAS</div>
+      <div id="coins" class="hudValue">0</div>
     </div>
 
   </div>
-
 </div>
-
 
 <!-- MENU -->
 
-<div
-  id="menu"
-  class="screen"
->
+<div id="menu" class="screen">
 
-  <div class="logo">
-    RUNNER EXPERIENCE
-  </div>
+  <div class="logo">RUNNER EXPERIENCE</div>
 
   <div class="title">
     ÚLTIMO<br>
@@ -377,90 +264,57 @@ button:active{
   </div>
 
   <div class="version">
-    V80 • 50 FASES
+    V81 • 50 FASES
   </div>
 
-  <button
-    id="play"
-    class="mainBtn"
-  >
+  <button id="play" class="mainBtn">
     JOGAR
   </button>
 
-  <button
-    id="phases"
-    class="smallBtn"
-  >
+  <button id="phases" class="smallBtn">
     FASES
   </button>
 
 </div>
 
-
 <!-- FASES -->
 
-<div
-  id="phaseMenu"
-  class="screen hidden"
->
+<div id="phaseMenu" class="screen hidden">
 
-  <div class="phaseTitle">
-    SELECIONE A FASE
-  </div>
+  <div class="phaseTitle">SELECIONE A FASE</div>
 
   <div class="phaseSubtitle">
     50 FASES • 10 AMBIENTES
   </div>
 
-  <div
-    id="phaseGrid"
-    class="phaseGrid"
-  ></div>
+  <div id="phaseGrid" class="phaseGrid"></div>
 
-  <div class="phaseInfo">
+  <div class="phaseSubtitle">
     DESBLOQUEADAS:
     <span id="unlockedText">1</span>/50
   </div>
 
-  <button
-    id="backMenu"
-    class="smallBtn"
-  >
+  <button id="backMenu" class="smallBtn">
     VOLTAR
   </button>
 
 </div>
 
-
 <!-- GAME OVER -->
 
-<div
-  id="gameOver"
-  class="screen hidden"
->
+<div id="gameOver" class="screen hidden">
 
   <div class="result">
 
-    <div class="resultTitle">
-      FIM DE JOGO
-    </div>
+    <div class="resultTitle">FIM DE JOGO</div>
 
-    <div
-      id="loseText"
-      class="resultText"
-    ></div>
+    <div id="loseText" class="resultText"></div>
 
-    <button
-      id="retry"
-      class="mainBtn"
-    >
+    <button id="retry" class="mainBtn">
       VOLTAR À FASE 1
     </button>
 
-    <button
-      id="loseMenu"
-      class="smallBtn"
-    >
+    <button id="loseMenu" class="smallBtn">
       MENU
     </button>
 
@@ -468,13 +322,9 @@ button:active{
 
 </div>
 
-
 <!-- VITÓRIA -->
 
-<div
-  id="victory"
-  class="screen hidden"
->
+<div id="victory" class="screen hidden">
 
   <div class="result">
 
@@ -482,22 +332,13 @@ button:active{
       FASE CONCLUÍDA
     </div>
 
-    <div
-      id="winText"
-      class="resultText"
-    ></div>
+    <div id="winText" class="resultText"></div>
 
-    <button
-      id="next"
-      class="mainBtn"
-    >
+    <button id="next" class="mainBtn">
       PRÓXIMA FASE
     </button>
 
-    <button
-      id="winMenu"
-      class="smallBtn"
-    >
+    <button id="winMenu" class="smallBtn">
       MENU
     </button>
 
@@ -505,305 +346,135 @@ button:active{
 
 </div>
 
-
 <script>
+"use strict";
 
-/* =========================================================
+/* =========================
    CANVAS
-========================================================= */
+========================= */
 
-const canvas =
-  document.getElementById("game");
-
-const ctx =
-  canvas.getContext("2d");
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
 let W = innerWidth;
 let H = innerHeight;
-
-let DPR =
-  Math.min(
-    devicePixelRatio || 1,
-    2
-  );
-
+let DPR = Math.min(devicePixelRatio || 1,2);
 
 function resize(){
-
   W = innerWidth;
   H = innerHeight;
 
-  canvas.width =
-    W * DPR;
+  canvas.width = W * DPR;
+  canvas.height = H * DPR;
 
-  canvas.height =
-    H * DPR;
+  canvas.style.width = W + "px";
+  canvas.style.height = H + "px";
 
-  canvas.style.width =
-    W + "px";
-
-  canvas.style.height =
-    H + "px";
-
-  ctx.setTransform(
-    DPR,
-    0,
-    0,
-    DPR,
-    0,
-    0
-  );
+  ctx.setTransform(DPR,0,0,DPR,0,0);
 }
 
-
-addEventListener(
-  "resize",
-  resize
-);
-
+addEventListener("resize",resize);
 resize();
 
 
-/* =========================================================
-   10 AMBIENTES
-========================================================= */
+/* =========================
+   AMBIENTES
+========================= */
 
 const worlds = [
 
-  {
-    name:"CIDADE NEON",
-    sky:"#05051b",
-    sky2:"#160c3d",
-    road:"#10152c",
-    glow:"#00eaff",
-    obstacle:"#ff2d75"
-  },
-
-  {
-    name:"CENTRO FUTURISTA",
-    sky:"#061522",
-    sky2:"#063b54",
-    road:"#10212b",
-    glow:"#29efff",
-    obstacle:"#ff3d91"
-  },
-
-  {
-    name:"VIA NOTURNA",
-    sky:"#13051d",
-    sky2:"#3a0b43",
-    road:"#211229",
-    glow:"#ff42dd",
-    obstacle:"#ff315d"
-  },
-
-  {
-    name:"ZONA INDUSTRIAL",
-    sky:"#151006",
-    sky2:"#43230a",
-    road:"#211c16",
-    glow:"#ffb52e",
-    obstacle:"#ff5428"
-  },
-
-  {
-    name:"CYBER CITY",
-    sky:"#02191a",
-    sky2:"#06483e",
-    road:"#092421",
-    glow:"#00ffb0",
-    obstacle:"#ff3970"
-  },
-
-  {
-    name:"DISTRITO VERMELHO",
-    sky:"#190306",
-    sky2:"#57090f",
-    road:"#281015",
-    glow:"#ff4439",
-    obstacle:"#ffb12e"
-  },
-
-  {
-    name:"MEGA TÚNEL",
-    sky:"#070713",
-    sky2:"#252253",
-    road:"#17172d",
-    glow:"#9e72ff",
-    obstacle:"#ff36dd"
-  },
-
-  {
-    name:"CIDADE AÉREA",
-    sky:"#06162a",
-    sky2:"#08617c",
-    road:"#0d2938",
-    glow:"#52eaff",
-    obstacle:"#ff9134"
-  },
-
-  {
-    name:"ZONA ZERO",
-    sky:"#010104",
-    sky2:"#141419",
-    road:"#0a0a0d",
-    glow:"#d0d0df",
-    obstacle:"#ffffff"
-  },
-
-  {
-    name:"ÚLTIMO SEGUNDO",
-    sky:"#03000d",
-    sky2:"#32075c",
-    road:"#140c25",
-    glow:"#d83cff",
-    obstacle:"#ff205e"
-  }
+  ["CIDADE NEON","#05051b","#160c3d","#10152c","#00eaff","#ff2d75"],
+  ["CENTRO FUTURISTA","#061522","#063b54","#10212b","#29efff","#ff3d91"],
+  ["VIA NOTURNA","#13051d","#3a0b43","#211229","#ff42dd","#ff315d"],
+  ["ZONA INDUSTRIAL","#151006","#43230a","#211c16","#ffb52e","#ff5428"],
+  ["CYBER CITY","#02191a","#06483e","#092421","#00ffb0","#ff3970"],
+  ["DISTRITO VERMELHO","#190306","#57090f","#281015","#ff4439","#ffb12e"],
+  ["MEGA TÚNEL","#070713","#252253","#17172d","#9e72ff","#ff36dd"],
+  ["CIDADE AÉREA","#06162a","#08617c","#0d2938","#52eaff","#ff9134"],
+  ["ZONA ZERO","#010104","#141419","#0a0a0d","#d0d0df","#ffffff"],
+  ["ÚLTIMO SEGUNDO","#03000d","#32075c","#140c25","#d83cff","#ff205e"]
 
 ];
 
 
-/* =========================================================
+/* =========================
    ESTADO
-========================================================= */
-
-/*
-  IMPORTANTE:
-
-  Não existe localStorage.
-
-  Portanto:
-  - fechar página = começa de novo
-  - morrer = bloqueia tudo novamente
-  - não existe checkpoint
-*/
+========================= */
 
 let unlocked = 1;
-
 let phase = 1;
-
 let running = false;
 
 let score = 0;
-
 let coins = 0;
-
 let target = 1200;
-
 let speed = .4;
 
 let lane = 1;
-
 let laneVisual = 1;
 
 let jumping = false;
-
 let jumpTime = 0;
 
 let sliding = false;
-
 let slideTimer = 0;
 
 let spawnTimer = 0;
-
 let lastTime = 0;
 
 let objects = [];
-
 let particles = [];
 
 
-/* =========================================================
+/* =========================
    FASES
-========================================================= */
+========================= */
 
 function worldIndex(p){
-
-  return Math.floor(
-    (p - 1) / 5
-  );
+  return Math.floor((p-1)/5);
 }
-
 
 function world(){
-
-  return worlds[
-    worldIndex(phase)
-  ];
+  return worlds[worldIndex(phase)];
 }
-
 
 function phaseTarget(p){
-
   return Math.floor(
     1200 +
-    (p - 1) * 470 +
-    Math.pow(
-      p - 1,
-      1.2
-    ) * 18
+    (p-1)*470 +
+    Math.pow(p-1,1.2)*18
   );
 }
-
 
 function phaseSpeed(p){
-
-  return (
-    .38 +
-    (p - 1) * .011 +
-    Math.min(
-      .25,
-      p * .002
-    )
-  );
+  return .38 +
+    (p-1)*.011 +
+    Math.min(.25,p*.002);
 }
 
-
 function spawnGap(){
-
-  if(phase <= 5)
-    return 2.35;
-
-  if(phase <= 10)
-    return 2.10;
-
-  if(phase <= 20)
-    return 1.85;
-
-  if(phase <= 30)
-    return 1.60;
-
-  if(phase <= 40)
-    return 1.40;
-
+  if(phase <= 5) return 2.35;
+  if(phase <= 10) return 2.1;
+  if(phase <= 20) return 1.85;
+  if(phase <= 30) return 1.6;
+  if(phase <= 40) return 1.4;
   return 1.25;
 }
 
 
-/* =========================================================
+/* =========================
    UI
-========================================================= */
+========================= */
 
 function show(id){
-
-  document
-    .getElementById(id)
-    .classList
-    .remove("hidden");
+  document.getElementById(id).classList.remove("hidden");
 }
-
 
 function hide(id){
-
-  document
-    .getElementById(id)
-    .classList
-    .add("hidden");
+  document.getElementById(id).classList.add("hidden");
 }
 
-
-function goMenu(){
-
+function menu(){
   running = false;
 
   hide("hud");
@@ -814,9 +485,7 @@ function goMenu(){
   show("menu");
 }
 
-
 function openPhases(){
-
   hide("menu");
   hide("gameOver");
   hide("victory");
@@ -826,146 +495,90 @@ function openPhases(){
   renderPhases();
 }
 
-
 function renderPhases(){
 
   const grid =
-    document.getElementById(
-      "phaseGrid"
-    );
+    document.getElementById("phaseGrid");
 
   grid.innerHTML = "";
 
-  for(
-    let i = 1;
-    i <= 50;
-    i++
-  ){
+  for(let i=1;i<=50;i++){
 
-    const button =
-      document.createElement(
-        "button"
-      );
+    const b =
+      document.createElement("button");
 
-    button.className =
-      "phaseBtn";
+    b.className = "phaseBtn";
 
     if(i <= unlocked){
 
-      button.classList.add(
-        "open"
-      );
+      b.classList.add("open");
+      b.textContent = i;
 
-      button.textContent =
-        i;
-
-      button.onclick = () => {
-
+      b.addEventListener("click",function(){
         startGame(i);
-
-      };
+      });
 
     }else{
 
-      button.classList.add(
-        "lock"
-      );
-
-      button.textContent =
-        "🔒";
+      b.classList.add("lock");
+      b.textContent = "🔒";
 
     }
 
-    grid.appendChild(
-      button
-    );
+    grid.appendChild(b);
   }
 
-  document.getElementById(
-    "unlockedText"
-  ).textContent =
+  document.getElementById("unlockedText").textContent =
     unlocked;
 }
 
-
 function updateHUD(){
 
-  document.getElementById(
-    "score"
-  ).textContent =
+  document.getElementById("score").textContent =
     Math.floor(score);
 
-  document.getElementById(
-    "coins"
-  ).textContent =
+  document.getElementById("coins").textContent =
     coins;
 
-  document.getElementById(
-    "phaseName"
-  ).textContent =
+  document.getElementById("phaseName").textContent =
     "FASE " + phase;
 
-  document.getElementById(
-    "worldName"
-  ).textContent =
-    world().name;
+  document.getElementById("worldName").textContent =
+    world()[0];
 
-  document.getElementById(
-    "target"
-  ).textContent =
+  document.getElementById("target").textContent =
     "META " + target;
 }
 
 
-/* =========================================================
+/* =========================
    COMEÇAR
-========================================================= */
+========================= */
 
 function startGame(p){
 
-  if(p > unlocked){
-    return;
-  }
+  if(p > unlocked) return;
 
-  phase =
-    Math.max(
-      1,
-      Math.min(
-        50,
-        p
-      )
-    );
+  phase = Math.max(1,Math.min(50,p));
 
   score = 0;
-
   coins = 0;
 
-  target =
-    phaseTarget(
-      phase
-    );
-
-  speed =
-    phaseSpeed(
-      phase
-    );
+  target = phaseTarget(phase);
+  speed = phaseSpeed(phase);
 
   lane = 1;
-
   laneVisual = 1;
 
   jumping = false;
-
   jumpTime = 0;
 
   sliding = false;
-
   slideTimer = 0;
 
-  spawnTimer = 0;
+  spawnTimer = .5;
 
   objects = [];
-
   particles = [];
 
   updateHUD();
@@ -978,686 +591,316 @@ function startGame(p){
   show("hud");
 
   running = true;
+  lastTime = performance.now();
 
-  lastTime =
-    performance.now();
-
-  requestAnimationFrame(
-    loop
-  );
+  requestAnimationFrame(loop);
 }
 
 
-/* =========================================================
+/* =========================
    ESTRADA
-========================================================= */
+========================= */
 
 function roadY(z){
-
-  const top =
-    H * .39;
-
-  const bottom =
-    H * 1.05;
-
-  return (
-    top +
-    (bottom - top) * z
-  );
+  return H*.38 + (H*1.08-H*.38)*z;
 }
-
 
 function roadHalf(z){
+  return W*(.06+.44*z);
+}
 
-  return W *
-    (
-      .065 +
-      .44 * z
-    );
+function laneX(l,z){
+
+  const center = W/2;
+  const spread = roadHalf(z)*.62;
+
+  return center+(l-1)*spread;
 }
 
 
-function laneX(
-  selectedLane,
-  z
-){
-
-  const center =
-    W / 2;
-
-  const spread =
-    roadHalf(z) * .62;
-
-  return (
-    center +
-    (selectedLane - 1) *
-    spread
-  );
-}
-
-
-/* =========================================================
+/* =========================
    FUNDO
-========================================================= */
+========================= */
 
 function drawBackground(){
 
-  const w =
-    world();
+  const w = world();
 
-  const gradient =
-    ctx.createLinearGradient(
-      0,
-      0,
-      0,
-      H
-    );
+  const g =
+    ctx.createLinearGradient(0,0,0,H);
 
-  gradient.addColorStop(
-    0,
-    w.sky
-  );
+  g.addColorStop(0,w[1]);
+  g.addColorStop(.55,w[2]);
+  g.addColorStop(1,"#020207");
 
-  gradient.addColorStop(
-    .55,
-    w.sky2
-  );
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,W,H);
 
-  gradient.addColorStop(
-    1,
-    "#020207"
-  );
+  /* prédios */
 
-  ctx.fillStyle =
-    gradient;
+  for(let i=0;i<28;i++){
 
-  ctx.fillRect(
-    0,
-    0,
-    W,
-    H
-  );
-
-  drawStars();
-
-  drawMoon();
-
-  drawBuildings();
-
-  drawWorldDetails();
-}
-
-
-function drawStars(){
-
-  const wi =
-    worldIndex(
-      phase
-    );
-
-  if(
-    wi !== 2 &&
-    wi !== 5 &&
-    wi !== 8 &&
-    wi !== 9
-  ){
-    return;
-  }
-
-  for(
-    let i = 0;
-    i < 40;
-    i++
-  ){
+    const bw = 25 + (i%5)*12;
+    const bh = 50 + ((i*37)%130);
 
     const x =
-      (i * 83) % W;
-
-    const y =
-      20 +
-      (i * 47) %
-      (H * .35);
-
-    const alpha =
-      .25 +
-      .25 *
-      Math.sin(
-        performance.now()/500 +
-        i
-      );
+      (i*97)%W;
 
     ctx.fillStyle =
-      "rgba(255,255,255," +
-      alpha +
-      ")";
+      "rgba(5,8,25,.8)";
 
     ctx.fillRect(
       x,
-      y,
-      2,
-      2
+      H*.38-bh,
+      bw,
+      bh
     );
+
+    ctx.fillStyle = w[4];
+
+    for(let y=H*.38-bh+10;y<H*.38-5;y+=15){
+
+      if((i+y)%3===0){
+
+        ctx.globalAlpha=.25;
+
+        ctx.fillRect(
+          x+5,
+          y,
+          4,
+          5
+        );
+
+        ctx.globalAlpha=1;
+      }
+    }
   }
+
+  /* horizonte */
+
+  ctx.strokeStyle = w[4];
+  ctx.globalAlpha=.35;
+  ctx.lineWidth=2;
+
+  ctx.beginPath();
+  ctx.moveTo(0,H*.38);
+  ctx.lineTo(W,H*.38);
+  ctx.stroke();
+
+  ctx.globalAlpha=1;
 }
 
 
-function drawMoon(){
+/* =========================
+   ESTRADA
+========================= */
 
-  const wi =
-    worldIndex(
-      phase
-    );
+function drawRoad(){
 
-  let color =
-    "rgba(140,230,255,.12)";
+  const w = world();
 
-  if(wi === 3){
+  const topY = roadY(0);
+  const bottomY = roadY(1);
 
-    color =
-      "rgba(255,170,40,.18)";
+  const topHalf = roadHalf(0);
+  const bottomHalf = roadHalf(1);
 
+  ctx.fillStyle = w[3];
+
+  ctx.beginPath();
+
+  ctx.moveTo(W/2-topHalf,topY);
+  ctx.lineTo(W/2+topHalf,topY);
+  ctx.lineTo(W/2+bottomHalf,bottomY);
+  ctx.lineTo(W/2-bottomHalf,bottomY);
+
+  ctx.closePath();
+  ctx.fill();
+
+  /* bordas */
+
+  ctx.strokeStyle = w[4];
+  ctx.lineWidth = 2;
+  ctx.globalAlpha=.5;
+
+  ctx.beginPath();
+  ctx.moveTo(W/2-topHalf,topY);
+  ctx.lineTo(W/2-bottomHalf,bottomY);
+  ctx.moveTo(W/2+topHalf,topY);
+  ctx.lineTo(W/2+bottomHalf,bottomY);
+  ctx.stroke();
+
+  /* divisórias */
+
+  for(let l=0;l<2;l++){
+
+    const laneDivider =
+      l===0 ? -.33 : .33;
+
+    ctx.beginPath();
+
+    for(let z=.03;z<1;z+=.08){
+
+      const y = roadY(z);
+      const x =
+        W/2 +
+        laneDivider*roadHalf(z);
+
+      if(z===.03) ctx.moveTo(x,y);
+      else ctx.lineTo(x,y);
+    }
+
+    ctx.stroke();
   }
 
-  if(wi === 5){
+  ctx.globalAlpha=1;
+}
 
-    color =
-      "rgba(255,50,40,.18)";
 
+/* =========================
+   PERSONAGEM
+========================= */
+
+function drawRunner(){
+
+  const baseY = H*.84;
+
+  let jumpOffset = 0;
+
+  if(jumping){
+
+    const t =
+      Math.min(1,jumpTime/.85);
+
+    jumpOffset =
+      -Math.sin(t*Math.PI)*H*.16;
   }
 
-  if(wi === 9){
+  const x =
+    laneX(laneVisual,.9);
 
-    color =
-      "rgba(210,70,255,.18)";
+  const y =
+    baseY+jumpOffset;
 
-  }
+  const w = world();
 
-  ctx.fillStyle =
-    color;
+  /* sombra */
+
+  ctx.globalAlpha=.35;
+  ctx.fillStyle="#000";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    x,
+    baseY+10,
+    30,
+    8,
+    0,0,Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.globalAlpha=1;
+
+  /* pernas */
+
+  ctx.strokeStyle="#dffcff";
+  ctx.lineWidth=7;
+  ctx.lineCap="round";
+
+  const runningMove =
+    Math.sin(performance.now()/90)*8;
+
+  ctx.beginPath();
+
+  ctx.moveTo(x-7,y+25);
+  ctx.lineTo(x-12+runningMove,y+58);
+
+  ctx.moveTo(x+7,y+25);
+  ctx.lineTo(x+12-runningMove,y+58);
+
+  ctx.stroke();
+
+  /* corpo */
+
+  ctx.fillStyle="#111827";
+
+  ctx.beginPath();
+
+  ctx.roundRect(
+    x-17,
+    y-10,
+    34,
+    42,
+    10
+  );
+
+  ctx.fill();
+
+  /* neon */
+
+  ctx.strokeStyle=w[4];
+  ctx.lineWidth=3;
+
+  ctx.stroke();
+
+  /* braços */
+
+  ctx.strokeStyle="#dffcff";
+  ctx.lineWidth=6;
+
+  ctx.beginPath();
+
+  ctx.moveTo(x-14,y);
+  ctx.lineTo(x-30-runningMove*.4,y+25);
+
+  ctx.moveTo(x+14,y);
+  ctx.lineTo(x+30+runningMove*.4,y+25);
+
+  ctx.stroke();
+
+  /* cabeça */
+
+  ctx.fillStyle="#dffcff";
 
   ctx.beginPath();
 
   ctx.arc(
-    W * .78,
-    H * .16,
-    38,
+    x,
+    y-28,
+    13,
     0,
-    Math.PI * 2
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.fillStyle=w[4];
+
+  ctx.beginPath();
+
+  ctx.arc(
+    x,
+    y-31,
+    11,
+    Math.PI,
+    Math.PI*2
   );
 
   ctx.fill();
 }
 
 
-function drawBuildings(){
-
-  const base =
-    H * .48;
-
-  const wi =
-    worldIndex(
-      phase
-    );
-
-  for(
-    let i = 0;
-    i < 22;
-    i++
-  ){
-
-    const width =
-      W / 22 + 5;
-
-    const x =
-      i * width;
-
-    let height =
-      45 +
-      (
-        i * 41 +
-        wi * 27
-      ) % 145;
-
-    if(wi === 6){
-
-      height += 35;
-
-    }
-
-    ctx.fillStyle =
-      "rgba(5,8,25,.94)";
-
-    ctx.fillRect(
-      x,
-      base - height,
-      width - 2,
-      height
-    );
-
-    for(
-      let y =
-        base - height + 10;
-
-      y < base - 8;
-
-      y += 15
-    ){
-
-      if(
-        (
-          i +
-          Math.floor(y) +
-          phase
-        ) % 4 < 1
-      ){
-
-        ctx.fillStyle =
-          "rgba(0,220,255,.24)";
-
-        ctx.fillRect(
-          x + 4,
-          y,
-          4,
-          6
-        );
-      }
-    }
-  }
-}
-
-
-function drawWorldDetails(){
-
-  const wi =
-    worldIndex(
-      phase
-    );
-
-  const glow =
-    world().glow;
-
-  ctx.save();
-
-  if(wi === 1){
-
-    for(
-      let i = 0;
-      i < 5;
-      i++
-    ){
-
-      const x =
-        W *
-        (.1 + i * .2);
-
-      ctx.strokeStyle =
-        "rgba(40,230,255,.18)";
-
-      ctx.lineWidth = 2;
-
-      ctx.beginPath();
-
-      ctx.arc(
-        x,
-        H * .30,
-        25 + i * 8,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.stroke();
-    }
-  }
-
-
-  if(wi === 3){
-
-    for(
-      let i = 0;
-      i < 8;
-      i++
-    ){
-
-      ctx.fillStyle =
-        "rgba(255,140,20,.18)";
-
-      ctx.fillRect(
-        W * (i / 7),
-        H * .31,
-        4,
-        80
-      );
-    }
-  }
-
-
-  if(wi === 5){
-
-    for(
-      let i = 0;
-      i < 7;
-      i++
-    ){
-
-      ctx.fillStyle =
-        "rgba(255,40,40,.15)";
-
-      ctx.fillRect(
-        i * W / 7,
-        H * .34,
-        3,
-        H * .12
-      );
-    }
-  }
-
-
-  if(wi === 6){
-
-    ctx.strokeStyle =
-      "rgba(160,110,255,.18)";
-
-    ctx.lineWidth = 8;
-
-    ctx.beginPath();
-
-    ctx.arc(
-      W / 2,
-      H * .40,
-      W * .30,
-      Math.PI,
-      Math.PI * 2
-    );
-
-    ctx.stroke();
-  }
-
-
-  if(wi === 7){
-
-    for(
-      let i = 0;
-      i < 5;
-      i++
-    ){
-
-      ctx.strokeStyle =
-        "rgba(60,220,255,.22)";
-
-      ctx.lineWidth = 2;
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-        i * W / 4,
-        H * .46
-      );
-
-      ctx.lineTo(
-        i * W / 4 +
-        W * .12,
-        H * .25
-      );
-
-      ctx.stroke();
-    }
-  }
-
-
-  if(wi === 8){
-
-    ctx.fillStyle =
-      "rgba(255,255,255,.08)";
-
-    ctx.fillRect(
-      0,
-      H * .47,
-      W,
-      2
-    );
-  }
-
-
-  if(wi === 9){
-
-    ctx.strokeStyle =
-      glow;
-
-    ctx.globalAlpha =
-      .12;
-
-    ctx.lineWidth = 2;
-
-    for(
-      let i = 0;
-      i < 9;
-      i++
-    ){
-
-      ctx.beginPath();
-
-      ctx.arc(
-        W / 2,
-        H * .40,
-        50 + i * 38,
-        0,
-        Math.PI * 2
-      );
-
-      ctx.stroke();
-    }
-  }
-
-  ctx.restore();
-}
-
-
-/* =========================================================
-   ESTRADA
-========================================================= */
-
-function drawRoad(){
-
-  const w =
-    world();
-
-  const topY =
-    H * .39;
-
-  const bottomY =
-    H * 1.05;
-
-  const topHalf =
-    W * .07;
-
-  const bottomHalf =
-    W * .49;
-
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    W/2 - topHalf,
-    topY
-  );
-
-  ctx.lineTo(
-    W/2 + topHalf,
-    topY
-  );
-
-  ctx.lineTo(
-    W/2 + bottomHalf,
-    bottomY
-  );
-
-  ctx.lineTo(
-    W/2 - bottomHalf,
-    bottomY
-  );
-
-  ctx.closePath();
-
-
-  const gradient =
-    ctx.createLinearGradient(
-      0,
-      topY,
-      0,
-      H
-    );
-
-  gradient.addColorStop(
-    0,
-    w.road
-  );
-
-  gradient.addColorStop(
-    1,
-    "#05070d"
-  );
-
-  ctx.fillStyle =
-    gradient;
-
-  ctx.fill();
-
-
-  ctx.strokeStyle =
-    w.glow;
-
-  ctx.globalAlpha =
-    .55;
-
-  ctx.lineWidth = 3;
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    W/2 - topHalf,
-    topY
-  );
-
-  ctx.lineTo(
-    W/2 - bottomHalf,
-    bottomY
-  );
-
-  ctx.moveTo(
-    W/2 + topHalf,
-    topY
-  );
-
-  ctx.lineTo(
-    W/2 + bottomHalf,
-    bottomY
-  );
-
-  ctx.stroke();
-
-  ctx.globalAlpha = 1;
-
-
-  for(
-    let l = 1;
-    l <= 2;
-    l++
-  ){
-
-    const tx =
-      W/2 +
-      (l - 1.5) *
-      topHalf *
-      .85;
-
-    const bx =
-      W/2 +
-      (l - 1.5) *
-      bottomHalf *
-      .85;
-
-    ctx.strokeStyle =
-      "rgba(130,180,220,.22)";
-
-    ctx.lineWidth = 2;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      tx,
-      topY
-    );
-
-    ctx.lineTo(
-      bx,
-      bottomY
-    );
-
-    ctx.stroke();
-  }
-
-
-  const time =
-    performance.now() / 1000;
-
-  for(
-    let i = 0;
-    i < 15;
-    i++
-  ){
-
-    const z =
-      (
-        i / 15 +
-        time * speed * .34
-      ) % 1;
-
-    const y =
-      roadY(z);
-
-    const height =
-      3 + z * 9;
-
-    ctx.fillStyle =
-      w.glow;
-
-    ctx.globalAlpha =
-      .04 + z * .18;
-
-    ctx.fillRect(
-      W/2 - roadHalf(z),
-      y,
-      roadHalf(z) * 2,
-      height
-    );
-
-    ctx.globalAlpha = 1;
-  }
-}
-
-
-/* =========================================================
+/* =========================
    OBJETOS
-========================================================= */
-
-function objectScale(z){
-
-  return .25 +
-    z * 1.05;
-}
-
+========================= */
 
 function canSpawn(){
 
-  for(
-    const object of objects
-  ){
+  for(const o of objects){
 
-    if(
-      object.type !== "coin" &&
-      object.z > .50
-    ){
-
+    if(o.z > .48 && o.type==="obstacle"){
       return false;
     }
   }
@@ -1665,801 +908,560 @@ function canSpawn(){
   return true;
 }
 
+function spawn(){
 
-function spawnObstacle(){
+  if(!canSpawn()) return;
 
-  if(!canSpawn()){
-    return;
-  }
+  const amount =
+    phase >= 15 && Math.random()<.32 ? 2 : 1;
 
+  const used=[];
 
-  let amount = 1;
+  for(let i=0;i<amount;i++){
 
+    let l;
 
-  /*
-    Fases iniciais:
-    sempre uma pista livre.
+    do{
+      l=Math.floor(Math.random()*3);
+    }while(used.includes(l));
 
-    Fases intermediárias:
-    dois obstáculos às vezes.
-
-    Fases finais:
-    dois obstáculos com
-    bastante frequência.
-  */
-
-  if(
-    phase >= 8 &&
-    phase <= 15 &&
-    Math.random() < .18
-  ){
-
-    amount = 2;
-
-  }
-
-
-  if(
-    phase >= 16 &&
-    phase <= 30 &&
-    Math.random() < .32
-  ){
-
-    amount = 2;
-
-  }
-
-
-  if(
-    phase >= 31 &&
-    Math.random() < .44
-  ){
-
-    amount = 2;
-
-  }
-
-
-  const lanes =
-    [0,1,2]
-      .sort(
-        () =>
-          Math.random() - .5
-      );
-
-
-  /*
-    Nunca ocupa as 3 pistas.
-  */
-
-  for(
-    let i = 0;
-    i < amount;
-    i++
-  ){
-
-    const selected =
-      lanes[i];
-
-    let type =
-      "block";
-
-
-    if(
-      phase >= 7 &&
-      Math.random() < .28
-    ){
-
-      type =
-        "bar";
-
-    }
-
+    used.push(l);
 
     objects.push({
-
-      lane:selected,
-
+      type:"obstacle",
+      lane:l,
       z:0,
-
-      type:type,
-
-      passed:false,
-
-      dead:false
-
+      kind:
+        Math.random()<.25 ? "low":"block"
     });
   }
 
+  /* moedas */
 
-  /*
-    Moedas ficam em uma pista
-    que pode ser alcançada.
-  */
+  if(Math.random()<.75){
 
-  if(
-    Math.random() < .68
-  ){
+    const l =
+      Math.floor(Math.random()*3);
 
-    let coinLane =
-      lanes[
-        amount
-      ];
-
-    if(
-      coinLane === undefined
-    ){
-
-      coinLane =
-        Math.floor(
-          Math.random() * 3
-        );
-    }
-
-
-    for(
-      let i = 0;
-      i < 3;
-      i++
-    ){
+    for(let i=0;i<4;i++){
 
       objects.push({
-
-        lane:coinLane,
-
-        z:
-          -.12 -
-          i * .14,
-
         type:"coin",
-
-        passed:false,
-
-        dead:false
-
+        lane:l,
+        z:-i*.10
       });
     }
   }
 }
 
 
-/* =========================================================
-   CONTROLES
-========================================================= */
+/* =========================
+   DESENHO OBJETOS
+========================= */
 
-function move(direction){
+function drawObjects(){
 
-  if(!running){
-    return;
-  }
+  const w = world();
 
-  lane += direction;
+  for(const o of objects){
 
-  if(lane < 0){
-    lane = 0;
-  }
+    if(o.z<0 || o.z>1.2) continue;
 
-  if(lane > 2){
-    lane = 2;
-  }
-}
+    const x =
+      laneX(o.lane,o.z);
 
+    const y =
+      roadY(o.z);
 
-function jump(){
+    const s =
+      .35+o.z*1.7;
 
-  if(!running){
-    return;
-  }
+    if(o.type==="coin"){
 
-  if(jumping){
-    return;
-  }
+      ctx.fillStyle="#ffd83d";
+      ctx.strokeStyle="#fff4a0";
+      ctx.lineWidth=2;
 
-  if(sliding){
-    return;
-  }
+      ctx.beginPath();
 
-  jumping = true;
-
-  jumpTime = 0;
-}
-
-
-function slide(){
-
-  if(!running){
-    return;
-  }
-
-  if(jumping){
-    return;
-  }
-
-  if(sliding){
-    return;
-  }
-
-  sliding = true;
-
-  slideTimer = .48;
-}
-
-
-/* =========================================================
-   COLISÃO
-========================================================= */
-
-function collision(
-  object
-){
-
-  if(
-    object.type === "coin"
-  ){
-
-    return false;
-  }
-
-
-  if(
-    Math.abs(
-      object.z - 1
-    ) > .12
-  ){
-
-    return false;
-  }
-
-
-  if(
-    object.lane !== lane
-  ){
-
-    return false;
-  }
-
-
-  /*
-    Pulo evita obstáculos.
-  */
-
-  if(jumping){
-
-    return false;
-  }
-
-
-  /*
-    Slide evita barras.
-  */
-
-  if(
-    object.type === "bar" &&
-    sliding
-  ){
-
-    return false;
-  }
-
-
-  return true;
-}
-
-
-function collectCoin(
-  object
-){
-
-  if(
-    object.type !== "coin"
-  ){
-
-    return;
-  }
-
-
-  if(
-    Math.abs(
-      object.z - 1
-    ) < .13 &&
-    object.lane === lane
-  ){
-
-    object.dead = true;
-
-    coins++;
-
-    score += 100;
-
-    createParticles(
-      laneX(
-        lane,
-        1
-      ),
-      roadY(1) - 35
-    );
-  }
-}
-
-
-/* =========================================================
-   PARTÍCULAS
-========================================================= */
-
-function createParticles(
-  x,
-  y
-){
-
-  for(
-    let i = 0;
-    i < 8;
-    i++
-  ){
-
-    particles.push({
-
-      x:x,
-
-      y:y,
-
-      vx:
-        (Math.random()-.5) *
-        100,
-
-      vy:
-        (Math.random()-.5) *
-        100,
-
-      life:.5
-
-    });
-  }
-}
-
-
-function updateParticles(
-  dt
-){
-
-  for(
-    const p of particles
-  ){
-
-    p.x +=
-      p.vx * dt;
-
-    p.y +=
-      p.vy * dt;
-
-    p.life -=
-      dt;
-  }
-
-
-  particles =
-    particles.filter(
-      p =>
-        p.life > 0
-    );
-}
-
-
-function drawParticles(){
-
-  for(
-    const p of particles
-  ){
-
-    ctx.globalAlpha =
-      Math.max(
+      ctx.arc(
+        x,
+        y-25*s,
+        8*s,
         0,
-        p.life * 2
+        Math.PI*2
       );
 
-    ctx.fillStyle =
-      "#00eaff";
+      ctx.fill();
+      ctx.stroke();
 
-    ctx.fillRect(
-      p.x,
-      p.y,
-      3,
-      3
-    );
+    }else{
+
+      const width =
+        32*s;
+
+      const height =
+        o.kind==="low"
+          ? 18*s
+          : 42*s;
+
+      ctx.fillStyle=w[5];
+
+      ctx.shadowBlur=15;
+      ctx.shadowColor=w[5];
+
+      ctx.fillRect(
+        x-width/2,
+        y-height,
+        width,
+        height
+      );
+
+      ctx.shadowBlur=0;
+
+      ctx.strokeStyle=w[4];
+      ctx.lineWidth=2;
+
+      ctx.strokeRect(
+        x-width/2,
+        y-height,
+        width,
+        height
+      );
+    }
   }
-
-  ctx.globalAlpha = 1;
 }
 
 
-/* =========================================================
-   UPDATE
-========================================================= */
+/* =========================
+   COLISÃO
+========================= */
+
+function collision(){
+
+  const playerX =
+    laneX(lane,.9);
+
+  for(const o of objects){
+
+    if(o.type!=="obstacle") continue;
+
+    if(
+      o.z>.78 &&
+      o.z<1.04 &&
+      o.lane===lane
+    ){
+
+      const jumpingOver =
+        jumping &&
+        jumpTime>.18 &&
+        jumpTime<.72;
+
+      const slidingUnder =
+        sliding &&
+        o.kind==="low";
+
+      if(!jumpingOver && !slidingUnder){
+
+        gameOver();
+        return;
+      }
+    }
+  }
+}
+
+
+/* =========================
+   ATUALIZAÇÃO
+========================= */
 
 function update(dt){
 
-  /*
-    Movimento rápido entre pistas.
-  */
+  /* movimento das pistas */
 
   laneVisual +=
-    (
-      lane -
-      laneVisual
-    ) *
-    Math.min(
-      1,
-      dt * 25
-    );
+    (lane-laneVisual) *
+    Math.min(1,dt*24);
 
-
-  /*
-    Pulo.
-  */
+  /* salto */
 
   if(jumping){
 
     jumpTime += dt;
 
-    if(
-      jumpTime >= .72
-    ){
+    if(jumpTime>=.85){
 
-      jumping = false;
-
-      jumpTime = 0;
+      jumping=false;
+      jumpTime=0;
     }
   }
 
-
-  /*
-    Slide.
-  */
+  /* slide */
 
   if(sliding){
 
-    slideTimer -= dt;
+    slideTimer-=dt;
 
-    if(
-      slideTimer <= 0
-    ){
-
-      sliding = false;
+    if(slideTimer<=0){
+      sliding=false;
     }
   }
 
+  /* objetos */
 
-  /*
-    Obstáculos.
-  */
+  for(const o of objects){
 
-  spawnTimer += dt;
+    o.z +=
+      dt*(.34+speed*.85);
 
-
-  const gap =
-    spawnGap() /
-    Math.max(
-      .75,
-      speed
-    );
-
-
-  if(
-    spawnTimer >= gap
-  ){
-
-    spawnTimer = 0;
-
-    spawnObstacle();
   }
 
+  /* moedas */
 
-  const velocity =
-    speed *
-    dt *
-    .72;
+  for(let i=objects.length-1;i>=0;i--){
 
-
-  for(
-    const object of objects
-  ){
-
-    object.z +=
-      velocity;
-
-
-    collectCoin(
-      object
-    );
-
+    const o=objects[i];
 
     if(
-      collision(object)
+      o.type==="coin" &&
+      o.z>.78 &&
+      o.z<1.03 &&
+      o.lane===lane
     ){
 
-      gameOver();
+      coins++;
+      score+=35;
 
-      return;
+      objects.splice(i,1);
+      continue;
     }
 
-
-    if(
-      !object.passed &&
-      object.z > 1.05
-    ){
-
-      object.passed = true;
-
-      if(
-        object.type !== "coin"
-      ){
-
-        score += 35;
-      }
+    if(o.z>1.15){
+      objects.splice(i,1);
     }
   }
 
+  /* spawn */
 
-  objects =
-    objects.filter(
-      object =>
-        !object.dead &&
-        object.z < 1.2
-    );
+  spawnTimer-=dt;
 
+  if(spawnTimer<=0){
 
-  score +=
-    dt *
-    speed *
-    18;
+    spawn();
 
+    spawnTimer =
+      spawnGap() *
+      (.88+Math.random()*.24);
+  }
 
-  updateParticles(
-    dt
-  );
+  /* pontuação */
 
+  score += dt*(48+phase*2);
 
-  /*
-    Vitória.
-  */
+  if(score>=target){
 
-  if(
-    score >= target
-  ){
-
-    winPhase();
-
+    win();
     return;
   }
 
+  collision();
 
   updateHUD();
 }
 
 
-/* =========================================================
-   DESENHO DOS OBJETOS
-========================================================= */
+/* =========================
+   GAME OVER
+========================= */
 
-function drawObject(
-  object
-){
+function gameOver(){
 
-  const z =
-    Math.max(
-      0,
-      object.z
-    );
+  if(!running) return;
 
-  const x =
-    laneX(
-      object.lane,
-      z
-    );
+  const lostPhase=phase;
 
-  const y =
-    roadY(z);
+  running=false;
 
-  const s =
-    objectScale(z);
-
-  const w =
-    world();
-
+  hide("hud");
 
   /*
-    MOEDA
+    MORREU:
+    tudo volta para a fase 1
   */
 
-  if(
-    object.type === "coin"
-  ){
+  unlocked=1;
+  phase=1;
 
-    ctx.save();
+  document.getElementById("loseText").innerHTML =
+    "VOCÊ CAIU NA FASE " +
+    lostPhase +
+    "<br><br>" +
+    "Pontuação: " +
+    Math.floor(score) +
+    "<br>" +
+    "As fases foram bloqueadas novamente.";
 
-    ctx.translate(
-      x,
-      y - 28 * s
-    );
-
-    ctx.rotate(
-      performance.now() /
-      500
-    );
-
-    ctx.strokeStyle =
-      "#ffd84d";
-
-    ctx.lineWidth =
-      5 * s;
-
-    ctx.shadowBlur =
-      15 * s;
-
-    ctx.shadowColor =
-      "#ffd84d";
-
-    ctx.beginPath();
-
-    ctx.arc(
-      0,
-      0,
-      11 * s,
-      0,
-      Math.PI * 2
-    );
-
-    ctx.stroke();
-
-    ctx.restore();
-
-    return;
-  }
-
-
-  /*
-    OBSTÁCULO
-  */
-
-  const width =
-    object.type === "bar"
-      ? 72 * s
-      : 52 * s;
-
-
-  const height =
-    object.type === "bar"
-      ? 22 * s
-      : 62 * s;
-
-
-  const yy =
-    y - height;
-
-
-  ctx.save();
-
-
-  ctx.shadowBlur =
-    18 * s;
-
-  ctx.shadowColor =
-    w.obstacle;
-
-
-  const gradient =
-    ctx.createLinearGradient(
-      x - width/2,
-      yy,
-      x + width/2,
-      yy + height
-    );
-
-
-  gradient.addColorStop(
-    0,
-    w.obstacle
-  );
-
-
-  gradient.addColorStop(
-    1,
-    "#6c20c7"
-  );
-
-
-  ctx.fillStyle =
-    gradient;
-
-
-  ctx.fillRect(
-    x - width/2,
-    yy,
-    width,
-    height
-  );
-
-
-  ctx.shadowBlur = 0;
-
-
-  ctx.strokeStyle =
-    "rgba(255,255,255,.65)";
-
-  ctx.lineWidth =
-    2 * s;
-
-
-  ctx.strokeRect(
-    x - width/2,
-    yy,
-    width,
-    height
-  );
-
-
-  ctx.fillStyle =
-    "rgba(255,255,255,.25)";
-
-
-  if(
-    object.type === "block"
-  ){
-
-    ctx.fillRect(
-      x - width*.32,
-      yy + height*.2,
-      width*.64,
-      3*s
-    );
-
-    ctx.fillRect(
-      x - width*.32,
-      yy + height*.5,
-      width*.64,
-      3*s
-    );
-
-  }else{
-
-    ctx.fillRect(
-      x - width*.38,
-      yy + height*.35,
-      width*.76,
-      3*s
-    );
-  }
-
-
-  ctx.restore();
+  show("gameOver");
 }
 
 
-/* =========================================================
-   PERSONAGEM
-========================================================= */
+/* =========================
+   VITÓRIA
+========================= */
 
-function drawRunner(){
+function win(){
 
-  const x =
-    laneX(
-      laneVisual,
-      .98
+  if(!running) return;
+
+  running=false;
+
+  hide("hud");
+
+  if(phase<50){
+
+    unlocked =
+      Math.max(
+        unlocked,
+        phase+1
+      );
+  }
+
+  document.getElementById("winText").innerHTML =
+    "FASE " +
+    phase +
+    " • " +
+    world()[0] +
+    "<br><br>" +
+    "Pontuação: " +
+    Math.floor(score) +
+    "<br>" +
+    "Moedas: " +
+    coins +
+    "<br><br>" +
+    (
+      phase<50
+      ? "FASE " +
+        (phase+1) +
+        " DESBLOQUEADA!"
+      : "VOCÊ TERMINOU AS 50 FASES!"
     );
 
+  document.getElementById("next").textContent =
+    phase<50
+      ? "PRÓXIMA FASE"
+      : "JOGAR NOVAMENTE";
 
-  let y =
-    H * .82;
+  show("victory");
+}
 
 
-  /*
-    Altura do pulo.
-  */
+/* =========================
+   LOOP
+========================= */
 
-  if(jumping){
+function loop(now){
 
-    const jumpAmount =
-      Math.sin(
-        (
-          jumpTime /
-         
+  if(!running) return;
+
+  let dt =
+    (now-lastTime)/1000;
+
+  dt=Math.min(dt,.035);
+
+  lastTime=now;
+
+  update(dt);
+
+  draw();
+
+  if(running){
+
+    requestAnimationFrame(loop);
+  }
+}
+
+
+/* =========================
+   DESENHAR
+========================= */
+
+function draw(){
+
+  ctx.clearRect(0,0,W,H);
+
+  drawBackground();
+
+  drawRoad();
+
+  drawObjects();
+
+  drawRunner();
+}
+
+
+/* =========================
+   CONTROLES
+========================= */
+
+let touchX=0;
+let touchY=0;
+
+canvas.addEventListener(
+  "touchstart",
+  e=>{
+    if(!running) return;
+
+    const t=e.changedTouches[0];
+
+    touchX=t.clientX;
+    touchY=t.clientY;
+  },
+  {passive:true}
+);
+
+canvas.addEventListener(
+  "touchend",
+  e=>{
+
+    if(!running) return;
+
+    const t=e.changedTouches[0];
+
+    const dx=t.clientX-touchX;
+    const dy=t.clientY-touchY;
+
+    const ax=Math.abs(dx);
+    const ay=Math.abs(dy);
+
+    if(Math.max(ax,ay)<25) return;
+
+    if(ax>ay){
+
+      if(dx>0){
+
+        lane=Math.min(
+          2,
+          lane+1
+        );
+
+      }else{
+
+        lane=Math.max(
+          0,
+          lane-1
+        );
+      }
+
+    }else{
+
+      if(dy<0){
+
+        if(!jumping && !sliding){
+
+          jumping=true;
+          jumpTime=0;
+        }
+
+      }else{
+
+        if(!jumping){
+
+          sliding=true;
+          slideTimer=.65;
+        }
+      }
+    }
+  },
+  {passive:true}
+);
+
+
+/* =========================
+   BOTÕES
+========================= */
+
+document
+  .getElementById("play")
+  .addEventListener(
+    "click",
+    function(){
+      startGame(1);
+    }
+  );
+
+document
+  .getElementById("phases")
+  .addEventListener(
+    "click",
+    function(){
+      openPhases();
+    }
+  );
+
+document
+  .getElementById("backMenu")
+  .addEventListener(
+    "click",
+    function(){
+      menu();
+    }
+  );
+
+document
+  .getElementById("retry")
+  .addEventListener(
+    "click",
+    function(){
+      startGame(1);
+    }
+  );
+
+document
+  .getElementById("loseMenu")
+  .addEventListener(
+    "click",
+    function(){
+      menu();
+    }
+  );
+
+document
+  .getElementById("winMenu")
+  .addEventListener(
+    "click",
+    function(){
+      menu();
+    }
+  );
+
+document
+  .getElementById("next")
+  .addEventListener(
+    "click",
+    function(){
+
+      if(phase<50){
+
+        startGame(
+          phase+1
+        );
+
+      }else{
+
+        startGame(1);
+      }
+    }
+  );
+
+
+/* =========================
+   INÍCIO
+========================= */
+
+renderPhases();
+updateHUD();
+
+</script>
+
+</body>
+</html>
