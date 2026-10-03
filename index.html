@@ -2,23 +2,16 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
->
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Último Segundo</title>
 
 <style>
-
 *{
   box-sizing:border-box;
   -webkit-tap-highlight-color:transparent;
 }
 
-html,
-body{
+html,body{
   margin:0;
   width:100%;
   height:100%;
@@ -47,10 +40,10 @@ canvas{
   background:
     radial-gradient(
       circle at 50% 30%,
-      rgba(40,220,255,.10),
-      transparent 40%
+      rgba(40,220,255,.12),
+      transparent 42%
     ),
-    rgba(1,3,10,.86);
+    rgba(1,3,10,.88);
   backdrop-filter:blur(8px);
 }
 
@@ -68,8 +61,8 @@ canvas{
   background:
     linear-gradient(
       145deg,
-      rgba(7,17,38,.97),
-      rgba(2,7,19,.96)
+      rgba(7,17,38,.98),
+      rgba(2,7,19,.97)
     );
   box-shadow:
     0 0 60px rgba(20,180,255,.15),
@@ -112,6 +105,10 @@ button{
   touch-action:manipulation;
 }
 
+button:active{
+  transform:scale(.97);
+}
+
 .mainBtn{
   width:100%;
   padding:17px;
@@ -136,10 +133,6 @@ button{
   color:#ccecff;
   background:rgba(14,31,57,.86);
   border:1px solid rgba(94,234,255,.20);
-}
-
-button:active{
-  transform:scale(.97);
 }
 
 .bestTitle{
@@ -202,13 +195,12 @@ button:active{
 }
 
 .phaseBtn.locked{
-  opacity:.32;
+  opacity:.3;
 }
 
 .phaseBtn.selected{
   border-color:#5eeaff;
-  box-shadow:
-    0 0 15px rgba(94,234,255,.18);
+  box-shadow:0 0 15px rgba(94,234,255,.22);
 }
 
 .lock{
@@ -282,11 +274,7 @@ button:active{
 #progress{
   width:0%;
   height:100%;
-  background:linear-gradient(
-    90deg,
-    #16ddff,
-    #8b3cff
-  );
+  background:linear-gradient(90deg,#16ddff,#8b3cff);
   box-shadow:0 0 12px #16ddff;
 }
 
@@ -335,25 +323,11 @@ button:active{
 }
 
 @media(max-width:380px){
-
-  h1{
-    font-size:35px;
-  }
-
-  #score{
-    font-size:36px;
-  }
-
-  .phaseGrid{
-    gap:6px;
-  }
-
-  .phaseBtn{
-    min-height:74px;
-  }
-
+  h1{font-size:35px}
+  #score{font-size:36px}
+  .phaseGrid{gap:6px}
+  .phaseBtn{min-height:74px}
 }
-
 </style>
 </head>
 
@@ -361,49 +335,32 @@ button:active{
 
 <canvas id="game"></canvas>
 
-
 <div id="hud">
-
   <div id="score">0</div>
-
   <div id="coins">● 0</div>
 
-  <div id="target">
-    META 1200
-  </div>
+  <div id="target">META 1200</div>
 
   <div id="progressBox">
     <div id="progress"></div>
   </div>
 
-  <div id="speed">
-    VELOCIDADE 1.0x
-  </div>
+  <div id="speed">VELOCIDADE 1.0x</div>
+  <div id="phaseHud">FASE 1</div>
 
-  <div id="phaseHud">
-    FASE 1
-  </div>
-
-  <button id="sound">
-    🔊 SOM
-  </button>
+  <button id="sound">🔊 SOM</button>
 
   <div id="hint">
     ← → FAIXA &nbsp; • &nbsp; ↑ PULAR &nbsp; • &nbsp; ↓ DESLIZAR
   </div>
-
 </div>
-
 
 <!-- MENU -->
 
 <div id="menu" class="screen show">
-
   <div class="card">
 
-    <div class="logo">
-      RUNNER EXPERIENCE
-    </div>
+    <div class="logo">RUNNER EXPERIENCE</div>
 
     <h1>
       ÚLTIMO<br>SEGUNDO
@@ -413,17 +370,11 @@ button:active{
       CORRA • DESVIE • SOBREVIVA
     </div>
 
-    <button
-      id="play"
-      class="mainBtn"
-    >
+    <button id="play" class="mainBtn">
       ▶ JOGAR
     </button>
 
-    <button
-      id="phases"
-      class="secondaryBtn"
-    >
+    <button id="phases" class="secondaryBtn">
       🎮 50 FASES
     </button>
 
@@ -431,24 +382,17 @@ button:active{
       MELHOR PONTUAÇÃO
     </div>
 
-    <div id="menuBest">
-      0
-    </div>
+    <div id="menuBest">0</div>
 
   </div>
-
 </div>
-
 
 <!-- FASES -->
 
 <div id="phaseMenu" class="screen">
-
   <div class="card">
 
-    <div class="logo">
-      PROGRESSÃO
-    </div>
+    <div class="logo">PROGRESSÃO</div>
 
     <h1 style="font-size:31px">
       50 FASES
@@ -458,183 +402,102 @@ button:active{
       Cada fase aumenta a velocidade e a dificuldade.
     </div>
 
-    <div
-      id="phaseGrid"
-      class="phaseGrid"
-    ></div>
+    <div id="phaseGrid" class="phaseGrid"></div>
 
-    <button
-      id="backMenu"
-      class="secondaryBtn"
-    >
+    <button id="backMenu" class="secondaryBtn">
       ← VOLTAR
     </button>
 
   </div>
-
 </div>
-
 
 <!-- GAME OVER -->
 
 <div id="gameover" class="screen">
-
   <div class="card">
 
     <div class="resultTitle">
       CORRIDA ENCERRADA
     </div>
 
-    <h1>
-      FIM DE JOGO
-    </h1>
+    <h1>FIM DE JOGO</h1>
 
-    <div
-      id="finalStats"
-      class="resultStats"
-    >
+    <div id="finalStats" class="resultStats">
       Pontuação: 0
     </div>
 
-    <button
-      id="again"
-      class="mainBtn"
-    >
+    <button id="again" class="mainBtn">
       🔄 TENTAR NOVAMENTE
     </button>
 
-    <button
-      id="overMenu"
-      class="secondaryBtn"
-    >
+    <button id="overMenu" class="secondaryBtn">
       🏠 MENU
     </button>
 
   </div>
-
 </div>
-
 
 <!-- VITÓRIA -->
 
 <div id="victory" class="screen">
-
   <div class="card">
 
     <div class="resultTitle">
       FASE CONCLUÍDA
     </div>
 
-    <h1>
-      🏆 VITÓRIA
-    </h1>
+    <h1>🏆 VITÓRIA</h1>
 
-    <div
-      id="victoryStats"
-      class="resultStats"
-    ></div>
+    <div id="victoryStats" class="resultStats"></div>
 
-    <button
-      id="nextPhase"
-      class="mainBtn"
-    >
+    <button id="nextPhase" class="mainBtn">
       🚀 PRÓXIMA FASE
     </button>
 
-    <button
-      id="victoryMenu"
-      class="secondaryBtn"
-    >
+    <button id="victoryMenu" class="secondaryBtn">
       🏠 MENU
     </button>
 
   </div>
-
 </div>
 
-
 <script>
-
 (function(){
 
 "use strict";
-
 
 /* =========================================================
    ELEMENTOS
 ========================================================= */
 
-var canvas=
-  document.getElementById("game");
+var canvas=document.getElementById("game");
+var ctx=canvas.getContext("2d");
 
-var ctx=
-  canvas.getContext("2d");
+var menu=document.getElementById("menu");
+var phaseMenu=document.getElementById("phaseMenu");
+var gameover=document.getElementById("gameover");
+var victory=document.getElementById("victory");
 
-var menu=
-  document.getElementById("menu");
+var play=document.getElementById("play");
+var phases=document.getElementById("phases");
+var again=document.getElementById("again");
+var backMenu=document.getElementById("backMenu");
+var overMenu=document.getElementById("overMenu");
+var victoryMenu=document.getElementById("victoryMenu");
+var nextPhase=document.getElementById("nextPhase");
+var soundButton=document.getElementById("sound");
+var phaseGrid=document.getElementById("phaseGrid");
 
-var phaseMenu=
-  document.getElementById("phaseMenu");
+var scoreEl=document.getElementById("score");
+var coinsEl=document.getElementById("coins");
+var targetEl=document.getElementById("target");
+var progressEl=document.getElementById("progress");
+var speedEl=document.getElementById("speed");
+var phaseEl=document.getElementById("phaseHud");
+var menuBest=document.getElementById("menuBest");
 
-var gameover=
-  document.getElementById("gameover");
-
-var victory=
-  document.getElementById("victory");
-
-var play=
-  document.getElementById("play");
-
-var phases=
-  document.getElementById("phases");
-
-var again=
-  document.getElementById("again");
-
-var backMenu=
-  document.getElementById("backMenu");
-
-var overMenu=
-  document.getElementById("overMenu");
-
-var victoryMenu=
-  document.getElementById("victoryMenu");
-
-var nextPhase=
-  document.getElementById("nextPhase");
-
-var soundButton=
-  document.getElementById("sound");
-
-var phaseGrid=
-  document.getElementById("phaseGrid");
-
-var scoreEl=
-  document.getElementById("score");
-
-var coinsEl=
-  document.getElementById("coins");
-
-var targetEl=
-  document.getElementById("target");
-
-var progressEl=
-  document.getElementById("progress");
-
-var speedEl=
-  document.getElementById("speed");
-
-var phaseEl=
-  document.getElementById("phaseHud");
-
-var menuBest=
-  document.getElementById("menuBest");
-
-var finalStats=
-  document.getElementById("finalStats");
-
-var victoryStats=
-  document.getElementById("victoryStats");
+var finalStats=document.getElementById("finalStats");
+var victoryStats=document.getElementById("victoryStats");
 
 
 /* =========================================================
@@ -647,46 +510,21 @@ var dpr=1;
 
 function resize(){
 
-  dpr=
-    Math.min(
-      window.devicePixelRatio || 1,
-      2
-    );
+  dpr=Math.min(window.devicePixelRatio||1,1.5);
 
-  W=
-    window.innerWidth;
+  W=window.innerWidth;
+  H=window.innerHeight;
 
-  H=
-    window.innerHeight;
+  canvas.width=Math.floor(W*dpr);
+  canvas.height=Math.floor(H*dpr);
 
-  canvas.width=
-    Math.floor(W*dpr);
+  canvas.style.width=W+"px";
+  canvas.style.height=H+"px";
 
-  canvas.height=
-    Math.floor(H*dpr);
-
-  canvas.style.width=
-    W+"px";
-
-  canvas.style.height=
-    H+"px";
-
-  ctx.setTransform(
-    dpr,
-    0,
-    0,
-    dpr,
-    0,
-    0
-  );
-
+  ctx.setTransform(dpr,0,0,dpr,0,0);
 }
 
-window.addEventListener(
-  "resize",
-  resize
-);
-
+window.addEventListener("resize",resize);
 resize();
 
 
@@ -695,85 +533,49 @@ resize();
 ========================================================= */
 
 var themes=[
-
   ["CIDADE NEON","#020617","#092b4a","#20dcff"],
-
   ["CENTRO FUTURISTA","#09021c","#24104a","#b45cff"],
-
   ["VIA NOTURNA","#020611","#102e3a","#35ffd2"],
-
   ["ZONA INDUSTRIAL","#120504","#4a1c08","#ff7b2f"],
-
   ["CYBER CITY","#10001c","#30104f","#ff35df"],
-
   ["DISTRITO VERMELHO","#180208","#52101d","#ff304f"],
-
   ["MEGA TÚNEL","#02030b","#16264c","#477cff"],
-
   ["CIDADE AÉREA","#03121a","#07506a","#29f7ff"],
-
   ["ZONA ZERO","#100008","#360015","#ff168f"],
-
   ["ÚLTIMO SEGUNDO","#05000f","#26005c","#a855ff"]
-
 ];
-
 
 var phaseData={};
 
+for(var p=1;p<=50;p++){
 
-for(
-  var phase=1;
-  phase<=50;
-  phase++
-){
+  var theme=themes[(p-1)%themes.length];
 
-  var theme=
-    themes[
-      (phase-1)%themes.length
-    ];
+  var cycle=Math.floor((p-1)/10);
 
-  var cycle=
-    Math.floor(
-      (phase-1)/10
-    );
+  var target=Math.floor(
+    1200+
+    (p-1)*560+
+    Math.pow(p-1,1.22)*12
+  );
 
-  var target=
-    Math.floor(
-      1200+
-      (phase-1)*560+
-      Math.pow(
-        phase-1,
-        1.22
-      )*12
-    );
+  var maxSpeed=Math.min(
+    1.95,
+    .76+(p-1)*.024
+  );
 
-  var maxSpeed=
-    Math.min(
-      1.95,
-      .76+
-      (phase-1)*.024
-    );
-
-  phaseData[phase]={
-
-    name:
-      phase<=10
-      ? theme[0]
-      : theme[0]+" "+(cycle+1),
+  phaseData[p]={
+    name:p<=10
+      ?theme[0]
+      :theme[0]+" "+(cycle+1),
 
     target:target,
-
     maxSpeed:maxSpeed,
 
     sky1:theme[1],
-
     sky2:theme[2],
-
     accent:theme[3]
-
   };
-
 }
 
 
@@ -781,56 +583,26 @@ for(
    PROGRESSÃO
 ========================================================= */
 
-var currentPhase=
-  Number(
-    localStorage.getItem(
-      "ultimoSegundoPhase"
-    ) || 1
-  );
+var currentPhase=Number(
+  localStorage.getItem("ultimoSegundoPhase")||1
+);
 
-var unlockedPhase=
-  Number(
-    localStorage.getItem(
-      "ultimoSegundoUnlocked"
-    ) || 1
-  );
+var unlockedPhase=Number(
+  localStorage.getItem("ultimoSegundoUnlocked")||1
+);
 
-if(
-  !Number.isFinite(currentPhase)
-){
-  currentPhase=1;
-}
+var best=Number(
+  localStorage.getItem("ultimoSegundoBest")||0
+);
 
-if(
-  !Number.isFinite(unlockedPhase)
-){
-  unlockedPhase=1;
-}
+if(!Number.isFinite(currentPhase))currentPhase=1;
+if(!Number.isFinite(unlockedPhase))unlockedPhase=1;
 
-currentPhase=
-  Math.max(
-    1,
-    Math.min(
-      50,
-      currentPhase
-    )
-  );
+currentPhase=Math.max(1,Math.min(50,currentPhase));
+unlockedPhase=Math.max(1,Math.min(50,unlockedPhase));
 
-unlockedPhase=
-  Math.max(
-    1,
-    Math.min(
-      50,
-      unlockedPhase
-    )
-  );
-
-if(
-  currentPhase>
-  unlockedPhase
-){
-  currentPhase=
-    unlockedPhase;
+if(currentPhase>unlockedPhase){
+  currentPhase=unlockedPhase;
 }
 
 
@@ -841,210 +613,98 @@ if(
 var running=false;
 
 var last=0;
-
-var gameTime=0;
-
 var score=0;
-
 var coins=0;
 
 var speed=.55;
 
 var lane=1;
-
 var targetLane=1;
-
 var laneVisual=1;
 
 var jumpTime=0;
-
 var slideTime=0;
 
 var spawnTimer=0;
-
 var coinTimer=0;
 
 var objects=[];
-
 var particles=[];
 
 var shake=0;
 
 var combo=1;
-
 var comboTimer=0;
-
-var best=
-  Number(
-    localStorage.getItem(
-      "ultimoSegundoBest"
-    ) || 0
-  );
 
 
 /* =========================================================
-   ÁUDIO LIMPO
+   ÁUDIO
 ========================================================= */
 
 var audioCtx=null;
-
 var master=null;
-
-var engine1=null;
-
-var engine2=null;
-
-var engineGain=null;
-
 var soundOn=true;
-
 
 function initAudio(){
 
   try{
 
     var AC=
-      window.AudioContext ||
+      window.AudioContext||
       window.webkitAudioContext;
 
-    if(!AC){
-      return;
-    }
+    if(!AC)return;
 
     if(!audioCtx){
 
-      audioCtx=
-        new AC();
+      audioCtx=new AC();
 
-      master=
-        audioCtx.createGain();
+      master=audioCtx.createGain();
 
-      master.gain.value=
-        soundOn ? .38 : 0;
+      master.gain.value=soundOn?.32:0;
 
-      master.connect(
-        audioCtx.destination
-      );
-
-
-      engine1=
-        audioCtx.createOscillator();
-
-      engine2=
-        audioCtx.createOscillator();
-
-      engineGain=
-        audioCtx.createGain();
-
-      engine1.type=
-        "triangle";
-
-      engine2.type=
-        "sine";
-
-      engine1.frequency.value=
-        72;
-
-      engine2.frequency.value=
-        108;
-
-      engineGain.gain.value=
-        .018;
-
-      engine1.connect(
-        engineGain
-      );
-
-      engine2.connect(
-        engineGain
-      );
-
-      engineGain.connect(
-        master
-      );
-
-      engine1.start();
-
-      engine2.start();
-
+      master.connect(audioCtx.destination);
     }
 
-    if(
-      audioCtx.state===
-      "suspended"
-    ){
-
-      audioCtx
-        .resume()
-        .catch(function(){});
-
+    if(audioCtx.state==="suspended"){
+      audioCtx.resume().catch(function(){});
     }
 
   }catch(e){}
-
 }
 
+function tone(freq,duration,type,volume,endFreq){
 
-function tone(
-  frequency,
-  duration,
-  type,
-  volume,
-  endFrequency
-){
-
-  if(!soundOn){
-    return;
-  }
+  if(!soundOn)return;
 
   try{
 
     initAudio();
 
-    if(
-      !audioCtx ||
-      !master
-    ){
-      return;
-    }
+    if(!audioCtx||!master)return;
 
-    var oscillator=
-      audioCtx.createOscillator();
+    var osc=audioCtx.createOscillator();
+    var gain=audioCtx.createGain();
 
-    var gain=
-      audioCtx.createGain();
+    var now=audioCtx.currentTime;
 
-    var now=
-      audioCtx.currentTime;
+    osc.type=type||"sine";
 
-    oscillator.type=
-      type || "sine";
+    osc.frequency.setValueAtTime(freq,now);
 
-    oscillator.frequency.setValueAtTime(
-      frequency,
-      now
-    );
+    if(endFreq){
 
-    if(endFrequency){
-
-      oscillator.frequency.exponentialRampToValueAtTime(
-        endFrequency,
+      osc.frequency.exponentialRampToValueAtTime(
+        endFreq,
         now+duration
       );
-
     }
 
-    gain.gain.setValueAtTime(
-      .001,
-      now
-    );
+    gain.gain.setValueAtTime(.001,now);
 
     gain.gain.exponentialRampToValueAtTime(
-      Math.max(
-        .001,
-        volume || .08
-      ),
-      now+.015
+      volume||.07,
+      now+.012
     );
 
     gain.gain.exponentialRampToValueAtTime(
@@ -1052,139 +712,29 @@ function tone(
       now+duration
     );
 
-    oscillator.connect(gain);
-
+    osc.connect(gain);
     gain.connect(master);
 
-    oscillator.start(now);
-
-    oscillator.stop(
-      now+duration+.02
-    );
+    osc.start(now);
+    osc.stop(now+duration+.02);
 
   }catch(e){}
-
 }
-
 
 function startSound(){
-
-  tone(
-    300,
-    .18,
-    "sine",
-    .08,
-    620
-  );
-
+  tone(300,.16,"sine",.07,620);
 }
-
 
 function coinSound(){
-
-  tone(
-    620,
-    .10,
-    "sine",
-    .11,
-    950
-  );
-
+  tone(620,.09,"sine",.09,950);
 }
-
 
 function jumpSound(){
-
-  tone(
-    220,
-    .15,
-    "triangle",
-    .055,
-    560
-  );
-
+  tone(220,.13,"triangle",.07,520);
 }
-
-
-function slideSound(){
-
-  tone(
-    180,
-    .12,
-    "triangle",
-    .045,
-    90
-  );
-
-}
-
 
 function hitSound(){
-
-  tone(
-    95,
-    .25,
-    "sawtooth",
-    .09,
-    42
-  );
-
-}
-
-
-function victorySound(){
-
-  tone(
-    440,
-    .12,
-    "sine",
-    .09,
-    660
-  );
-
-  setTimeout(
-    function(){
-
-      tone(
-        660,
-        .18,
-        "sine",
-        .10,
-        990
-      );
-
-    },
-    130
-  );
-
-}
-
-
-function toggleSound(){
-
-  soundOn=
-    !soundOn;
-
-  soundButton.textContent=
-    soundOn
-    ? "🔊 SOM"
-    : "🔇 SOM";
-
-  initAudio();
-
-  if(
-    master &&
-    audioCtx
-  ){
-
-    master.gain.setTargetAtTime(
-      soundOn ? .38 : 0,
-      audioCtx.currentTime,
-      .05
-    );
-
-  }
-
+  tone(90,.22,"sawtooth",.08,45);
 }
 
 
@@ -1192,756 +742,965 @@ function toggleSound(){
    TELAS
 ========================================================= */
 
-function showScreen(screen){
+function hideScreens(){
 
   menu.classList.remove("show");
-
   phaseMenu.classList.remove("show");
-
   gameover.classList.remove("show");
-
   victory.classList.remove("show");
-
-  if(screen){
-    screen.classList.add("show");
-  }
-
 }
 
+function showMenu(){
 
-function updateMenu(){
+  running=false;
 
-  menuBest.textContent=
-    Math.floor(best);
+  hideScreens();
 
+  menu.classList.add("show");
+
+  menuBest.textContent=Math.floor(best);
+
+  renderPhases();
 }
 
-
-function buildPhaseMenu(){
+function renderPhases(){
 
   phaseGrid.innerHTML="";
 
-  for(
-    var p=1;
-    p<=50;
-    p++
-  ){
+  for(let i=1;i<=50;i++){
 
-    var data=
-      phaseData[p];
+    let data=phaseData[i];
 
-    var button=
-      document.createElement("button");
+    let btn=document.createElement("button");
 
-    button.className=
-      "phaseBtn";
+    btn.className="phaseBtn";
 
-    if(
-      p>unlockedPhase
-    ){
-
-      button.classList.add(
-        "locked"
-      );
-
+    if(i>unlockedPhase){
+      btn.classList.add("locked");
     }
 
-    if(
-      p===currentPhase
-    ){
-
-      button.classList.add(
-        "selected"
-      );
-
+    if(i===currentPhase){
+      btn.classList.add("selected");
     }
 
-    button.dataset.phase=
-      String(p);
+    btn.innerHTML=
+      '<span class="num">'+i+'</span>'+
+      '<span class="name">'+data.name+'</span>'+
+      '<span class="goal">META '+data.target+'</span>'+
+      (i>unlockedPhase
+        ?'<span class="lock">🔒</span>'
+        :"");
 
-    button.innerHTML=
-      '<span class="num">'+
-      String(p).padStart(2,"0")+
-      '</span>'+
-      '<span class="name">'+
-      data.name+
-      '</span>'+
-      '<span class="goal">META '+
-      data.target+
-      '</span>'+
-      (
-        p>unlockedPhase
-        ? '<span class="lock">🔒</span>'
-        : ''
+    btn.addEventListener("click",function(){
+
+      if(i>unlockedPhase)return;
+
+      currentPhase=i;
+
+      localStorage.setItem(
+        "ultimoSegundoPhase",
+        currentPhase
       );
 
-    button.addEventListener(
-      "click",
-      function(){
+      renderPhases();
+    });
 
-        var selected=
-          Number(
-            this.dataset.phase
-          );
+    phaseGrid.appendChild(btn);
+  }
+}
 
-        if(
-          selected>
-          unlockedPhase
-        ){
-          return;
-        }
 
-        currentPhase=
-          selected;
+/* =========================================================
+   HUD
+========================================================= */
 
-        saveProgress();
+function updateHUD(){
 
-        buildPhaseMenu();
+  var data=phaseData[currentPhase];
 
+  scoreEl.textContent=Math.floor(score);
+
+  coinsEl.textContent="● "+coins;
+
+  targetEl.textContent="META "+data.target;
+
+  progressEl.style.width=
+    Math.min(
+      100,
+      score/data.target*100
+    )+"%";
+
+  speedEl.textContent=
+    "VELOCIDADE "+
+    (speed/.55).toFixed(1)+"x";
+
+  phaseEl.textContent=
+    "FASE "+
+    currentPhase+
+    " • "+
+    data.name;
+}
+
+
+/* =========================================================
+   ROAD
+========================================================= */
+
+function roadPoints(){
+
+  var horizon=H*.45;
+
+  var bottomY=H;
+
+  var topW=Math.min(W*.18,120);
+  var bottomW=Math.min(W*.95,760);
+
+  var cx=W*.5;
+
+  return {
+    horizon:horizon,
+    topLeft:cx-topW/2,
+    topRight:cx+topW/2,
+    bottomLeft:cx-bottomW/2,
+    bottomRight:cx+bottomW/2
+  };
+}
+
+function laneX(l,z){
+
+  var r=roadPoints();
+
+  var center=W*.5;
+
+  var topLaneWidth=
+    (r.topRight-r.topLeft)/3;
+
+  var bottomLaneWidth=
+    (r.bottomRight-r.bottomLeft)/3;
+
+  var t=Math.max(0,Math.min(1,z));
+
+  var width=
+    topLaneWidth+
+    (bottomLaneWidth-topLaneWidth)*t;
+
+  return center+
+    (l-1)*width;
+}
+
+function depthY(z){
+
+  var r=roadPoints();
+
+  return r.horizon+
+    (H-r.horizon)*z;
+}
+
+
+/* =========================================================
+   CENÁRIO
+========================================================= */
+
+function drawBackground(){
+
+  var data=phaseData[currentPhase];
+
+  var g=ctx.createLinearGradient(
+    0,0,0,H
+  );
+
+  g.addColorStop(0,data.sky1);
+  g.addColorStop(.48,data.sky2);
+  g.addColorStop(1,"#02040a");
+
+  ctx.fillStyle=g;
+  ctx.fillRect(0,0,W,H);
+
+  var horizon=H*.45;
+
+  /* brilho do horizonte */
+
+  var glow=ctx.createRadialGradient(
+    W*.5,
+    horizon,
+    10,
+    W*.5,
+    horizon,
+    W*.55
+  );
+
+  glow.addColorStop(
+    0,
+    data.accent+"44"
+  );
+
+  glow.addColorStop(
+    1,
+    "transparent"
+  );
+
+  ctx.fillStyle=glow;
+  ctx.fillRect(0,0,W,H);
+
+  /* prédios */
+
+  var base=horizon+10;
+
+  for(var i=0;i<14;i++){
+
+    var bw=
+      28+
+      ((i*47)%70);
+
+    var bh=
+      50+
+      ((i*83)%150);
+
+    var bx=
+      ((i*97)%W)-20;
+
+    ctx.fillStyle=
+      i%2
+      ?"rgba(1,8,22,.88)"
+      :"rgba(3,13,30,.92)";
+
+    ctx.fillRect(
+      bx,
+      base-bh,
+      bw,
+      bh
+    );
+
+    ctx.fillStyle=
+      data.accent+"33";
+
+    for(var wy=base-bh+12;wy<base-10;wy+=18){
+
+      if((wy+i)%3!==0){
+
+        ctx.fillRect(
+          bx+7,
+          wy,
+          3,
+          4
+        );
       }
-    );
-
-    phaseGrid.appendChild(
-      button
-    );
-
+    }
   }
-
 }
 
 
-function saveProgress(){
+/* =========================================================
+   ESTRADA
+========================================================= */
 
-  localStorage.setItem(
-    "ultimoSegundoPhase",
-    String(currentPhase)
+function drawRoad(){
+
+  var r=roadPoints();
+  var data=phaseData[currentPhase];
+
+  ctx.beginPath();
+
+  ctx.moveTo(r.topLeft,r.horizon);
+  ctx.lineTo(r.topRight,r.horizon);
+  ctx.lineTo(r.bottomRight,r.bottomY||H);
+  ctx.lineTo(r.bottomLeft,r.bottomY||H);
+  ctx.closePath();
+
+  ctx.fillStyle="#030812";
+  ctx.fill();
+
+  /* bordas */
+
+  ctx.strokeStyle=data.accent;
+  ctx.lineWidth=4;
+
+  ctx.beginPath();
+
+  ctx.moveTo(r.topLeft,r.horizon);
+  ctx.lineTo(r.bottomLeft,H);
+
+  ctx.moveTo(r.topRight,r.horizon);
+  ctx.lineTo(r.bottomRight,H);
+
+  ctx.stroke();
+
+  /* divisórias */
+
+  for(var l=1;l<3;l++){
+
+    var topX=
+      r.topLeft+
+      (r.topRight-r.topLeft)*l/3;
+
+    var bottomX=
+      r.bottomLeft+
+      (r.bottomRight-r.bottomLeft)*l/3;
+
+    ctx.strokeStyle=
+      "rgba(55,190,230,.16)";
+
+    ctx.lineWidth=3;
+
+    ctx.beginPath();
+
+    ctx.moveTo(topX,r.horizon);
+    ctx.lineTo(bottomX,H);
+
+    ctx.stroke();
+  }
+
+  /* faixas de perspectiva */
+
+  for(var j=0;j<12;j++){
+
+    var z=
+      ((j/12)+(gameTime*.35))%1;
+
+    var y=
+      r.horizon+
+      (H-r.horizon)*
+      Math.pow(z,1.6);
+
+    var t=
+      (y-r.horizon)/
+      (H-r.horizon);
+
+    var left=
+      r.topLeft+
+      (r.bottomLeft-r.topLeft)*t;
+
+    var right=
+      r.topRight+
+      (r.bottomRight-r.topRight)*t;
+
+    ctx.strokeStyle=
+      "rgba(80,210,240,.13)";
+
+    ctx.lineWidth=2;
+
+    ctx.beginPath();
+
+    ctx.moveTo(left,y);
+    ctx.lineTo(right,y);
+
+    ctx.stroke();
+  }
+}
+
+
+/* =========================================================
+   RUNNER
+========================================================= */
+
+function drawRunner(){
+
+  var x=laneX(
+    laneVisual,
+    1
   );
 
-  localStorage.setItem(
-    "ultimoSegundoUnlocked",
-    String(unlockedPhase)
+  var groundY=H*.88;
+
+  var jump=
+    jumpTime>0
+    ?Math.sin(
+      Math.max(0,jumpTime/0.65)*Math.PI
+    )*H*.13
+    :0;
+
+  var slide=
+    slideTime>0;
+
+  var y=
+    groundY-jump;
+
+  ctx.save();
+
+  ctx.translate(x,y);
+
+  /* sombra */
+
+  ctx.globalAlpha=.25;
+
+  ctx.fillStyle="#000";
+
+  ctx.beginPath();
+
+  ctx.ellipse(
+    0,
+    8,
+    slide?38:25,
+    8,
+    0,
+    0,
+    Math.PI*2
   );
 
-}
+  ctx.fill();
 
+  ctx.globalAlpha=1;
 
-phases.addEventListener(
-  "click",
-  function(){
+  if(slide){
 
-    buildPhaseMenu();
+    /* corpo deslizando */
 
-    showScreen(
-      phaseMenu
+    ctx.fillStyle="#e9fbff";
+
+    ctx.fillRect(
+      -30,
+      -28,
+      55,
+      22
     );
 
-  }
-);
+    ctx.fillStyle="#071225";
 
-
-backMenu.addEventListener(
-  "click",
-  function(){
-
-    updateMenu();
-
-    showScreen(
-      menu
+    ctx.fillRect(
+      -20,
+      -25,
+      30,
+      16
     );
 
-  }
-);
-
-
-overMenu.addEventListener(
-  "click",
-  function(){
-
-    updateMenu();
-
-    showScreen(
-      menu
-    );
-
-  }
-);
-
-
-victoryMenu.addEventListener(
-  "click",
-  function(){
-
-    updateMenu();
-
-    showScreen(
-      menu
-    );
-
-  }
-);
-
-
-soundButton.addEventListener(
-  "click",
-  toggleSound
-);
-
-
-/* =========================================================
-   GEOMETRIA
-========================================================= */
-
-function horizon(){
-
-  return H*.34;
-
-}
-
-
-function ground(){
-
-  return H*.94;
-
-}
-
-
-function roadY(z){
-
-  var h=
-    horizon();
-
-  var g=
-    ground();
-
-  return h+
-    (
-      g-h
-    )*
-    Math.pow(
-      z,
-      1.38
-    );
-
-}
-
-
-function roadHalf(z){
-
-  return W*.10+
-    W*.40*
-    Math.pow(
-      z,
-      1.10
-    );
-
-}
-
-
-function laneX(
-  selectedLane,
-  z
-){
-
-  return W/2+
-    (
-      selectedLane-1
-    )*
-    roadHalf(z)*
-    .62;
-
-}
-
-
-function objectScale(z){
-
-  return .30+
-    z*1.20;
-
-}
-
-
-/* =========================================================
-   RESET
-========================================================= */
-
-function reset(){
-
-  var data=
-    phaseData[currentPhase];
-
-  score=0;
-
-  coins=0;
-
-  speed=
-    Math.min(
-      data.maxSpeed*.76,
-      .55+
-      (currentPhase-1)*.014
-    );
-
-  lane=1;
-
-  targetLane=1;
-
-  laneVisual=1;
-
-  jumpTime=0;
-
-  slideTime=0;
-
-  spawnTimer=.7;
-
-  coinTimer=.3;
-
-  gameTime=0;
-
-  objects=[];
-
-  particles=[];
-
-  shake=0;
-
-  combo=1;
-
-  comboTimer=0;
-
-  updateHUD();
-
-}
-
-
-/* =========================================================
-   SPAWN INTELIGENTE
-========================================================= */
-
-function laneBlocked(
-  selectedLane,
-  minimumZ
-){
-
-  for(
-    var i=0;
-    i<objects.length;
-    i++
-  ){
-
-    var o=
-      objects[i];
-
-    if(
-      o.kind!=="obstacle"
-    ){
-      continue;
-    }
-
-    if(
-      o.lane===
-      selectedLane &&
-      o.z<
-      minimumZ
-    ){
-
-      return true;
-
-    }
-
-  }
-
-  return false;
-
-}
-
-
-function freeLanes(){
-
-  var result=[];
-
-  for(
-    var l=0;
-    l<3;
-    l++
-  ){
-
-    if(
-      !laneBlocked(
-        l,
-        .34
-      )
-    ){
-
-      result.push(l);
-
-    }
-
-  }
-
-  return result;
-
-}
-
-
-function chooseFreeLane(){
-
-  var free=
-    freeLanes();
-
-  if(
-    free.length===0
-  ){
-
-    return Math.floor(
-      Math.random()*3
-    );
-
-  }
-
-  return free[
-    Math.floor(
-      Math.random()*
-      free.length
-    )
-  ];
-
-}
-
-
-function addObstacle(
-  selectedLane,
-  type
-){
-
-  objects.push({
-
-    kind:"obstacle",
-
-    lane:selectedLane,
-
-    type:type,
-
-    z:0,
-
-    seed:
-      Math.random()*100
-
-  });
-
-}
-
-
-function spawnPattern(){
-
-  var difficulty=
-    currentPhase/50;
-
-  var free=
-    freeLanes();
-
-  if(
-    free.length===0
-  ){
-
-    return;
-
-  }
-
-
-  /*
-    Quanto mais alta a fase,
-    maior chance de dois obstáculos.
-  */
-
-  var doubleChance=
-    Math.min(
-      .82,
-      .15+
-      difficulty*.72
-    );
-
-
-  /*
-    Escolhe duas faixas
-    diferentes, mas sempre
-    preserva pelo menos uma.
-  */
-
-  if(
-    Math.random()<
-    doubleChance &&
-    free.length>=2
-  ){
-
-    var aIndex=
-      Math.floor(
-        Math.random()*
-        free.length
-      );
-
-    var firstLane=
-      free[aIndex];
-
-    var remaining=
-      free.filter(
-        function(v){
-          return v!==firstLane;
-        }
-      );
-
-    var secondLane=
-      remaining[
-        Math.floor(
-          Math.random()*
-          remaining.length
-        )
-      ];
-
-
-    var typeA;
-
-    var typeB;
-
-
-    /*
-      Fases iniciais:
-      barreiras simples.
-
-      Fases altas:
-      mistura de trem,
-      salto e deslize.
-    */
-
-    if(
-      currentPhase<8
-    ){
-
-      typeA="barrier";
-
-      typeB="train";
-
-    }else if(
-      currentPhase<18
-    ){
-
-      typeA=
-        Math.random()<.5
-        ? "barrier"
-        : "train";
-
-      typeB=
-        Math.random()<.5
-        ? "train"
-        : "gate";
-
-    }else{
-
-      var types=[
-        "train",
-        "barrier",
-        "gate"
-      ];
-
-      typeA=
-        types[
-          Math.floor(
-            Math.random()*
-            types.length
-          )
-        ];
-
-      typeB=
-        types[
-          Math.floor(
-            Math.random()*
-            types.length
-          )
-        ];
-
-    }
-
-
-    addObstacle(
-      firstLane,
-      typeA
-    );
-
-    addObstacle(
-      secondLane,
-      typeB
+    ctx.fillStyle="#59efff";
+
+    ctx.fillRect(
+      -32,
+      -7,
+      58,
+      5
     );
 
   }else{
 
-    var selected=
-      chooseFreeLane();
+    /* pernas */
+
+    ctx.strokeStyle="#e9fbff";
+    ctx.lineWidth=9;
+    ctx.lineCap="round";
+
+    var run=Math.sin(gameTime*18)*8;
+
+    ctx.beginPath();
+
+    ctx.moveTo(-8,-22);
+    ctx.lineTo(-14+run,-2);
+    ctx.lineTo(-19+run,18);
+
+    ctx.moveTo(8,-22);
+    ctx.lineTo(14-run,-2);
+    ctx.lineTo(19-run,18);
+
+    ctx.stroke();
+
+    /* corpo */
+
+    ctx.fillStyle="#071225";
+
+    ctx.fillRect(
+      -17,
+      -65,
+      34,
+      43
+    );
+
+    ctx.strokeStyle="#e9fbff";
+    ctx.lineWidth=7;
+
+    ctx.beginPath();
+
+    ctx.moveTo(-14,-55);
+    ctx.lineTo(-25,-29);
+
+    ctx.moveTo(14,-55);
+    ctx.lineTo(25,-29);
+
+    ctx.stroke();
+
+    /* cabeça */
+
+    ctx.fillStyle="#071225";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      0,
+      -81,
+      19,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.strokeStyle="#e9fbff";
+    ctx.lineWidth=6;
+    ctx.stroke();
+
+    /* visor */
+
+    ctx.fillStyle="#06111d";
+
+    ctx.fillRect(
+      -12,
+      -87,
+      24,
+      10
+    );
+
+    ctx.fillStyle="#5eeaff";
+
+    ctx.fillRect(
+      -8,
+      -84,
+      16,
+      4
+    );
+
+    /* peito */
+
+    ctx.fillStyle="#58e9ff";
+
+    ctx.fillRect(
+      -4,
+      -50,
+      8,
+      8
+    );
+  }
+
+  ctx.restore();
+}
+
+
+/* =========================================================
+   OBJETOS
+========================================================= */
+
+function objectSafe(obj){
+
+  for(var i=0;i<objects.length;i++){
+
+    var o=objects[i];
+
+    if(
+      o.type!=="coin" &&
+      o.lane===obj.lane &&
+      Math.abs(o.z-obj.z)<.22
+    ){
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function freeLanes(z){
+
+  var result=[];
+
+  for(var l=0;l<3;l++){
+
+    var blocked=false;
+
+    for(var i=0;i<objects.length;i++){
+
+      var o=objects[i];
+
+      if(
+        o.type!=="coin" &&
+        o.lane===l &&
+        Math.abs(o.z-z)<.28
+      ){
+        blocked=true;
+        break;
+      }
+    }
+
+    if(!blocked)result.push(l);
+  }
+
+  return result;
+}
+
+function randomLane(){
+
+  return Math.floor(
+    Math.random()*3
+  );
+}
+
+function spawnObstacle(){
+
+  var free=freeLanes(0);
+
+  if(!free.length)return;
+
+  var amount=1;
+
+  var difficulty=
+    Math.min(
+      2,
+      Math.floor(currentPhase/8)
+    );
+
+  if(
+    difficulty>0 &&
+    Math.random()<.35
+  ){
+    amount=2;
+  }
+
+  amount=Math.min(
+    amount,
+    Math.max(1,free.length-1)
+  );
+
+  for(var i=0;i<amount;i++){
+
+    if(!free.length)break;
+
+    var index=
+      Math.floor(
+        Math.random()*free.length
+      );
+
+    var laneChoice=
+      free.splice(index,1)[0];
+
+    var roll=Math.random();
 
     var type;
 
-    if(
-      currentPhase<6
-    ){
-
-      type=
-        Math.random()<.55
-        ? "barrier"
-        : "train";
-
-    }else if(
-      currentPhase<15
-    ){
-
-      var simpleTypes=[
-        "train",
-        "barrier",
-        "gate"
-      ];
-
-      type=
-        simpleTypes[
-          Math.floor(
-            Math.random()*
-            simpleTypes.length
-          )
-        ];
-
+    if(roll<.42){
+      type="barrier";
+    }else if(roll<.72){
+      type="train";
     }else{
-
-      var hardTypes=[
-        "train",
-        "barrier",
-        "gate"
-      ];
-
-      type=
-        hardTypes[
-          Math.floor(
-            Math.random()*
-            hardTypes.length
-          )
-        ];
-
+      type="gate";
     }
 
-    addObstacle(
-      selected,
-      type
-    );
+    var obj={
+      type:type,
+      lane:laneChoice,
+      z:0,
+      hit:false
+    };
 
+    if(objectSafe(obj)){
+      objects.push(obj);
+    }
   }
-
 }
-
-
-/* =========================================================
-   MOEDAS
-========================================================= */
 
 function spawnCoinLine(){
 
-  var selected=
-    chooseFreeLane();
+  var free=freeLanes(0);
 
-  var count=
-    currentPhase>=25
-    ? 4
-    : 3;
+  var l=
+    free.length
+    ?free[
+      Math.floor(
+        Math.random()*free.length
+      )
+    ]
+    :randomLane();
 
-  for(
-    var i=0;
-    i<count;
-    i++
-  ){
+  for(var i=0;i<4;i++){
 
     objects.push({
-
-      kind:"coin",
-
-      lane:selected,
-
-      z:
-        -i*.12,
-
-      spin:
-        Math.random()*
-        Math.PI*2
-
+      type:"coin",
+      lane:l,
+      z:-i*.13,
+      hit:false
     });
-
   }
-
 }
 
 
 /* =========================================================
-   MOVIMENTO
+   DESENHAR OBJETOS
+========================================================= */
+
+function drawObject(o){
+
+  if(o.z<0||o.z>1.12)return;
+
+  var x=laneX(o.lane,o.z);
+  var y=depthY(o.z);
+
+  var scale=
+    .35+
+    o.z*1.15;
+
+  ctx.save();
+
+  ctx.translate(x,y);
+  ctx.scale(scale,scale);
+
+  if(o.type==="coin"){
+
+    ctx.shadowBlur=16;
+    ctx.shadowColor="#ffd83d";
+
+    ctx.fillStyle="#ffd83d";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+      0,
+      -16,
+      9,
+      14,
+      0,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.shadowBlur=0;
+
+    ctx.fillStyle="#fff4a0";
+
+    ctx.beginPath();
+
+    ctx.arc(
+      -3,
+      -20,
+      3,
+      0,
+      Math.PI*2
+    );
+
+    ctx.fill();
+
+  }else{
+
+    var color=
+      o.type==="train"
+      ?" #ff3158"
+      :o.type==="gate"
+      ?" #b94cff"
+      :"#18e4d0";
+
+    color=color.trim();
+
+    ctx.shadowBlur=16;
+    ctx.shadowColor=color;
+
+    if(o.type==="barrier"){
+
+      ctx.fillStyle="#11192a";
+
+      ctx.fillRect(
+        -45,
+        -28,
+        90,
+        28
+      );
+
+      ctx.fillStyle=color;
+
+      ctx.fillRect(
+        -40,
+        -23,
+        80,
+        6
+      );
+
+    }else if(o.type==="train"){
+
+      ctx.fillStyle="#11192a";
+
+      ctx.fillRect(
+        -50,
+        -65,
+        100,
+        65
+      );
+
+      ctx.strokeStyle=color;
+      ctx.lineWidth=5;
+
+      ctx.strokeRect(
+        -50,
+        -65,
+        100,
+        65
+      );
+
+      ctx.fillStyle=color;
+
+      ctx.fillRect(
+        -31,
+        -25,
+        10,
+        9
+      );
+
+      ctx.fillRect(
+        21,
+        -25,
+        10,
+        9
+      );
+
+    }else{
+
+      ctx.strokeStyle=color;
+      ctx.lineWidth=8;
+
+      ctx.strokeRect(
+        -48,
+        -80,
+        96,
+        80
+      );
+
+      ctx.fillStyle="#10172a";
+
+      ctx.fillRect(
+        -40,
+        -70,
+        80,
+        70
+      );
+    }
+
+    ctx.shadowBlur=0;
+  }
+
+  ctx.restore();
+}
+
+
+/* =========================================================
+   PARTÍCULAS
+========================================================= */
+
+function particleBurst(x,y,color){
+
+  for(var i=0;i<7;i++){
+
+    particles.push({
+      x:x,
+      y:y,
+      vx:(Math.random()-.5)*100,
+      vy:(Math.random()-.8)*100,
+      life:.5,
+      color:color
+    });
+  }
+}
+
+function updateParticles(dt){
+
+  for(var i=particles.length-1;i>=0;i--){
+
+    var p=particles[i];
+
+    p.x+=p.vx*dt;
+    p.y+=p.vy*dt;
+
+    p.vy+=150*dt;
+
+    p.life-=dt;
+
+    if(p.life<=0){
+      particles.splice(i,1);
+    }
+  }
+}
+
+function drawParticles(){
+
+  for(var i=0;i<particles.length;i++){
+
+    var p=particles[i];
+
+    ctx.globalAlpha=
+      Math.max(0,p.life*2);
+
+    ctx.fillStyle=p.color;
+
+    ctx.fillRect(
+      p.x,
+      p.y,
+      3,
+      3
+    );
+  }
+
+  ctx.globalAlpha=1;
+}
+
+
+/* =========================================================
+   CONTROLES
 ========================================================= */
 
 function moveLeft(){
 
-  if(!running){
-    return;
-  }
+  if(!running)return;
 
-  targetLane=
-    Math.max(
-      0,
-      targetLane-1
-    );
+  targetLane=Math.max(
+    0,
+    targetLane-1
+  );
 
+  lane=targetLane;
+
+  tone(
+    260,
+    .06,
+    "square",
+    .025,
+    190
+  );
 }
-
 
 function moveRight(){
 
-  if(!running){
-    return;
-  }
+  if(!running)return;
 
-  targetLane=
-    Math.min(
-      2,
-      targetLane+1
-    );
+  targetLane=Math.min(
+    2,
+    targetLane+1
+  );
 
+  lane=targetLane;
+
+  tone(
+    300,
+    .06,
+    "square",
+    .025,
+    220
+  );
 }
-
 
 function jump(){
 
-  if(!running){
-    return;
-  }
+  if(!running)return;
 
-  if(
-    jumpTime<=0 &&
-    slideTime<=0
-  ){
+  if(jumpTime<=0 && slideTime<=0){
 
-    jumpTime=.72;
+    jumpTime=.65;
 
     jumpSound();
-
   }
-
 }
-
 
 function slide(){
 
-  if(!running){
-    return;
+  if(!running)return;
+
+  if(slideTime<=0 && jumpTime<=0){
+
+    slideTime=.55;
   }
-
-  if(
-    slideTime<=0 &&
-    jumpTime<=0
-  ){
-
-    slideTime=.56;
-
-    slideSound();
-
-  }
-
 }
 
 
@@ -1950,96 +1709,72 @@ function slide(){
 ========================================================= */
 
 var touchX=0;
-
 var touchY=0;
-
-var touchStart=0;
+var touchStartTime=0;
 
 canvas.addEventListener(
   "touchstart",
   function(e){
 
-    if(!running){
-      return;
-    }
+    if(!running)return;
 
-    var t=
-      e.changedTouches[0];
+    var t=e.changedTouches[0];
 
-    touchX=
-      t.clientX;
+    touchX=t.clientX;
+    touchY=t.clientY;
 
-    touchY=
-      t.clientY;
+    touchStartTime=performance.now();
 
-    touchStart=
-      performance.now();
+    initAudio();
 
   },
-  {
-    passive:false
-  }
+  {passive:false}
 );
-
 
 canvas.addEventListener(
   "touchend",
   function(e){
 
-    if(!running){
+    if(!running)return;
+
+    var t=e.changedTouches[0];
+
+    var dx=t.clientX-touchX;
+    var dy=t.clientY-touchY;
+
+    var ax=Math.abs(dx);
+    var ay=Math.abs(dy);
+
+    var min=28;
+
+    if(
+      ax<min &&
+      ay<min
+    ){
       return;
     }
 
-    e.preventDefault();
+    if(ax>ay){
 
-    var t=
-      e.changedTouches[0];
-
-    var dx=
-      t.clientX-touchX;
-
-    var dy=
-      t.clientY-touchY;
-
-    var duration=
-      performance.now()-
-      touchStart;
-
-    if(
-      duration<500 &&
-      Math.abs(dx)<20 &&
-      Math.abs(dy)<20
-    ){
-
-      return;
-
-    }
-
-    if(
-      Math.abs(dx)>
-      Math.abs(dy)
-    ){
-
-      if(dx>30){
+      if(dx>0){
         moveRight();
-      }else if(dx<-30){
+      }else{
         moveLeft();
       }
 
     }else{
 
-      if(dy<-30){
+      if(dy<0){
         jump();
-      }else if(dy>30){
+      }else{
         slide();
       }
-
     }
 
+    e.preventDefault();
+
   },
-  {
-    passive:false
-  }
+  {passive:false}
 );
 
 
@@ -2051,31 +1786,21 @@ window.addEventListener(
   "keydown",
   function(e){
 
-    if(
-      e.key==="ArrowLeft"
-    ){
+    if(e.key==="ArrowLeft"){
       moveLeft();
     }
 
-    if(
-      e.key==="ArrowRight"
-    ){
+    if(e.key==="ArrowRight"){
       moveRight();
     }
 
-    if(
-      e.key==="ArrowUp" ||
-      e.key===" "
-    ){
+    if(e.key==="ArrowUp"||e.key===" "){
       jump();
     }
 
-    if(
-      e.key==="ArrowDown"
-    ){
+    if(e.key==="ArrowDown"){
       slide();
     }
-
   }
 );
 
@@ -2084,413 +1809,85 @@ window.addEventListener(
    COLISÃO
 ========================================================= */
 
-function obstacleSafe(
-  obstacle
-){
-
-  if(
-    obstacle.type==="train"
-  ){
-
-    return false;
-
-  }
-
-  if(
-    obstacle.type==="barrier"
-  ){
-
-    return jumpTime>0;
-
-  }
-
-  if(
-    obstacle.type==="gate"
-  ){
-
-    return slideTime>0;
-
-  }
-
-  return false;
-
-}
-
-
-function checkCollision(){
+function checkCollisions(){
 
   var playerLane=
-  targetLane;
+    targetLane;
 
-  for(
-    var i=objects.length-1;
-    i>=0;
-    i--
-  ){
+  for(var i=objects.length-1;i>=0;i--){
 
-    var o=
-      objects[i];
+    var o=objects[i];
 
-
-    /*
-      MOEDA
-    */
+    if(o.hit)continue;
 
     if(
-      o.kind==="coin"
+      o.type==="coin" &&
+      o.lane===playerLane &&
+      o.z>.82 &&
+      o.z<1.04
     ){
 
-      if(
-        o.z>.84 &&
-        o.z<1.06 &&
-        o.lane===
-        playerLane
-      ){
+      o.hit=true;
 
-        coins++;
+      coins++;
 
-        score+=
-          24+
-          Math.floor(
-            combo*5
-          );
+      score+=35*combo;
 
-        combo=
-          Math.min(
-            5,
-            combo+.25
-          );
-
-        comboTimer=1.4;
-
-        coinSound();
-
-        createBurst(
-          laneX(
-            o.lane,
-            1
-          ),
-          roadY(1)-25,
-          "#ffd83d",
-          8
-        );
-
-        objects.splice(
-          i,
-          1
-        );
-
-      }
-
-      continue;
-
-    }
-
-
-    /*
-      OBSTÁCULO
-    */
-
-    if(
-      o.kind==="obstacle" &&
-      o.lane===
-      playerLane
-    ){
-
-      /*
-        Colisão antecipada:
-        o objeto não atravessa
-        o personagem antes da
-        detecção.
-      */
-
-      if(
-        o.z>.77 &&
-        o.z<1.04
-      ){
-
-        if(
-          !obstacleSafe(o)
-        ){
-
-          gameOver();
-
-          return;
-
-        }
-
-      }
-
-    }
-
-  }
-
-}
-
-
-/* =========================================================
-   GAME OVER
-========================================================= */
-
-function gameOver(){
-
-  if(!running){
-    return;
-  }
-
-  running=false;
-
-  hitSound();
-
-  shake=.5;
-
-  if(
-    score>best
-  ){
-
-    best=
-      Math.floor(score);
-
-    localStorage.setItem(
-      "ultimoSegundoBest",
-      String(best)
-    );
-
-  }
-
-  finalStats.innerHTML=
-    "FASE <b>"+
-    currentPhase+
-    "</b><br>"+
-    "Pontuação: <b>"+
-    Math.floor(score)+
-    "</b><br>"+
-    "Moedas: <b>"+
-    coins+
-    "</b><br>"+
-    "Recorde: <b>"+
-    best+
-    "</b>";
-
-  updateMenu();
-
-  showScreen(
-    gameover
-  );
-
-}
-
-
-/* =========================================================
-   VITÓRIA
-========================================================= */
-
-function completePhase(){
-
-  if(!running){
-    return;
-  }
-
-  running=false;
-
-  victorySound();
-
-  if(
-    score>best
-  ){
-
-    best=
-      Math.floor(score);
-
-    localStorage.setItem(
-      "ultimoSegundoBest",
-      String(best)
-    );
-
-  }
-
-
-  if(
-    currentPhase<50
-  ){
-
-    if(
-      unlockedPhase<
-      currentPhase+1
-    ){
-
-      unlockedPhase=
-        currentPhase+1;
-
-    }
-
-    nextPhase.textContent=
-      "🚀 FASE "+
-      (
-        currentPhase+1
+      combo=Math.min(
+        8,
+        combo+1
       );
 
-  }else{
+      comboTimer=1.5;
 
-    nextPhase.textContent=
-      "🏆 FINALIZAR";
+      var cx=laneX(
+        playerLane,
+        1
+      );
 
-  }
+      particleBurst(
+        cx,
+        H*.76,
+        "#ffd83d"
+      );
 
+      coinSound();
 
-  saveProgress();
-
-
-  victoryStats.innerHTML=
-    "FASE <b>"+
-    currentPhase+
-    "</b><br>"+
-    phaseData[currentPhase].name+
-    "<br>"+
-    "Pontuação: <b>"+
-    Math.floor(score)+
-    "</b><br>"+
-    "Moedas: <b>"+
-    coins+
-    "</b><br><br>"+
-    (
-      currentPhase<50
-      ?
-      "<span style='color:#ffd83d'>"+
-      "FASE "+
-      (currentPhase+1)+
-      " DESBLOQUEADA!</span>"
-      :
-      "<span style='color:#ffd83d'>"+
-      "VOCÊ COMPLETOU AS 50 FASES!</span>"
-    );
-
-  updateMenu();
-
-  showScreen(
-    victory
-  );
-
-}
-
-
-/* =========================================================
-   HUD
-========================================================= */
-
-function updateHUD(){
-
-  var data=
-    phaseData[currentPhase];
-
-  scoreEl.textContent=
-    Math.floor(score);
-
-  coinsEl.textContent=
-    "● "+coins;
-
-  targetEl.textContent=
-    "META "+
-    data.target;
-
-  phaseEl.textContent=
-    "FASE "+
-    currentPhase+
-    " • "+
-    data.name;
-
-  var percent=
-    Math.min(
-      100,
-      score/data.target*100
-    );
-
-  progressEl.style.width=
-    percent+"%";
-
-  var multiplier=
-    speed/.55;
-
-  speedEl.textContent=
-    "VELOCIDADE "+
-    multiplier.toFixed(1)+
-    "x";
-
-}
-
-
-/* =========================================================
-   INICIAR
-========================================================= */
-
-function startGame(){
-
-  initAudio();
-
-  if(
-    audioCtx &&
-    audioCtx.state===
-    "suspended"
-  ){
-
-    audioCtx
-      .resume()
-      .catch(function(){});
-
-  }
-
-  reset();
-
-  running=true;
-
-  showScreen(null);
-
-  startSound();
-
-  last=
-    performance.now();
-
-  requestAnimationFrame(
-    loop
-  );
-
-}
-
-
-play.addEventListener(
-  "click",
-  startGame
-);
-
-
-again.addEventListener(
-  "click",
-  startGame
-);
-
-
-nextPhase.addEventListener(
-  "click",
-  function(){
-
-    if(
-      currentPhase<50
-    ){
-
-      currentPhase++;
-
-      saveProgress();
-
-      startGame();
-
-    }else{
-
-      showScreen(menu);
-
+      continue;
     }
 
+    if(
+      o.type!=="coin" &&
+      o.lane===playerLane &&
+      o.z>.80 &&
+      o.z<1.03
+    ){
+
+      var safe=false;
+
+      if(o.type==="barrier"){
+        safe=jumpTime>0;
+      }
+
+      if(o.type==="gate"){
+        safe=slideTime>0;
+      }
+
+      if(o.type==="train"){
+        safe=false;
+      }
+
+      if(!safe){
+
+        hitSound();
+
+        gameOver();
+
+        return;
+      }
+    }
   }
-);
+}
 
 
 /* =========================================================
@@ -2499,25 +1896,54 @@ nextPhase.addEventListener(
 
 function update(dt){
 
-  var data=
-    phaseData[currentPhase];
+  var data=phaseData[currentPhase];
 
+  gameTime+=dt;
 
-  /*
-    Velocidade sobe durante a fase.
-  */
+  /* movimento extremamente responsivo */
 
-  var phaseBase=
-    .55+
-    (currentPhase-1)*
-    .014;
+  laneVisual+=
+    (targetLane-laneVisual)*
+    Math.min(
+      1,
+      dt*28
+    );
+
+  if(
+    Math.abs(
+      targetLane-laneVisual
+    )<.005
+  ){
+    laneVisual=targetLane;
+  }
+
+  if(jumpTime>0){
+    jumpTime-=dt;
+  }
+
+  if(slideTime>0){
+    slideTime-=dt;
+  }
+
+  if(comboTimer>0){
+
+    comboTimer-=dt;
+
+    if(comboTimer<=0){
+      combo=1;
+    }
+  }
+
+  /* velocidade */
 
   var targetSpeed=
+    .55+
+    (
+      data.maxSpeed-.55
+    )*
     Math.min(
-      data.maxSpeed,
-      phaseBase+
-      gameTime*.010+
-      score*.000012
+      1,
+      score/data.target
     );
 
   speed+=
@@ -2529,1700 +1955,119 @@ function update(dt){
       dt*2
     );
 
-
-  /*
-    Troca de faixa suave.
-  */
-
-  laneVisual+=
-  (
-    targetLane-
-    laneVisual
-  )*
-  Math.min(
-    1,
-    dt*28
-  );
-
-  lane=
-    Math.round(
-      laneVisual
-    );
-
-
-  /*
-    Pulo.
-  */
-
-  if(
-    jumpTime>0
-  ){
-
-    jumpTime-=dt;
-
-    if(
-      jumpTime<0
-    ){
-
-      jumpTime=0;
-
-    }
-
-  }
-
-
-  /*
-    Deslize.
-  */
-
-  if(
-    slideTime>0
-  ){
-
-    slideTime-=dt;
-
-    if(
-      slideTime<0
-    ){
-
-      slideTime=0;
-
-    }
-
-  }
-
-
-  /*
-    Pontuação.
-  */
+  /* pontuação */
 
   score+=
-    dt*
-    (
-      34+
-      speed*23
-    );
+    90*
+    speed*
+    dt;
 
-
-  /*
-    Combo.
-  */
-
-  if(
-    comboTimer>0
-  ){
-
-    comboTimer-=dt;
-
-  }else{
-
-    combo=
-      Math.max(
-        1,
-        combo-
-        dt*.65
-      );
-
-  }
-
-
-  /*
-    Spawn progressivamente
-    mais rápido.
-  */
+  /* obstáculos */
 
   spawnTimer-=dt;
 
-  var phaseDifficulty=
-    Math.min(
-      1,
-      (currentPhase-1)/49
-    );
-
   var spawnInterval=
-    .94-
-    phaseDifficulty*.43-
-    speed*.08;
-
-  spawnInterval=
     Math.max(
-      .39,
-      spawnInterval
+      .38,
+      .88-
+      currentPhase*.008
     );
 
+  if(spawnTimer<=0){
 
-  if(
-    spawnTimer<=0
-  ){
-
-    spawnPattern();
+    spawnObstacle();
 
     spawnTimer=
-      spawnInterval*
-      (
-        .88+
-        Math.random()*.22
+      spawnInterval/
+      Math.max(
+        .75,
+        speed/.55
       );
-
   }
 
-
-  /*
-    Moedas.
-  */
+  /* moedas */
 
   coinTimer-=dt;
 
-  if(
-    coinTimer<=0
-  ){
+  if(coinTimer<=0){
 
     spawnCoinLine();
 
     coinTimer=
       Math.max(
-        .55,
-        .82-
-        phaseDifficulty*.22
+        .7,
+        1.45-
+        currentPhase*.01
       );
-
   }
 
+  /* objetos */
 
-  /*
-    Objetos avançam.
-  */
+  for(var i=objects.length-1;i>=0;i--){
 
-  var objectSpeed=
-    .30+
-    speed*.46;
-
-
-  for(
-    var i=objects.length-1;
-    i>=0;
-    i--
-  ){
-
-    var o=
-      objects[i];
+    var o=objects[i];
 
     o.z+=
+      speed*
       dt*
-      objectSpeed;
+      .78;
 
+    if(o.z>1.15){
 
-    if(
-      o.kind==="coin"
-    ){
-
-      o.spin+=
-        dt*8;
-
+      objects.splice(i,1);
     }
-
-
-    if(
-      o.z>1.20
-    ){
-
-      objects.splice(
-        i,
-        1
-      );
-
-    }
-
   }
 
+  updateParticles(dt);
 
-  /*
-    Partículas.
-  */
+  checkCollisions();
 
-  for(
-    var j=particles.length-1;
-    j>=0;
-    j--
-  ){
+  /* vitória */
 
-    var p=
-      particles[j];
-
-    p.x+=
-      p.vx*dt;
-
-    p.y+=
-      p.vy*dt;
-
-    p.vy+=
-      80*dt;
-
-    p.life-=dt;
-
-    if(
-      p.life<=0
-    ){
-
-      particles.splice(
-        j,
-        1
-      );
-
-    }
-
-  }
-
-
-  if(
-    shake>0
-  ){
-
-    shake-=dt;
-
-    if(
-      shake<0
-    ){
-
-      shake=0;
-
-    }
-
-  }
-
-
-  checkCollision();
-
-  updateHUD();
-
-
-  if(
-    score>=
-    data.target
-  ){
+  if(score>=data.target){
 
     completePhase();
 
-  }
-
-}
-
-
-/* =========================================================
-   PARTÍCULAS
-========================================================= */
-
-function createBurst(
-  x,
-  y,
-  color,
-  amount
-){
-
-  for(
-    var i=0;
-    i<amount;
-    i++
-  ){
-
-    particles.push({
-
-      x:x,
-
-      y:y,
-
-      vx:
-        (
-          Math.random()-
-          .5
-        )*130,
-
-      vy:
-        (
-          Math.random()-
-          .7
-        )*100,
-
-      life:
-        .35+
-        Math.random()*.35,
-
-      max:.7,
-
-      color:color
-
-    });
-
-  }
-
-}
-
-
-/* =========================================================
-   FUNDO
-========================================================= */
-
-function drawBackground(){
-
-  var data=
-    phaseData[currentPhase];
-
-  var gradient=
-    ctx.createLinearGradient(
-      0,
-      0,
-      0,
-      H
-    );
-
-  gradient.addColorStop(
-    0,
-    data.sky1
-  );
-
-  gradient.addColorStop(
-    .58,
-    data.sky2
-  );
-
-  gradient.addColorStop(
-    1,
-    "#02040a"
-  );
-
-  ctx.fillStyle=
-    gradient;
-
-  ctx.fillRect(
-    0,
-    0,
-    W,
-    H
-  );
-
-
-  /*
-    brilho no horizonte
-  */
-
-  var glow=
-    ctx.createRadialGradient(
-      W/2,
-      horizon(),
-      10,
-      W/2,
-      horizon(),
-      W*.55
-    );
-
-  glow.addColorStop(
-    0,
-    data.accent+
-    "25"
-  );
-
-  glow.addColorStop(
-    1,
-    "rgba(0,0,0,0)"
-  );
-
-  ctx.fillStyle=
-    glow;
-
-  ctx.fillRect(
-    0,
-    0,
-    W,
-    H
-  );
-
-
-}
-
-
-/* =========================================================
-   CIDADE
-========================================================= */
-
-function drawCity(){
-
-  var data=
-    phaseData[currentPhase];
-
-  var base=
-    horizon()+10;
-
-  var seed=
-    currentPhase*19;
-
-  var x=0;
-
-  while(
-    x<W
-  ){
-
-    var width=
-      26+
-      (
-        Math.sin(
-          x*.035+
-          seed
-        )+1
-      )*
-      22;
-
-    var height=
-      45+
-      (
-        Math.sin(
-          x*.018+
-          seed*2
-        )+1
-      )*
-      75;
-
-
-    ctx.fillStyle=
-      "rgba(3,10,25,.92)";
-
-    ctx.fillRect(
-      x,
-      base-height,
-      width,
-      height
-    );
-
-
-    /*
-      janelas
-    */
-
-    ctx.fillStyle=
-      data.accent;
-
-    ctx.globalAlpha=.15;
-
-    for(
-      var wy=
-        base-height+12;
-      wy<
-        base-8;
-      wy+=14
-    ){
-
-      if(
-        Math.sin(
-          wy*.13+x
-        )>.2
-      ){
-
-        ctx.fillRect(
-          x+6,
-          wy,
-          3,
-          4
-        );
-
-        if(
-          width>55
-        ){
-
-          ctx.fillRect(
-            x+18,
-            wy,
-            3,
-            4
-          );
-
-        }
-
-      }
-
-    }
-
-    ctx.globalAlpha=1;
-
-    x+=
-      width+
-      9;
-
-  }
-
-}
-
-
-/* =========================================================
-   PISTA
-========================================================= */
-
-function drawRoad(){
-
-  var data=
-    phaseData[currentPhase];
-
-  var h=
-    horizon();
-
-  var g=
-    ground();
-
-  var near=
-    roadHalf(1);
-
-  var far=
-    roadHalf(0);
-
-
-  /*
-    piso
-  */
-
-  ctx.fillStyle=
-    "#02050b";
-
-  ctx.fillRect(
-    0,
-    h,
-    W,
-    H-h
-  );
-
-
-  /*
-    pista
-  */
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    W/2-far,
-    h
-  );
-
-  ctx.lineTo(
-    W/2+far,
-    h
-  );
-
-  ctx.lineTo(
-    W/2+near,
-    g
-  );
-
-  ctx.lineTo(
-    W/2-near,
-    g
-  );
-
-  ctx.closePath();
-
-  ctx.fillStyle=
-    "#07101b";
-
-  ctx.fill();
-
-
-  /*
-    bordas
-  */
-
-  ctx.strokeStyle=
-    data.accent;
-
-  ctx.lineWidth=3;
-
-  ctx.globalAlpha=.72;
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    W/2-far,
-    h
-  );
-
-  ctx.lineTo(
-    W/2-near,
-    g
-  );
-
-  ctx.stroke();
-
-  ctx.beginPath();
-
-  ctx.moveTo(
-    W/2+far,
-    h
-  );
-
-  ctx.lineTo(
-    W/2+near,
-    g
-  );
-
-  ctx.stroke();
-
-  ctx.globalAlpha=1;
-
-
-  /*
-    divisões das 3 faixas
-  */
-
-  for(
-    var l=1;
-    l<=2;
-    l++
-  ){
-
-    var topX=
-      W/2+
-      (
-        l-1.5
-      )*
-      roadHalf(.01)*
-      .62;
-
-    var bottomX=
-      W/2+
-      (
-        l-1.5
-      )*
-      roadHalf(1)*
-      .62;
-
-    ctx.strokeStyle=
-      "rgba(80,190,220,.20)";
-
-    ctx.lineWidth=2;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      topX,
-      h
-    );
-
-    ctx.lineTo(
-      bottomX,
-      g
-    );
-
-    ctx.stroke();
-
-  }
-
-
-  /*
-    marcações horizontais
-  */
-
-  var offset=
-    (
-      gameTime*
-      (
-        .30+
-        speed*.45
-      )
-    )%1;
-
-
-  for(
-    var i=0;
-    i<13;
-    i++
-  ){
-
-    var z=
-      (
-        i/13+
-        offset
-      )%1;
-
-    var y=
-      roadY(z);
-
-    var half=
-      roadHalf(z);
-
-    ctx.strokeStyle=
-      "rgba(75,210,225,"+
-      (
-        .06+
-        z*.12
-      )+
-      ")";
-
-    ctx.lineWidth=
-      1+
-      z*1.7;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      W/2-half,
-      y
-    );
-
-    ctx.lineTo(
-      W/2+half,
-      y
-    );
-
-    ctx.stroke();
-
-  }
-
-}
-
-
-/* =========================================================
-   COIN
-========================================================= */
-
-function drawCoin(o){
-
-  var z=
-    Math.max(
-      0,
-      Math.min(
-        1,
-        o.z
-      )
-    );
-
-  var x=
-    laneX(
-      o.lane,
-      z
-    );
-
-  var y=
-    roadY(z)-
-    25-
-    Math.sin(
-      o.spin
-    )*
-    4*
-    z;
-
-  var radius=
-    4+
-    15*z;
-
-  ctx.save();
-
-  ctx.translate(
-    x,
-    y
-  );
-
-  ctx.shadowColor=
-    "#ffd83d";
-
-  ctx.shadowBlur=
-    15*z;
-
-  ctx.fillStyle=
-    "#ffd83d";
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    0,
-    0,
-    Math.max(
-      2,
-      Math.abs(
-        Math.cos(
-          o.spin
-        )
-      )*
-      radius
-    ),
-    radius,
-    0,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-  ctx.fillStyle=
-    "#fff7ae";
-
-  ctx.beginPath();
-
-  ctx.arc(
-    -radius*.25,
-    -radius*.25,
-    radius*.18,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-  ctx.restore();
-
-}
-
-
-/* =========================================================
-   OBSTÁCULOS
-========================================================= */
-
-function drawObstacle(o){
-
-  var z=
-    Math.max(
-      0,
-      Math.min(
-        1,
-        o.z
-      )
-    );
-
-  var x=
-    laneX(
-      o.lane,
-      z
-    );
-
-  var y=
-    roadY(z);
-
-  var s=
-    objectScale(z);
-
-  var accent=
-    phaseData[
-      currentPhase
-    ].accent;
-
-
-  ctx.save();
-
-  ctx.translate(
-    x,
-    y
-  );
-
-  ctx.globalAlpha=
-    .35+
-    .65*z;
-
-
-  /*
-    sombra
-  */
-
-  ctx.fillStyle=
-    "rgba(0,0,0,.45)";
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    0,
-    5,
-    32*s,
-    9*s,
-    0,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-
-  /*
-    TREM
-  */
-
-  if(
-    o.type==="train"
-  ){
-
-    var w=
-      47*s;
-
-    var h=
-      58*s;
-
-    ctx.shadowColor=
-      "#ff315c";
-
-    ctx.shadowBlur=
-      17*s;
-
-    ctx.fillStyle=
-      "#101a2c";
-
-    ctx.fillRect(
-      -w,
-      -h,
-      w*2,
-      h
-    );
-
-
-    /*
-      topo
-    */
-
-    ctx.fillStyle=
-      "#263e61";
-
-    ctx.fillRect(
-      -w*.68,
-      -h*1.28,
-      w*1.36,
-      h*.40
-    );
-
-
-    /*
-      vidro
-    */
-
-    ctx.fillStyle=
-      "#0a1221";
-
-    ctx.fillRect(
-      -w*.55,
-      -h*1.12,
-      w*1.1,
-      h*.25
-    );
-
-
-    /*
-      luzes
-    */
-
-    ctx.fillStyle=
-      "#ff315c";
-
-    ctx.fillRect(
-      -w*.72,
-      -h*.45,
-      9*s,
-      6*s
-    );
-
-    ctx.fillRect(
-      w*.54,
-      -h*.45,
-      9*s,
-      6*s
-    );
-
-
-    /*
-      faixa neon
-    */
-
-    ctx.fillStyle=
-      accent;
-
-    ctx.fillRect(
-      -w*.75,
-      -h*.18,
-      w*1.5,
-      3*s
-    );
-
-
-  /*
-    BARREIRA
-  */
-
-  }else if(
-    o.type==="barrier"
-  ){
-
-    var bw=
-      44*s;
-
-    var bh=
-      25*s;
-
-    ctx.shadowColor=
-      accent;
-
-    ctx.shadowBlur=
-      16*s;
-
-    ctx.fillStyle=
-      "#101827";
-
-    ctx.fillRect(
-      -bw,
-      -bh,
-      bw*2,
-      bh
-    );
-
-    ctx.fillStyle=
-      accent;
-
-    ctx.fillRect(
-      -bw*.78,
-      -bh*.45,
-      bw*1.56,
-      5*s
-    );
-
-
-    /*
-      faixas
-    */
-
-    ctx.fillStyle=
-      "#ff355d";
-
-    ctx.fillRect(
-      -bw*.48,
-      -bh*.72,
-      bw*.96,
-      4*s
-    );
-
-
-  /*
-    PORTAL PARA DESLIZAR
-  */
-
-  }else{
-
-    var gw=
-      43*s;
-
-    var gh=
-      64*s;
-
-    ctx.shadowColor=
-      accent;
-
-    ctx.shadowBlur=
-      18*s;
-
-    ctx.fillStyle=
-      "#0e1728";
-
-    ctx.fillRect(
-      -gw,
-      -gh,
-      9*s,
-      gh
-    );
-
-    ctx.fillRect(
-      gw-9*s,
-      -gh,
-      9*s,
-      gh
-    );
-
-    ctx.fillRect(
-      -gw,
-      -gh,
-      gw*2,
-      9*s
-    );
-
-    ctx.fillStyle=
-      accent;
-
-    ctx.fillRect(
-      -gw,
-      -gh,
-      gw*2,
-      4*s
-    );
-
-  }
-
-
-  ctx.restore();
-
-}
-
-
-/* =========================================================
-   RUNNER
-========================================================= */
-
-function drawRunner(){
-
-  var x=
-    laneX(
-      laneVisual,
-      1
-    );
-
-  var jumpProgress=
-    jumpTime>0
-    ?
-    1-
-    jumpTime/.72
-    :
-    0;
-
-  var lift=
-    jumpTime>0
-    ?
-    Math.sin(
-      jumpProgress*
-      Math.PI
-    )*
-    H*.12
-    :
-    0;
-
-  var run=
-    Math.sin(
-      gameTime*17
-    );
-
-  var slideMode=
-    slideTime>0;
-
-  var y=
-    ground()-
-    28-
-    lift;
-
-
-  ctx.save();
-
-  ctx.translate(
-    x,
-    y
-  );
-
-
-  /*
-    sombra
-  */
-
-  ctx.globalAlpha=
-    .30;
-
-  ctx.fillStyle=
-    "#000";
-
-  ctx.beginPath();
-
-  ctx.ellipse(
-    0,
-    9+lift*.04,
-    slideMode?34:25,
-    7,
-    0,
-    0,
-    Math.PI*2
-  );
-
-  ctx.fill();
-
-  ctx.globalAlpha=1;
-
-
-  /*
-    inclinação na troca
-  */
-
-  var lean=
-    (
-      targetLane-
-      laneVisual
-    )*
-    .13;
-
-  ctx.rotate(
-    lean
-  );
-
-
-  /*
-    CORPO
-  */
-
-  if(slideMode){
-
-    /*
-      deslizando
-    */
-
-    ctx.fillStyle=
-      "#18283f";
-
-    ctx.shadowColor=
-      "#5eeaff";
-
-    ctx.shadowBlur=14;
-
-    ctx.fillRect(
-      -25,
-      -25,
-      50,
-      20
-    );
-
-    ctx.strokeStyle=
-      "#e5fbff";
-
-    ctx.lineWidth=6;
-
-    ctx.lineCap="round";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      -15,
-      -10
-    );
-
-    ctx.lineTo(
-      -34,
-      4
-    );
-
-    ctx.moveTo(
-      14,
-      -10
-    );
-
-    ctx.lineTo(
-      33,
-      4
-    );
-
-    ctx.stroke();
-
-  }else{
-
-    /*
-      pernas
-    */
-
-    var legA=
-      run*12;
-
-    var legB=
-      -run*12;
-
-    ctx.strokeStyle=
-      "#dffbff";
-
-    ctx.lineWidth=8;
-
-    ctx.lineCap="round";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      -7,
-      0
-    );
-
-    ctx.lineTo(
-      -12+legA,
-      18
-    );
-
-    ctx.lineTo(
-      -14+legA,
-      28
-    );
-
-    ctx.moveTo(
-      7,
-      0
-    );
-
-    ctx.lineTo(
-      12+legB,
-      18
-    );
-
-    ctx.lineTo(
-      14+legB,
-      28
-    );
-
-    ctx.stroke();
-
-
-    /*
-      corpo
-    */
-
-    ctx.fillStyle=
-      "#172942";
-
-    ctx.shadowColor=
-      "#5eeaff";
-
-    ctx.shadowBlur=14;
-
-    ctx.beginPath();
-
-    ctx.roundRect(
-      -12,
-      -43,
-      24,
-      44,
-      7
-    );
-
-    ctx.fill();
-
-
-    /*
-      peito
-    */
-
-    ctx.fillStyle=
-      "#5eeaff";
-
-    ctx.fillRect(
-      -7,
-      -34,
-      14,
-      3
-    );
-
-
-    /*
-      braços
-    */
-
-    var armA=
-      -run*11;
-
-    var armB=
-      run*11;
-
-    ctx.strokeStyle=
-      "#dffbff";
-
-    ctx.lineWidth=7;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      -10,
-      -34
-    );
-
-    ctx.lineTo(
-      -20+armA,
-      -13
-    );
-
-    ctx.moveTo(
-      10,
-      -34
-    );
-
-    ctx.lineTo(
-      20+armB,
-      -13
-    );
-
-    ctx.stroke();
-
-
-    /*
-      cabeça
-    */
-
-    ctx.fillStyle=
-      "#e9fcff";
-
-    ctx.beginPath();
-
-    ctx.arc(
-      0,
-      -57,
-      12,
-      0,
-      Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    /*
-      cabelo/visor
-    */
-
-    ctx.fillStyle=
-      "#15253b";
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-      0,
-      -58,
-      9,
-      5,
-      0,
-      0,
-      Math.PI*2
-    );
-
-    ctx.fill();
-
-
-    /*
-      luz nas costas
-    */
-
-    ctx.fillStyle=
-      "#5eeaff";
-
-    ctx.shadowColor=
-      "#5eeaff";
-
-    ctx.shadowBlur=12;
-
-    ctx.beginPath();
-
-    ctx.arc(
-      0,
-      -19,
-      3,
-      0,
-      Math.PI*2
-    );
-
-    ctx.fill();
-
-  }
-
-
-  ctx.restore();
-
-}
-
-
-/* =========================================================
-   VELOCIDADE
-========================================================= */
-
-function drawSpeedLines(){
-
-  var data=
-    phaseData[currentPhase];
-
-  var intensity=
-    Math.max(
-      0,
-      (
-        speed-.62
-      )/.95
-    );
-
-  if(
-    intensity<=.02
-  ){
     return;
   }
 
-  ctx.save();
-
-  ctx.globalAlpha=
-    .08+
-    intensity*.10;
-
-  ctx.strokeStyle=
-    data.accent;
-
-  ctx.lineWidth=2;
-
-  for(
-    var i=0;
-    i<14;
-    i++
-  ){
-
-    var side=
-      i%2===0
-      ? -1
-      : 1;
-
-    var y=
-      H*.47+
-      (
-        (
-          i*71+
-          gameTime*
-          speed*
-          270
-        )%
-        (H*.46)
-      );
-
-    var x=
-      W/2+
-      side*
-      (
-        W*.10+
-        (
-          i*31
-        )%
-        Math.max(
-          40,
-          W*.37
-        )
-      );
-
-    var length=
-      8+
-      intensity*24;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-      x,
-      y
-    );
-
-    ctx.lineTo(
-      x-side*length,
-      y+length*1.8
-    );
-
-    ctx.stroke();
-
-  }
-
-  ctx.restore();
-
+  updateHUD();
 }
 
 
 /* =========================================================
-   RENDER
+   DESENHO
 ========================================================= */
 
-function render(){
+function draw(){
 
-  ctx.save();
-
-  if(
-    shake>0
-  ){
-
-    ctx.translate(
-      (
-        Math.random()-
-        .5
-      )*
-      5*
-      shake,
-
-      (
-        Math.random()-
-        .5
-      )*
-      5*
-      shake
-    );
-
-  }
-
+  ctx.clearRect(
+    0,
+    0,
+    W,
+    H
+  );
 
   drawBackground();
 
-  drawCity();
-
   drawRoad();
 
+  /* objetos do mais distante
+     para o mais próximo */
 
-  /*
-    mais distante primeiro
-  */
-
-  var sorted=
-    objects
-      .slice()
-      .sort(
-        function(a,b){
-
-          return b.z-a.z;
-
-        }
-      );
-
-
-  for(
-    var i=0;
-    i<sorted.length;
-    i++
-  ){
-
-    var o=
-      sorted[i];
-
-    if(
-      o.kind==="coin"
-    ){
-
-      drawCoin(o);
-
-    }else{
-
-      drawObstacle(o);
-
+  objects.sort(
+    function(a,b){
+      return a.z-b.z;
     }
+  );
 
+  for(var i=0;i<objects.length;i++){
+    drawObject(objects[i]);
   }
 
-
-  drawSpeedLines();
+  drawParticles();
 
   drawRunner();
-
-
-  /*
-    partículas
-  */
-
-  for(
-    var j=0;
-    j<particles.length;
-    j++
-  ){
-
-    var p=
-      particles[j];
-
-    ctx.globalAlpha=
-      Math.max(
-        0,
-        p.life/
-        p.max
-      );
-
-    ctx.fillStyle=
-      p.color;
-
-    ctx.fillRect(
-      p.x,
-      p.y,
-      3,
-      3
-    );
-
-  }
-
-  ctx.globalAlpha=1;
-
-  ctx.restore();
-
 }
 
 
@@ -4230,56 +2075,324 @@ function render(){
    LOOP
 ========================================================= */
 
-function loop(now){
+function loop(timestamp){
 
-  if(!running){
-
-    render();
-
-    return;
-
+  if(!last){
+    last=timestamp;
   }
 
   var dt=
-    Math.min(
-      .035,
-      (
-        now-last
-      )/1000
-    );
+    (timestamp-last)/1000;
 
-  last=now;
+  last=timestamp;
 
-  update(dt);
-
-  render();
+  dt=Math.min(
+    .033,
+    Math.max(
+      0,
+      dt
+    )
+  );
 
   if(running){
 
-    requestAnimationFrame(
-      loop
-    );
-
+    update(dt);
+    draw();
   }
 
+  requestAnimationFrame(loop);
 }
+
+requestAnimationFrame(loop);
+
+
+/* =========================================================
+   COMEÇAR
+========================================================= */
+
+function resetGame(){
+
+  score=0;
+  coins=0;
+
+  speed=.55;
+
+  lane=1;
+  targetLane=1;
+  laneVisual=1;
+
+  jumpTime=0;
+  slideTime=0;
+
+  spawnTimer=.55;
+  coinTimer=.8;
+
+  objects=[];
+  particles=[];
+
+  shake=0;
+
+  combo=1;
+  comboTimer=0;
+
+  gameTime=0;
+
+  updateHUD();
+}
+
+function startGame(){
+
+  initAudio();
+
+  resetGame();
+
+  hideScreens();
+
+  running=true;
+
+  last=performance.now();
+
+  startSound();
+}
+
+play.addEventListener(
+  "click",
+  startGame
+);
+
+again.addEventListener(
+  "click",
+  startGame
+);
+
+
+/* =========================================================
+   MENU / FASES
+========================================================= */
+
+phases.addEventListener(
+  "click",
+  function(){
+
+    hideScreens();
+
+    phaseMenu.classList.add("show");
+
+    renderPhases();
+  }
+);
+
+backMenu.addEventListener(
+  "click",
+  showMenu
+);
+
+overMenu.addEventListener(
+  "click",
+  showMenu
+);
+
+victoryMenu.addEventListener(
+  "click",
+  showMenu
+);
+
+
+/* =========================================================
+   VITÓRIA
+========================================================= */
+
+function completePhase(){
+
+  running=false;
+
+  var oldPhase=currentPhase;
+
+  if(currentPhase<50){
+
+    if(
+      unlockedPhase<
+      currentPhase+1
+    ){
+
+      unlockedPhase=
+        currentPhase+1;
+
+      localStorage.setItem(
+        "ultimoSegundoUnlocked",
+        unlockedPhase
+      );
+    }
+
+    currentPhase=
+      Math.min(
+        50,
+        currentPhase+1
+      );
+
+    localStorage.setItem(
+      "ultimoSegundoPhase",
+      currentPhase
+    );
+
+  }else{
+
+    currentPhase=50;
+  }
+
+  if(score>best){
+
+    best=Math.floor(score);
+
+    localStorage.setItem(
+      "ultimoSegundoBest",
+      best
+    );
+  }
+
+  hideScreens();
+
+  victory.classList.add("show");
+
+  if(oldPhase<50){
+
+    victoryStats.innerHTML=
+      "FASE "+
+      oldPhase+
+      " • "+
+      phaseData[oldPhase].name+
+      "<br>"+
+      "Pontuação: "+
+      Math.floor(score)+
+      "<br>"+
+      "Moedas: "+
+      coins+
+      "<br><br>"+
+      "FASE "+
+      (oldPhase+1)+
+      " DESBLOQUEADA!";
+
+    nextPhase.style.display="block";
+
+  }else{
+
+    victoryStats.innerHTML=
+      "🏆 VOCÊ CHEGOU À FASE 50!"+
+      "<br><br>"+
+      "Pontuação: "+
+      Math.floor(score)+
+      "<br>"+
+      "Moedas: "+
+      coins;
+
+    nextPhase.style.display="none";
+  }
+}
+
+nextPhase.addEventListener(
+  "click",
+  function(){
+
+    if(currentPhase>50){
+      currentPhase=50;
+    }
+
+    startGame();
+  }
+);
+
+
+/* =========================================================
+   GAME OVER
+========================================================= */
+
+function gameOver(){
+
+  running=false;
+
+  if(score>best){
+
+    best=Math.floor(score);
+
+    localStorage.setItem(
+      "ultimoSegundoBest",
+      best
+    );
+  }
+
+  hideScreens();
+
+  gameover.classList.add("show");
+
+  finalStats.innerHTML=
+    "Pontuação: "+
+    Math.floor(score)+
+    "<br>"+
+    "Moedas: "+
+    coins+
+    "<br>"+
+    "Fase: "+
+    currentPhase+
+    " • "+
+    phaseData[currentPhase].name;
+}
+
+
+/* =========================================================
+   SOM
+========================================================= */
+
+soundButton.addEventListener(
+  "click",
+  function(e){
+
+    e.stopPropagation();
+
+    soundOn=!soundOn;
+
+    soundButton.textContent=
+      soundOn
+      ?"🔊 SOM"
+      :"🔇 SOM";
+
+    if(soundOn){
+
+      initAudio();
+
+      if(master){
+        master.gain.value=.32;
+      }
+
+      tone(
+        500,
+        .08,
+        "sine",
+        .07,
+        800
+      );
+
+    }else{
+
+      if(master){
+        master.gain.value=0;
+      }
+    }
+  }
+);
 
 
 /* =========================================================
    INICIALIZAÇÃO
 ========================================================= */
 
-updateMenu();
+menuBest.textContent=
+  Math.floor(best);
 
-buildPhaseMenu();
+renderPhases();
 
 updateHUD();
 
-render();
-
-
 })();
-
 </script>
 
 </body>
