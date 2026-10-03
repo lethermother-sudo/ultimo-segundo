@@ -1,1 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Último Segundo</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      overflow: hidden;
+      background: #050509;
+      color: white;
+      font-family: Arial, sans-serif;
+      touch-action: none;
+    }
+
+    #game {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 20%, #17254a 0%, #080b18 45%, #030307 100%);
+    }
+
+    .grid {
+      position: absolute;
+      inset: 0;
+      opacity: 0.35;
+      background-image:
+        linear-gradient(rgba(80,130,255,.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(80,130,255,.15) 1px, transparent 1px);
+      background-size: 45px 45px;
+      transform: perspective(500px) rotateX(55deg) scale(1.5);
+      transform-origin: bottom;
+    }
+
+    #hud {
+      position: absolute;
+      top: 25px;
+      left: 20px;
+      right: 20px;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+    }
+
+    .score {
+      font-size: 32px;
+    }
+
+    .record {
+      color: #ffc400;
+      font-size: 15px;
+      margin-top: 8px;
+    }
+
+    #player {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      left: 50%;
+      bottom: 18%;
+      transform: translateX(-50%);
+      border-radius: 12px;
+      background: linear-gradient(135deg, #fff, #ffc400);
+      box-shadow:
+        0 0 15px #ffc400,
+        0 0 35px rgba(255,190,0,.7);
+      z-index: 5;
+      transition: left .08s linear;
+    }
+
+    #player::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #080b18;
+      border-radius: 50%;
+      top: 10px;
+      left: 8px;
+      box-shadow: 14px 0 #080b18;
+    }
+
+    .obstacle {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ff1744, #ff5a00);
+      box-shadow:
+        0 0 15px #ff1744,
+        0 0 35px rgba(255,23,68,.6);
+      z-index: 4;
+    }
+
+    #startScreen,
+    #gameOver {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 25px;
+      background: rgba(3,3,8,.88);
+      backdrop-filter: blur(10px);
+    }
+
+    #gameOver {
+      display: none;
+    }
+
+    h1 {
+      font-size: clamp(50px, 14vw, 90px);
+      line-height: .85;
+      font-style: italic;
+      font-weight: 900;
+      text-transform: uppercase;
+      text-shadow:
+        4px 4px 0 #ff8c00,
+        0 0 30px rgba(255,170,0,.4);
+    }
+
+    .subtitle {
+      margin-top: 20px;
+      color: #aaa;
+      letter-spacing: 2px;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 35px;
+      width: min(300px, 80vw);
+      padding: 18px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ffc400, #ff8c00);
+      color: #111;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(255,170,0,.35);
+    }
+
+    button:active {
+      transform: scale(.96);
+    }
+
+    .gameover-title {
+      font-size: 54px;
+      font-weight: 900;
+      font-style: italic;
+      color: #ff3b30;
+      text-shadow: 0 0 25px rgba(255,0,0,.4);
+    }
+
+    .final-score {
+      margin-top: 25px;
+      font-size: 22px;
+      color: #aaa;
+    }
+
+    .final-score strong {
+      display: block;
+      color: white;
+      font-size: 55px;
+      margin-top: 5px;
+    }
+
+    .hint {
+      position: absolute;
+      bottom: 7%;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: rgba(255,255,255,.45);
+      font-size: 13px;
+      z-index: 8;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="game">
+
+  <div class="grid"></div>
+
+  <div id="hud">
+    <div>
+      <div class="score" id="score">0.0</div>
+      <div class="record">🏆 RECORDE: <span id="record">0.0</span></div>
+    </div>
+
+    <div id="difficulty">NÍVEL 1</div>
+  </div>
+
+  <div id="player"></div>
+
+  <div class="hint">
+    TOQUE À ESQUERDA OU À DIREITA PARA DESVIAR
+  </div>
+
+  <div id="startScreen">
+    <h1>Último<br>Segundo</h1>
+    <div class="subtitle">
+      REFLEXO • ESTRATÉGIA • SOBREVIVÊNCIA
+    </div>
+
+    <button onclick="startGame()">
+      JOGAR
+    </button>
+  </div>
+
+  <div id="gameOver">
+
+    <div class="gameover-title">
+      GAME OVER
+    </div>
+
+    <div class="final-score">
+      SUA PONTUAÇÃO
+      <strong id="finalScore">0.0</strong>
+    </div>
+
+    <button onclick="startGame()">
+      TENTAR DE NOVO
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+  const game = document.getElementById("game");
+  const player = document.getElementById("player");
+  const scoreEl = document.getElementById("score");
+  const recordEl = document.getElementById("record");
+  const finalScoreEl = document.getElementById("finalScore");
+  const difficultyEl = document.getElementById("difficulty");
+
+  let playerX = 50;
+  let score = 0;
+  let record = Number(localStorage.getItem("ultimoSegundoRecorde") || 0);
+
+  let running = false;
+  let startTime = 0;
+  let lastSpawn = 0;
+  let speed = 3;
+  let obstacles = [];
+
+  recordEl.textContent = record.toFixed(1);
+
+  function movePlayer(x) {
+    playerX = Math.max(8, Math.min(92, x));
+    player.style.left = playerX + "%";
+  }
+
+  function spawnObstacle() {
+    const obstacle = document.createElement("div");
+
+    obstacle.className = "obstacle";
+
+    const x = Math.random() * 86 + 7;
+
+    obstacle.style.left = x + "%";
+    obstacle.style.top = "-60px";
+
+    game.appendChild(obstacle);
+
+    obstacles.push({
+      element: obstacle,
+      x: x,
+      y: -60
+    });
+  }
+
+  function collision(a, b) {
+    const ar = a.getBoundingClientRect();
+    const br = b.getBoundingClientRect();
+
+    return !(
+      ar.right < br.left ||
+      ar.left > br.right ||
+      ar.bottom < br.top ||
+      ar.top > br.bottom
+    );
+  }
+
+  function gameLoop(timestamp) {
+
+    if (!running) return;
+
+    score = (timestamp - startTime) / 1000;
+
+    scoreEl.textContent = score.toFixed(1);
+
+    speed = 3 + score * 0.08;
+
+    const level = Math.floor(score / 10) + 1;
+
+    difficultyEl.textContent = "NÍVEL " + level;
+
+    if (timestamp - lastSpawn > Math.max(350, 900 - score * 8)) {
+      spawnObstacle();
+      lastSpawn = timestamp;
+    }
+
+    obstacles.forEach((obstacle, index) => {
+
+      obstacle.y += speed;
+
+      obstacle.element.style.top = obstacle.y + "px";
+
+      if (collision(player, obstacle.element)) {
+        endGame();
+      }
+
+      if (obstacle.y > window.innerHeight + 100) {
+        obstacle.element.remove();
+        obstacles.splice(index, 1);
+      }
+
+    });
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  function startGame() {
+
+    obstacles.forEach(o => o.element.remove());
+    obstacles = [];
+
+    score = 0;
+    speed = 3;
+    playerX = 50;
+
+    movePlayer(50);
+
+    scoreEl.textContent = "0.0";
+
+    document.getElementById("startScreen").style.display = "none";
+    document.getElementById("gameOver").style.display = "none";
+
+    running = true;
+    startTime = performance.now();
+    lastSpawn = performance.now();
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  function endGame() {
+
+    if (!running) return;
+
+    running = false;
+
+    finalScoreEl.textContent = score.toFixed(1);
+
+    if (score > record) {
+      record = score;
+
+      localStorage.setItem(
+        "ultimoSegundoRecorde",
+        record.toString()
+      );
+
+      recordEl.textContent = record.toFixed(1);
+    }
+
+    document.getElementById("gameOver").style.display = "flex";
+
+    if (navigator.vibrate) {
+      navigator.vibrate([100, 50, 200]);
+    }
+  }
+
+  game.addEventListener("touchstart", function(e) {
+
+    if (!running) return;
+
+    const touch = e.touches[0];
+
+    const screenMiddle = window.innerWidth / 2;
+
+    if (touch.clientX < screenMiddle) {
+      movePlayer(playerX - 12);
+    } else {
+      movePlayer(playerX + 12);
+    }
+
+  }, { passive: true });
+
+  game.addEventListener("mousedown", function(e) {
+
+    if (!running) return;
+
+    const screenMiddle = window.innerWidth / 2;
+
+    if (e.clientX < screenMiddle) {
+      movePlayer(playerX - 12);
+    } else {
+      movePlayer(playerX + 12);
+    }
+
+  });
+
+</script>
+
+</body>
+</html>
