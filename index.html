@@ -1,196 +1,287 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Último Segundo</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Último Segundo</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
 
-    body {
-      overflow: hidden;
-      background: #050509;
-      color: white;
-      font-family: Arial, sans-serif;
-      touch-action: none;
-    }
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#030308;
+  font-family:Arial,sans-serif;
+  touch-action:none;
+}
 
-    #game {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      height: 100dvh;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 20%, #17254a 0%, #080b18 45%, #030307 100%);
-    }
+#game{
+  position:relative;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 25%,#18284b 0%,#080b18 38%,#020207 100%);
+}
 
-    .grid {
-      position: absolute;
-      inset: 0;
-      opacity: 0.35;
-      background-image:
-        linear-gradient(rgba(80,130,255,.15) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(80,130,255,.15) 1px, transparent 1px);
-      background-size: 45px 45px;
-      transform: perspective(500px) rotateX(55deg) scale(1.5);
-      transform-origin: bottom;
-    }
+/* FUNDO */
 
-    #hud {
-      position: absolute;
-      top: 25px;
-      left: 20px;
-      right: 20px;
-      z-index: 10;
-      display: flex;
-      justify-content: space-between;
-      font-weight: bold;
-    }
+.grid{
+  position:absolute;
+  width:160%;
+  height:80%;
+  left:-30%;
+  bottom:-10%;
+  opacity:.35;
+  transform:perspective(500px) rotateX(58deg);
+  background-image:
+    linear-gradient(rgba(0,180,255,.18) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,180,255,.18) 1px,transparent 1px);
+  background-size:50px 50px;
+}
 
-    .score {
-      font-size: 32px;
-    }
+/* HUD */
 
-    .record {
-      color: #ffc400;
-      font-size: 15px;
-      margin-top: 8px;
-    }
+#hud{
+  position:absolute;
+  top:25px;
+  left:20px;
+  right:20px;
+  z-index:20;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+}
 
-    #player {
-      position: absolute;
-      width: 42px;
-      height: 42px;
-      left: 50%;
-      bottom: 18%;
-      transform: translateX(-50%);
-      border-radius: 12px;
-      background: linear-gradient(135deg, #fff, #ffc400);
-      box-shadow:
-        0 0 15px #ffc400,
-        0 0 35px rgba(255,190,0,.7);
-      z-index: 5;
-      transition: left .08s linear;
-    }
+.score{
+  font-size:34px;
+  font-weight:900;
+}
 
-    #player::after {
-      content: "";
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      background: #080b18;
-      border-radius: 50%;
-      top: 10px;
-      left: 8px;
-      box-shadow: 14px 0 #080b18;
-    }
+.record{
+  margin-top:5px;
+  font-size:13px;
+  color:#ffc400;
+}
 
-    .obstacle {
-      position: absolute;
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #ff1744, #ff5a00);
-      box-shadow:
-        0 0 15px #ff1744,
-        0 0 35px rgba(255,23,68,.6);
-      z-index: 4;
-    }
+.level{
+  padding:8px 13px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:20px;
+  background:rgba(0,0,0,.25);
+  font-size:12px;
+  font-weight:bold;
+}
 
-    #startScreen,
-    #gameOver {
-      position: absolute;
-      inset: 0;
-      z-index: 20;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 25px;
-      background: rgba(3,3,8,.88);
-      backdrop-filter: blur(10px);
-    }
+/* FAIXAS */
 
-    #gameOver {
-      display: none;
-    }
+.lane{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:33.333%;
+  border-left:1px solid rgba(0,190,255,.08);
+}
 
-    h1 {
-      font-size: clamp(50px, 14vw, 90px);
-      line-height: .85;
-      font-style: italic;
-      font-weight: 900;
-      text-transform: uppercase;
-      text-shadow:
-        4px 4px 0 #ff8c00,
-        0 0 30px rgba(255,170,0,.4);
-    }
+.lane:nth-child(1){left:0}
+.lane:nth-child(2){left:33.333%}
+.lane:nth-child(3){left:66.666%}
 
-    .subtitle {
-      margin-top: 20px;
-      color: #aaa;
-      letter-spacing: 2px;
-      font-size: 14px;
-    }
+/* PERSONAGEM */
 
-    button {
-      margin-top: 35px;
-      width: min(300px, 80vw);
-      padding: 18px;
-      border: none;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #ffc400, #ff8c00);
-      color: #111;
-      font-size: 20px;
-      font-weight: 900;
-      cursor: pointer;
-      box-shadow: 0 8px 30px rgba(255,170,0,.35);
-    }
+#player{
+  position:absolute;
+  width:48px;
+  height:48px;
+  bottom:17%;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:10;
+  border-radius:14px;
+  background:linear-gradient(135deg,#fff,#ffc400);
+  box-shadow:
+    0 0 15px #ffc400,
+    0 0 40px rgba(255,190,0,.65);
+  transition:left .12s ease;
+}
 
-    button:active {
-      transform: scale(.96);
-    }
+#player:before{
+  content:"";
+  position:absolute;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:#090b14;
+  left:9px;
+  top:10px;
+  box-shadow:18px 0 #090b14;
+}
 
-    .gameover-title {
-      font-size: 54px;
-      font-weight: 900;
-      font-style: italic;
-      color: #ff3b30;
-      text-shadow: 0 0 25px rgba(255,0,0,.4);
-    }
+#player:after{
+  content:"";
+  position:absolute;
+  width:22px;
+  height:4px;
+  border-radius:5px;
+  background:#090b14;
+  left:13px;
+  bottom:10px;
+}
 
-    .final-score {
-      margin-top: 25px;
-      font-size: 22px;
-      color: #aaa;
-    }
+/* OBSTÁCULOS */
 
-    .final-score strong {
-      display: block;
-      color: white;
-      font-size: 55px;
-      margin-top: 5px;
-    }
+.obstacle{
+  position:absolute;
+  width:54px;
+  height:54px;
+  z-index:8;
+  transform:translateX(-50%);
+  border-radius:12px;
+  background:linear-gradient(135deg,#ff164f,#ff5b00);
+  box-shadow:
+    0 0 18px #ff164f,
+    0 0 45px rgba(255,30,70,.45);
+}
 
-    .hint {
-      position: absolute;
-      bottom: 7%;
-      left: 0;
-      right: 0;
-      text-align: center;
-      color: rgba(255,255,255,.45);
-      font-size: 13px;
-      z-index: 8;
-    }
-  </style>
+.obstacle.diamond{
+  border-radius:5px;
+  transform:translateX(-50%) rotate(45deg);
+  background:linear-gradient(135deg,#a500ff,#ff167d);
+}
+
+.obstacle.blue{
+  border-radius:50%;
+  background:linear-gradient(135deg,#00c6ff,#0072ff);
+  box-shadow:
+    0 0 20px #00aaff,
+    0 0 45px rgba(0,150,255,.5);
+}
+
+/* EFEITO */
+
+#flash{
+  position:absolute;
+  inset:0;
+  z-index:30;
+  pointer-events:none;
+  background:#ff1744;
+  opacity:0;
+}
+
+#combo{
+  position:absolute;
+  top:110px;
+  left:0;
+  right:0;
+  text-align:center;
+  z-index:15;
+  font-size:22px;
+  font-weight:900;
+  color:#ffc400;
+  opacity:0;
+}
+
+/* TELAS */
+
+.screen{
+  position:absolute;
+  inset:0;
+  z-index:50;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:25px;
+  background:rgba(2,2,8,.88);
+  backdrop-filter:blur(12px);
+}
+
+#gameOver{
+  display:none;
+}
+
+.logo{
+  font-size:clamp(55px,15vw,90px);
+  line-height:.82;
+  font-weight:1000;
+  font-style:italic;
+  text-transform:uppercase;
+  color:#fff;
+  text-shadow:
+    4px 4px 0 #ff9800,
+    0 0 30px rgba(255,170,0,.5);
+}
+
+.subtitle{
+  margin-top:22px;
+  color:#aaa;
+  letter-spacing:3px;
+  font-size:12px;
+}
+
+button{
+  width:min(310px,85vw);
+  margin-top:38px;
+  padding:19px;
+  border:0;
+  border-radius:16px;
+  background:linear-gradient(135deg,#ffd000,#ff8a00);
+  color:#111;
+  font-size:20px;
+  font-weight:1000;
+  box-shadow:0 8px 35px rgba(255,170,0,.35);
+}
+
+button:active{
+  transform:scale(.96);
+}
+
+.gameTitle{
+  color:#ff3040;
+  font-size:55px;
+  font-weight:1000;
+  font-style:italic;
+  text-shadow:0 0 30px rgba(255,0,30,.45);
+}
+
+.finalLabel{
+  margin-top:30px;
+  color:#aaa;
+  font-size:15px;
+}
+
+.finalScore{
+  margin-top:5px;
+  font-size:65px;
+  font-weight:1000;
+}
+
+.newRecord{
+  margin-top:10px;
+  color:#ffc400;
+  font-weight:900;
+  opacity:0;
+}
+
+.hint{
+  position:absolute;
+  bottom:6%;
+  left:0;
+  right:0;
+  z-index:15;
+  text-align:center;
+  color:rgba(255,255,255,.4);
+  font-size:11px;
+}
+</style>
 </head>
 
 <body>
@@ -199,23 +290,41 @@
 
   <div class="grid"></div>
 
+  <div class="lane"></div>
+  <div class="lane"></div>
+  <div class="lane"></div>
+
   <div id="hud">
     <div>
-      <div class="score" id="score">0.0</div>
-      <div class="record">🏆 RECORDE: <span id="record">0.0</span></div>
+      <div class="score" id="score">0</div>
+      <div class="record">
+        🏆 RECORDE <span id="record">0</span>
+      </div>
     </div>
 
-    <div id="difficulty">NÍVEL 1</div>
+    <div class="level" id="level">
+      NÍVEL 1
+    </div>
   </div>
+
+  <div id="combo">+ COMBO</div>
 
   <div id="player"></div>
 
+  <div id="flash"></div>
+
   <div class="hint">
-    TOQUE À ESQUERDA OU À DIREITA PARA DESVIAR
+    TOQUE NA ESQUERDA OU DIREITA PARA DESVIAR
   </div>
 
-  <div id="startScreen">
-    <h1>Último<br>Segundo</h1>
+  <!-- INÍCIO -->
+
+  <div class="screen" id="startScreen">
+
+    <div class="logo">
+      ÚLTIMO<br>SEGUNDO
+    </div>
+
     <div class="subtitle">
       REFLEXO • ESTRATÉGIA • SOBREVIVÊNCIA
     </div>
@@ -223,17 +332,27 @@
     <button onclick="startGame()">
       JOGAR
     </button>
+
   </div>
 
-  <div id="gameOver">
+  <!-- GAME OVER -->
 
-    <div class="gameover-title">
+  <div class="screen" id="gameOver">
+
+    <div class="gameTitle">
       GAME OVER
     </div>
 
-    <div class="final-score">
+    <div class="finalLabel">
       SUA PONTUAÇÃO
-      <strong id="finalScore">0.0</strong>
+    </div>
+
+    <div class="finalScore" id="finalScore">
+      0
+    </div>
+
+    <div class="newRecord" id="newRecord">
+      👑 NOVO RECORDE!
     </div>
 
     <button onclick="startGame()">
@@ -245,178 +364,249 @@
 </div>
 
 <script>
-  const game = document.getElementById("game");
-  const player = document.getElementById("player");
-  const scoreEl = document.getElementById("score");
-  const recordEl = document.getElementById("record");
-  const finalScoreEl = document.getElementById("finalScore");
-  const difficultyEl = document.getElementById("difficulty");
 
-  let playerX = 50;
-  let score = 0;
-  let record = Number(localStorage.getItem("ultimoSegundoRecorde") || 0);
+const game=document.getElementById("game");
+const player=document.getElementById("player");
+const scoreEl=document.getElementById("score");
+const recordEl=document.getElementById("record");
+const finalScoreEl=document.getElementById("finalScore");
+const levelEl=document.getElementById("level");
+const comboEl=document.getElementById("combo");
+const flash=document.getElementById("flash");
 
-  let running = false;
-  let startTime = 0;
-  let lastSpawn = 0;
-  let speed = 3;
-  let obstacles = [];
+let lane=1;
+let score=0;
+let record=Number(localStorage.getItem("ultimoSegundoRecorde")||0);
 
-  recordEl.textContent = record.toFixed(1);
+let running=false;
+let startTime=0;
+let lastSpawn=0;
+let obstacles=[];
+let combo=0;
 
-  function movePlayer(x) {
-    playerX = Math.max(8, Math.min(92, x));
-    player.style.left = playerX + "%";
+recordEl.textContent=record.toFixed(1);
+
+function setLane(value){
+
+  lane=Math.max(0,Math.min(2,value));
+
+  const positions=["16.666%","50%","83.333%"];
+
+  player.style.left=positions[lane];
+}
+
+function createObstacle(){
+
+  const el=document.createElement("div");
+
+  const types=["","diamond","blue"];
+  const type=types[Math.floor(Math.random()*types.length)];
+
+  if(type){
+    el.classList.add(type);
   }
 
-  function spawnObstacle() {
-    const obstacle = document.createElement("div");
+  const obstacleLane=Math.floor(Math.random()*3);
 
-    obstacle.className = "obstacle";
+  const positions=["16.666%","50%","83.333%"];
 
-    const x = Math.random() * 86 + 7;
+  el.style.left=positions[obstacleLane];
+  el.style.top="-70px";
 
-    obstacle.style.left = x + "%";
-    obstacle.style.top = "-60px";
+  game.appendChild(el);
 
-    game.appendChild(obstacle);
-
-    obstacles.push({
-      element: obstacle,
-      x: x,
-      y: -60
-    });
-  }
-
-  function collision(a, b) {
-    const ar = a.getBoundingClientRect();
-    const br = b.getBoundingClientRect();
-
-    return !(
-      ar.right < br.left ||
-      ar.left > br.right ||
-      ar.bottom < br.top ||
-      ar.top > br.bottom
-    );
-  }
-
-  function gameLoop(timestamp) {
-
-    if (!running) return;
-
-    score = (timestamp - startTime) / 1000;
-
-    scoreEl.textContent = score.toFixed(1);
-
-    speed = 3 + score * 0.08;
-
-    const level = Math.floor(score / 10) + 1;
-
-    difficultyEl.textContent = "NÍVEL " + level;
-
-    if (timestamp - lastSpawn > Math.max(350, 900 - score * 8)) {
-      spawnObstacle();
-      lastSpawn = timestamp;
-    }
-
-    obstacles.forEach((obstacle, index) => {
-
-      obstacle.y += speed;
-
-      obstacle.element.style.top = obstacle.y + "px";
-
-      if (collision(player, obstacle.element)) {
-        endGame();
-      }
-
-      if (obstacle.y > window.innerHeight + 100) {
-        obstacle.element.remove();
-        obstacles.splice(index, 1);
-      }
-
-    });
-
-    requestAnimationFrame(gameLoop);
-  }
-
-  function startGame() {
-
-    obstacles.forEach(o => o.element.remove());
-    obstacles = [];
-
-    score = 0;
-    speed = 3;
-    playerX = 50;
-
-    movePlayer(50);
-
-    scoreEl.textContent = "0.0";
-
-    document.getElementById("startScreen").style.display = "none";
-    document.getElementById("gameOver").style.display = "none";
-
-    running = true;
-    startTime = performance.now();
-    lastSpawn = performance.now();
-
-    requestAnimationFrame(gameLoop);
-  }
-
-  function endGame() {
-
-    if (!running) return;
-
-    running = false;
-
-    finalScoreEl.textContent = score.toFixed(1);
-
-    if (score > record) {
-      record = score;
-
-      localStorage.setItem(
-        "ultimoSegundoRecorde",
-        record.toString()
-      );
-
-      recordEl.textContent = record.toFixed(1);
-    }
-
-    document.getElementById("gameOver").style.display = "flex";
-
-    if (navigator.vibrate) {
-      navigator.vibrate([100, 50, 200]);
-    }
-  }
-
-  game.addEventListener("touchstart", function(e) {
-
-    if (!running) return;
-
-    const touch = e.touches[0];
-
-    const screenMiddle = window.innerWidth / 2;
-
-    if (touch.clientX < screenMiddle) {
-      movePlayer(playerX - 12);
-    } else {
-      movePlayer(playerX + 12);
-    }
-
-  }, { passive: true });
-
-  game.addEventListener("mousedown", function(e) {
-
-    if (!running) return;
-
-    const screenMiddle = window.innerWidth / 2;
-
-    if (e.clientX < screenMiddle) {
-      movePlayer(playerX - 12);
-    } else {
-      movePlayer(playerX + 12);
-    }
-
+  obstacles.push({
+    element:el,
+    lane:obstacleLane,
+    y:-70
   });
+}
+
+function hitTest(obstacle){
+
+  const a=player.getBoundingClientRect();
+  const b=obstacle.element.getBoundingClientRect();
+
+  return !(
+    a.right<b.left+8 ||
+    a.left>b.right-8 ||
+    a.bottom<b.top+8 ||
+    a.top>b.bottom-8
+  );
+}
+
+function showCombo(){
+
+  combo++;
+
+  if(combo<2)return;
+
+  comboEl.textContent="🔥 COMBO x"+combo;
+  comboEl.style.opacity="1";
+
+  clearTimeout(showCombo.timer);
+
+  showCombo.timer=setTimeout(()=>{
+    comboEl.style.opacity="0";
+  },500);
+}
+
+function flashScreen(){
+
+  flash.style.opacity=".35";
+
+  setTimeout(()=>{
+    flash.style.opacity="0";
+  },80);
+}
+
+function gameLoop(time){
+
+  if(!running)return;
+
+  score=(time-startTime)/1000;
+
+  scoreEl.textContent=score.toFixed(1);
+
+  const level=Math.floor(score/10)+1;
+
+  levelEl.textContent="NÍVEL "+level;
+
+  const speed=3.5+(score*.075);
+
+  const spawnDelay=Math.max(300,850-score*7);
+
+  if(time-lastSpawn>spawnDelay){
+
+    createObstacle();
+
+    lastSpawn=time;
+  }
+
+  for(let i=obstacles.length-1;i>=0;i--){
+
+    const o=obstacles[i];
+
+    o.y+=speed;
+
+    o.element.style.top=o.y+"px";
+
+    if(o.lane===lane && hitTest(o)){
+
+      endGame();
+      return;
+    }
+
+    if(o.y>window.innerHeight+100){
+
+      o.element.remove();
+
+      obstacles.splice(i,1);
+
+      showCombo();
+    }
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+function startGame(){
+
+  obstacles.forEach(o=>o.element.remove());
+
+  obstacles=[];
+
+  score=0;
+  combo=0;
+
+  setLane(1);
+
+  scoreEl.textContent="0.0";
+
+  document.getElementById("startScreen").style.display="none";
+  document.getElementById("gameOver").style.display="none";
+
+  document.getElementById("newRecord").style.opacity="0";
+
+  running=true;
+
+  startTime=performance.now();
+  lastSpawn=performance.now();
+
+  requestAnimationFrame(gameLoop);
+}
+
+function endGame(){
+
+  if(!running)return;
+
+  running=false;
+
+  flashScreen();
+
+  if(navigator.vibrate){
+
+    navigator.vibrate([
+      100,
+      50,
+      180
+    ]);
+  }
+
+  finalScoreEl.textContent=score.toFixed(1);
+
+  const recordElement=document.getElementById("newRecord");
+
+  if(score>record){
+
+    record=score;
+
+    localStorage.setItem(
+      "ultimoSegundoRecorde",
+      record.toString()
+    );
+
+    recordEl.textContent=record.toFixed(1);
+
+    recordElement.style.opacity="1";
+  }
+
+  document.getElementById("gameOver").style.display="flex";
+}
+
+/* CONTROLES */
+
+game.addEventListener("touchstart",function(e){
+
+  if(!running)return;
+
+  const x=e.touches[0].clientX;
+
+  if(x<window.innerWidth/2){
+
+    setLane(lane-1);
+
+  }else{
+
+    setLane(lane+1);
+  }
+
+},{passive:true});
+
+game.addEventListener("mousedown",function(e){
+
+  if(!running)return;
+
+  if(e.clientX<window.innerWidth/2){
+
+    setLane(lane-1);
+
+  }else{
+
+    setLane(lane+1);
+  }
+
+});
 
 </script>
 
