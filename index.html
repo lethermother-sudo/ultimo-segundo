@@ -2537,14 +2537,14 @@ function update(dt){
   */
 
   laneVisual+=
-    (
-      targetLane-
-      laneVisual
-    )*
-    Math.min(
-      1,
-      dt*12
-    );
+  (
+    targetLane-
+    laneVisual
+  )*
+  Math.min(
+    1,
+    dt*28
+  );
 
   lane=
     Math.round(
