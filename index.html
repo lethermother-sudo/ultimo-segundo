@@ -1466,227 +1466,402 @@ function drawCoin(o){
 
 function drawRunner(){
 
-  var x=laneX(lane,.98);
-  var ground=H*.91;
+  var x = laneX(lane,.98);
+  var ground = H*.91;
 
-  var lift=jump>0
+  var lift = jump>0
     ? Math.sin(((.38-jump)/.38)*Math.PI)*H*.14
     : 0;
 
-  var y=ground-lift;
+  var y = ground-lift+Math.sin(gameTime*15)*H*.008;
 
-  /* ANIMAÇÃO DE CORRIDA */
-  var run=Math.sin(gameTime*18);
+  var run = Math.sin(gameTime*15);
 
-  var leftLeg=run*20;
-  var rightLeg=-run*20;
+  var arm = run*13;
+  var leg = run*18;
 
-  var leftArm=-run*16;
-  var rightArm=run*16;
+  /* =========================
+     INCLINAÇÃO DO PERSONAGEM
+     ========================= */
+
+  var lean = (targetLane-lane)*.18;
+
+  if(jump>0){
+    lean *= .45;
+  }
 
   ctx.save();
   ctx.translate(x,y);
+  ctx.rotate(lean);
 
-  /* SOMBRA */
+  /* =========================
+     SOMBRA
+     ========================= */
 
-  ctx.globalAlpha=.28;
+  ctx.globalAlpha=.25;
   ctx.fillStyle="#000";
-
   ctx.beginPath();
-  ctx.ellipse(0,8,32,9,0,0,Math.PI*2);
+  ctx.ellipse(
+    0,
+    28,
+    20,
+    8,
+    0,
+    0,
+    Math.PI*2
+  );
   ctx.fill();
-
   ctx.globalAlpha=1;
 
-  /* PERNA ESQUERDA */
+  /* =========================
+     EFEITO DE ENERGIA
+     ========================= */
 
-  ctx.strokeStyle="#17263d";
-  ctx.lineWidth=13;
+  ctx.shadowBlur=22;
+  ctx.shadowColor="#20eaff";
+
+  /* =========================
+     PERNAS
+     ========================= */
+
+  var jumping = jump>0;
+
+  var legA;
+  var legB;
+
+  if(jumping){
+
+    legA = -10;
+    legB = 10;
+
+  }else{
+
+    legA = leg;
+    legB = -leg;
+
+  }
+
+  /* perna esquerda */
+
+  ctx.strokeStyle="#172b4d";
+  ctx.lineWidth=10;
   ctx.lineCap="round";
 
   ctx.beginPath();
-  ctx.moveTo(-8,-22);
-  ctx.lineTo(-13+leftLeg,19);
+  ctx.moveTo(-6,15);
+  ctx.lineTo(-10+legA*.35,30);
   ctx.stroke();
 
-  /* PERNA DIREITA */
+  /* perna direita */
 
   ctx.beginPath();
-  ctx.moveTo(8,-22);
-  ctx.lineTo(13+rightLeg,19);
+  ctx.moveTo(6,15);
+  ctx.lineTo(10+legB*.35,30);
   ctx.stroke();
 
-  /* TÊNIS ESQUERDO */
+  /* botas */
 
-  ctx.strokeStyle="#55f4ff";
+  ctx.shadowBlur=14;
+  ctx.shadowColor="#ff27d8";
+
+  ctx.strokeStyle="#22eaff";
   ctx.lineWidth=7;
 
   ctx.beginPath();
-  ctx.moveTo(-13+leftLeg,19);
-  ctx.lineTo(-25+leftLeg,22);
+  ctx.moveTo(-10+legA*.35,30);
+  ctx.lineTo(-18+legA*.55,30);
   ctx.stroke();
-
-  /* TÊNIS DIREITO */
 
   ctx.beginPath();
-  ctx.moveTo(13+rightLeg,19);
-  ctx.lineTo(25+rightLeg,22);
+  ctx.moveTo(10+legB*.35,30);
+  ctx.lineTo(18+legB*.55,30);
   ctx.stroke();
 
-  /* MOCHILA */
+  /* =========================
+     CORPO / JAQUETA
+     ========================= */
 
-  ctx.fillStyle="#081426";
   ctx.shadowBlur=18;
-  ctx.shadowColor="#14eaff";
+  ctx.shadowColor="#13eaff";
+
+  var bodyGrad=ctx.createLinearGradient(-16,-10,16,22);
+
+  bodyGrad.addColorStop(0,"#172f55");
+  bodyGrad.addColorStop(.55,"#0c1934");
+  bodyGrad.addColorStop(1,"#081022");
+
+  ctx.fillStyle=bodyGrad;
 
   ctx.beginPath();
-  ctx.roundRect(-24,-66,48,48,13);
+
+  ctx.roundRect(
+    -16,
+    -10,
+    32,
+    35,
+    10
+  );
+
   ctx.fill();
 
-  ctx.shadowBlur=0;
+  /* detalhe central */
 
-  /* DETALHE DA MOCHILA */
+  ctx.shadowBlur=12;
+  ctx.shadowColor="#ff28d8";
 
-  ctx.strokeStyle="#203d5c";
-  ctx.lineWidth=3;
+  ctx.fillStyle="#ff27d8";
 
   ctx.beginPath();
-  ctx.roundRect(-20,-61,40,38,10);
+
+  ctx.roundRect(
+    -5,
+    3,
+    10,
+    5,
+    2
+  );
+
+  ctx.fill();
+
+  /* =========================
+     BRAÇOS
+     ========================= */
+
+  ctx.shadowBlur=12;
+  ctx.shadowColor="#20eaff";
+
+  ctx.strokeStyle="#142b50";
+  ctx.lineWidth=9;
+  ctx.lineCap="round";
+
+  ctx.beginPath();
+
+  ctx.moveTo(-13,-4);
+  ctx.lineTo(-23-arm*.35,12);
+
   ctx.stroke();
 
-  /* NÚCLEO DE ENERGIA */
-
-  ctx.fillStyle="#ff2bd6";
-  ctx.shadowBlur=15;
-  ctx.shadowColor="#ff2bd6";
-
   ctx.beginPath();
-  ctx.roundRect(-7,-48,14,8,3);
-  ctx.fill();
 
-  ctx.shadowBlur=0;
+  ctx.moveTo(13,-4);
+  ctx.lineTo(23+arm*.35,12);
 
-  /* CORPO */
+  ctx.stroke();
 
-  ctx.fillStyle="#142743";
-
-  ctx.beginPath();
-  ctx.roundRect(-18,-61,36,48,11);
-  ctx.fill();
-
-  /* FAIXA LUMINOSA */
+  /* mãos */
 
   ctx.fillStyle="#28eaff";
-  ctx.fillRect(-12,-56,24,5);
-
-  /* BRAÇO ESQUERDO */
-
-  ctx.strokeStyle="#1b3150";
-  ctx.lineWidth=10;
 
   ctx.beginPath();
-  ctx.moveTo(-15,-52);
-  ctx.lineTo(-27+leftArm,-25);
-  ctx.stroke();
-
-  /* BRAÇO DIREITO */
+  ctx.arc(-23-arm*.35,12,4,0,Math.PI*2);
+  ctx.fill();
 
   ctx.beginPath();
-  ctx.moveTo(15,-52);
-  ctx.lineTo(27+rightArm,-25);
-  ctx.stroke();
+  ctx.arc(23+arm*.35,12,4,0,Math.PI*2);
+  ctx.fill();
 
-  /* LUZ DAS MÃOS */
+  /* =========================
+     PESCOÇO
+     ========================= */
 
-  ctx.fillStyle="#5ef4ff";
+  ctx.fillStyle="#111d35";
+
+  ctx.fillRect(
+    -6,
+    -15,
+    12,
+    7
+  );
+
+  /* =========================
+     CABEÇA / CAPACETE
+     ========================= */
+
+  ctx.shadowBlur=20;
+  ctx.shadowColor="#24eaff";
+
+  var headGrad=ctx.createLinearGradient(
+    -17,-40,
+    17,-10
+  );
+
+  headGrad.addColorStop(0,"#1a3459");
+  headGrad.addColorStop(.5,"#09172e");
+  headGrad.addColorStop(1,"#050b19");
+
+  ctx.fillStyle=headGrad;
+
+  ctx.beginPath();
+
+  ctx.roundRect(
+    -17,
+    -42,
+    34,
+    29,
+    12
+  );
+
+  ctx.fill();
+
+  /* visor */
+
   ctx.shadowBlur=10;
-  ctx.shadowColor="#5ef4ff";
+  ctx.shadowColor="#ff2bd8";
+
+  ctx.fillStyle="#050a15";
 
   ctx.beginPath();
-  ctx.arc(-27+leftArm,-25,4,0,Math.PI*2);
+
+  ctx.roundRect(
+    -14,
+    -35,
+    28,
+    11,
+    5
+  );
+
+  ctx.fill();
+
+  /* reflexo do visor */
+
+  ctx.fillStyle="#18344e";
+
+  ctx.fillRect(
+    -10,
+    -33,
+    20,
+    3
+  );
+
+  /* olhos/LEDs */
+
+  ctx.shadowBlur=14;
+  ctx.shadowColor="#20eaff";
+
+  ctx.fillStyle="#26eaff";
+
+  ctx.beginPath();
+  ctx.arc(-8,-29,3,0,Math.PI*2);
   ctx.fill();
 
   ctx.beginPath();
-  ctx.arc(27+rightArm,-25,4,0,Math.PI*2);
+  ctx.arc(8,-29,3,0,Math.PI*2);
   ctx.fill();
 
-  ctx.shadowBlur=0;
+  /* =========================
+     ARO DO CAPACETE
+     ========================= */
 
-  /* PESCOÇO */
-
-  ctx.fillStyle="#0a1425";
-  ctx.fillRect(-7,-70,14,12);
-
-  /* CABEÇA / CAPACETE */
-
-  ctx.fillStyle="#050b16";
-
-  ctx.beginPath();
-  ctx.arc(0,-86,21,0,Math.PI*2);
-  ctx.fill();
-
-  /* ARO DO CAPACETE */
-
-  ctx.strokeStyle="#5cefff";
+  ctx.strokeStyle="#20eaff";
   ctx.lineWidth=4;
+  ctx.shadowBlur=18;
+  ctx.shadowColor="#20eaff";
+
+  ctx.beginPath();
+
+  ctx.arc(
+    0,
+    -28,
+    20,
+    Math.PI*1.08,
+    Math.PI*1.92
+  );
+
+  ctx.stroke();
+
+  /* =========================
+     MOCHILA DE ENERGIA
+     ========================= */
 
   ctx.shadowBlur=16;
-  ctx.shadowColor="#21eaff";
+  ctx.shadowColor="#ff27d8";
+
+  ctx.fillStyle="#101d39";
 
   ctx.beginPath();
-  ctx.arc(0,-86,21,0,Math.PI*2);
-  ctx.stroke();
 
-  ctx.shadowBlur=0;
+  ctx.roundRect(
+    -10,
+    -4,
+    20,
+    20,
+    6
+  );
 
-  /* VISOR */
-
-  ctx.fillStyle="#101f35";
-
-  ctx.beginPath();
-  ctx.roundRect(-16,-92,32,14,7);
   ctx.fill();
 
-  ctx.strokeStyle="#244762";
+  ctx.strokeStyle="#1eeaff";
   ctx.lineWidth=2;
+
   ctx.stroke();
 
-  /* LUZES DO VISOR */
+  /* núcleo */
 
-  ctx.fillStyle="#55efff";
-  ctx.shadowBlur=12;
-  ctx.shadowColor="#55efff";
+  ctx.fillStyle="#ff27d8";
 
   ctx.beginPath();
-  ctx.arc(-10,-85,3.5,0,Math.PI*2);
+
+  ctx.arc(
+    0,
+    6,
+    3,
+    0,
+    Math.PI*2
+  );
+
   ctx.fill();
 
-  ctx.beginPath();
-  ctx.arc(10,-85,3.5,0,Math.PI*2);
-  ctx.fill();
+  /* =========================
+     PROPULSOR
+     ========================= */
 
-  ctx.shadowBlur=0;
+  if(!jumping){
 
-  /* PROPULSOR */
+    ctx.shadowBlur=20;
+    ctx.shadowColor="#ff27d8";
 
-  var thrust=8+Math.abs(Math.cos(gameTime*18))*5;
+    ctx.strokeStyle="#ff27d8";
+    ctx.lineWidth=4;
 
-  ctx.fillStyle="rgba(255,25,220,.25)";
-  ctx.shadowBlur=20;
-  ctx.shadowColor="#ff21dd";
+    ctx.beginPath();
 
-  ctx.beginPath();
-  ctx.ellipse(0,27,25+thrust,8,0,0,Math.PI*2);
-  ctx.fill();
+    ctx.moveTo(-7,24);
+    ctx.lineTo(-10,34+Math.abs(run)*5);
 
-  ctx.strokeStyle="#ff29df";
-  ctx.lineWidth=4;
+    ctx.stroke();
 
-  ctx.beginPath();
-  ctx.ellipse(0,27,24+thrust,7,0,0,Math.PI*2);
-  ctx.stroke();
+    ctx.beginPath();
 
-  ctx.shadowBlur=0;
+    ctx.moveTo(7,24);
+    ctx.lineTo(10,34+Math.abs(run)*5);
+
+    ctx.stroke();
+
+  }else{
+
+    /* energia durante o salto */
+
+    ctx.shadowBlur=22;
+    ctx.shadowColor="#20eaff";
+
+    ctx.strokeStyle="#20eaff";
+    ctx.lineWidth=4;
+
+    ctx.beginPath();
+
+    ctx.moveTo(-7,24);
+    ctx.lineTo(-11,36);
+
+    ctx.stroke();
+
+    ctx.beginPath();
+
+    ctx.moveTo(7,24);
+    ctx.lineTo(11,36);
+
+    ctx.stroke();
+
+  }
 
   ctx.restore();
 }
