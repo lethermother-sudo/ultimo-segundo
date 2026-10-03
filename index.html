@@ -1660,6 +1660,133 @@ function laneX(l,z){
 
 function spawnObstacle(){
 
+  var pattern=Math.random();
+
+  var difficulty=
+    1+
+    (currentPhase-1)*.12;
+
+  /*
+    Fases mais altas começam a
+    usar combinações mais difíceis.
+  */
+
+  if(currentPhase>=7 && pattern<.18){
+
+    var safe=Math.floor(Math.random()*3);
+
+    for(var l=0;l<3;l++){
+
+      if(l!==safe){
+
+        objects.push({
+          type:"ob",
+          lane:l,
+          z:0,
+          kind:
+            Math.random()<.5
+            ?"gate"
+            :"column"
+        });
+
+      }
+    }
+
+    return;
+  }
+
+
+  if(currentPhase>=5 && pattern<.34){
+
+    var first=
+      Math.floor(Math.random()*3);
+
+    var second=
+      Math.floor(Math.random()*3);
+
+    while(second===first){
+      second=
+        Math.floor(Math.random()*3);
+    }
+
+    objects.push({
+      type:"ob",
+      lane:first,
+      z:0,
+      kind:"traffic"
+    });
+
+    objects.push({
+      type:"ob",
+      lane:second,
+      z:-.10,
+      kind:
+        Math.random()<.5
+        ?"drone"
+        :"column"
+    });
+
+    return;
+  }
+
+
+  if(pattern<.25){
+
+    var safeLane=
+      Math.floor(Math.random()*3);
+
+    for(var a=0;a<3;a++){
+
+      if(a!==safeLane){
+
+        objects.push({
+          type:"ob",
+          lane:a,
+          z:0,
+          kind:"gate"
+        });
+
+      }
+    }
+
+  }else if(pattern<.50){
+
+    objects.push({
+      type:"ob",
+      lane:
+        Math.floor(
+          Math.random()*3
+        ),
+      z:0,
+      kind:"traffic"
+    });
+
+  }else if(pattern<.75){
+
+    objects.push({
+      type:"ob",
+      lane:
+        Math.floor(
+          Math.random()*3
+        ),
+      z:0,
+      kind:"column"
+    });
+
+  }else{
+
+    objects.push({
+      type:"ob",
+      lane:
+        Math.floor(
+          Math.random()*3
+        ),
+      z:0,
+      kind:"drone"
+    });
+  }
+}
+
   var pattern=
     Math.random();
 
@@ -1885,15 +2012,23 @@ function update(dt){
 
   if(spawn<=0){
 
-    spawnObstacle();
+  spawnObstacle();
 
-    spawn=
-      Math.max(
-        .40,
-        .92-speed*.34
-      )+
-      Math.random()*.28;
-  }
+  var difficulty=
+    1+
+    (currentPhase-1)*.10;
+
+  spawn=
+    Math.max(
+      .26,
+      (
+        .92-
+        speed*.34
+      )/
+      difficulty
+    )+
+    Math.random()*.22;
+}
 
 
   if(coinSpawn<=0){
