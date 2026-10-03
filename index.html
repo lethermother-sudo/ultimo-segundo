@@ -1017,65 +1017,160 @@ function showError(message){
 
 async function boot(){
 
+  // ============================================
+  // BOTÕES — LIGADOS IMEDIATAMENTE
+  // Não dependem do carregamento do 3D
+  // ============================================
+
+  const startBtn = document.getElementById("startBtn");
+  const phaseBtn = document.getElementById("phaseBtn");
+
+  if(startBtn){
+    startBtn.addEventListener("click", () => {
+
+      const home = document.getElementById("homeMenu");
+      const game = document.getElementById("gameScreen");
+
+      if(home) home.classList.add("hidden");
+      if(game) game.classList.remove("hidden");
+
+      // Se o sistema do jogo já estiver pronto
+      if(typeof startGame === "function"){
+        try{
+          startGame();
+        }catch(error){
+          console.error("Erro ao iniciar missão:", error);
+        }
+      }
+
+    });
+  }
+
+  if(phaseBtn){
+    phaseBtn.addEventListener("click", () => {
+
+      const home = document.getElementById("homeMenu");
+      const phases = document.getElementById("phaseMenu");
+
+      if(home) home.classList.add("hidden");
+      if(phases) phases.classList.remove("hidden");
+
+    });
+  }
+
+
+  // ============================================
+  // CARREGAMENTO DO THREE.JS
+  // ============================================
+
   try{
 
-    /*
-      Primeiro carrega somente o núcleo.
-      Assim o jogo não depende do Bloom para abrir.
-    */
+    THREE = await import(THREE_URL);
 
-    THREE=
-      await import(THREE_URL);
+  }catch(error){
 
+    console.error("Erro ao carregar Three.js:", error);
 
-    /*
-      Agora tenta carregar os efeitos.
-      Se falhar, continua sem eles.
-    */
+    const errorScreen = document.getElementById("errorScreen");
 
-    try{
-
-      const modules=
-        await Promise.all([
-          import(
-            ADDON_BASE+
-            "EffectComposer.js"
-          ),
-          import(
-            ADDON_BASE+
-            "RenderPass.js"
-          ),
-          import(
-            ADDON_BASE+
-            "UnrealBloomPass.js"
-          ),
-          import(
-            ADDON_BASE+
-            "OutputPass.js"
-          )
-        ]);
-
-      EffectComposer=
-        modules[0].EffectComposer;
-
-      RenderPass=
-        modules[1].RenderPass;
-
-      UnrealBloomPass=
-        modules[2].UnrealBloomPass;
-
-      OutputPass=
-        modules[3].OutputPass;
-
-    }catch(error){
-
-      console.warn(
-        "Bloom indisponível:",
-        error
-      );
-
+    if(errorScreen){
+      errorScreen.classList.remove("hidden");
     }
 
+    return;
+  }
+
+
+  // ============================================
+  // EFEITOS VISUAIS — OPCIONAIS
+  // Se falharem, o jogo continua normalmente
+  // ============================================
+
+  try{
+
+    const modules = await Promise.all([
+
+      import(
+        ADDON_BASE +
+        "EffectComposer.js"
+      ),
+
+      import(
+        ADDON_BASE +
+        "RenderPass.js"
+      ),
+
+      import(
+        ADDON_BASE +
+        "UnrealBloomPass.js"
+      ),
+
+      import(
+        ADDON_BASE +
+        "OutputPass.js"
+      )
+
+    ]);
+
+    EffectComposer = modules[0].EffectComposer;
+    RenderPass = modules[1].RenderPass;
+    UnrealBloomPass = modules[2].UnrealBloomPass;
+    OutputPass = modules[3].OutputPass;
+
+  }catch(error){
+
+    console.warn(
+      "Bloom indisponível. Continuando sem bloom.",
+      error
+    );
+
+    EffectComposer = null;
+    RenderPass = null;
+    UnrealBloomPass = null;
+    OutputPass = null;
+
+  }
+
+
+  // ============================================
+  // INICIALIZAÇÃO DO JOGO
+  // ============================================
+
+  try{
+
+    createRenderer();
+
+    createScene();
+
+    setupEvents();
+
+    setupPhase();
+
+    animate(
+      performance.now()
+    );
+
+  }catch(error){
+
+    console.error(
+      "Erro ao iniciar sistema gráfico:",
+      error
+    );
+
+    showError(
+      "O sistema gráfico não conseguiu iniciar."
+    );
+
+  }
+
+}
+
+
+// ============================================
+// INICIA O SISTEMA
+// ============================================
+
+boot();
 
     createRenderer();
     createScene();
