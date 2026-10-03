@@ -2,10 +2,11 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#02040d">
 
-<title>Último Segundo 3D</title>
+<meta name="viewport"
+content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+
+<title>Último Segundo</title>
 
 <style>
 *{
@@ -18,283 +19,593 @@ html,body{
   width:100%;
   height:100%;
   overflow:hidden;
-  background:#02040d;
+  background:#000;
   font-family:Arial,Helvetica,sans-serif;
   touch-action:none;
-  user-select:none;
+}
+
+body{
+  position:fixed;
+  inset:0;
 }
 
 #game{
   position:fixed;
   inset:0;
+  overflow:hidden;
+  background:#000;
+}
+
+canvas{
+  position:absolute;
+  inset:0;
   width:100%;
   height:100%;
+  display:block;
 }
+
+/* ================= HUD ================= */
 
 #hud{
-  position:fixed;
-  inset:0;
-  z-index:20;
+  position:absolute;
+  top:12px;
+  left:12px;
+  right:12px;
+  display:grid;
+  grid-template-columns:1fr 1.1fr 1.25fr 1fr;
+  gap:7px;
+  z-index:30;
   pointer-events:none;
-  color:#fff;
 }
 
-#score{
-  position:absolute;
-  left:22px;
-  top:calc(env(safe-area-inset-top) + 10px);
-  font-size:40px;
-  font-weight:900;
-  text-shadow:0 3px 18px #000;
-}
-
-#coins{
-  position:absolute;
-  left:24px;
-  top:calc(env(safe-area-inset-top) + 60px);
-  color:#ffd83d;
-  font-size:16px;
-  font-weight:900;
-}
-
-#target{
-  position:absolute;
-  left:24px;
-  top:calc(env(safe-area-inset-top) + 87px);
-  color:#aab9ca;
-  font-size:10px;
-  font-weight:900;
-}
-
-#progressBox{
-  position:absolute;
-  left:24px;
-  right:24px;
-  top:calc(env(safe-area-inset-top) + 108px);
-  height:4px;
-  border-radius:10px;
-  overflow:hidden;
-  background:rgba(255,255,255,.13);
-}
-
-#progress{
-  width:0%;
-  height:100%;
-  background:linear-gradient(90deg,#1ce4ff,#7047ff);
-  box-shadow:0 0 14px #20eaff;
-}
-
-#speed{
-  position:absolute;
-  right:20px;
-  top:calc(env(safe-area-inset-top) + 12px);
-  color:#59eaff;
-  font-size:13px;
-  font-weight:900;
-}
-
-#phaseHud{
-  position:absolute;
-  right:20px;
-  top:calc(env(safe-area-inset-top) + 38px);
-  color:#ffd83d;
-  font-size:10px;
-  font-weight:900;
-  text-align:right;
-}
-
-#sound{
-  position:absolute;
-  right:18px;
-  top:calc(env(safe-area-inset-top) + 65px);
-  pointer-events:auto;
-  padding:9px 13px;
-  border-radius:14px;
-  color:#59eaff;
-  background:rgba(2,9,23,.88);
-  border:1px solid rgba(80,225,255,.32);
-  font-weight:900;
-}
-
-#hint{
-  position:absolute;
-  bottom:17px;
-  left:0;
-  right:0;
-  text-align:center;
-  color:rgba(255,255,255,.42);
-  font-size:10px;
-  font-weight:700;
-}
-
-.screen{
-  position:fixed;
-  inset:0;
-  z-index:50;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:
-    radial-gradient(
-      circle at 50% 35%,
-      rgba(25,210,255,.13),
-      transparent 45%
-    ),
-    rgba(1,3,10,.90);
-  backdrop-filter:blur(12px);
-}
-
-.screen.show{
-  display:flex;
-}
-
-.card{
-  width:min(430px,92vw);
-  max-height:90vh;
-  overflow:auto;
-  padding:30px 22px;
-  border-radius:27px;
-  background:
-    linear-gradient(
-      145deg,
-      rgba(7,17,38,.98),
-      rgba(2,5,15,.98)
-    );
-  border:1px solid rgba(80,230,255,.28);
+.box{
+  min-height:67px;
+  padding:10px 12px;
+  border:1px solid rgba(83,225,255,.38);
+  border-radius:17px;
+  background:rgba(1,8,14,.80);
   box-shadow:
-    0 0 80px rgba(20,200,255,.14),
-    inset 0 0 35px rgba(30,200,255,.04);
-  text-align:center;
+    0 0 18px rgba(0,220,255,.08),
+    inset 0 0 20px rgba(0,220,255,.035);
+  backdrop-filter:blur(5px);
 }
 
-.logo{
-  color:#59eaff;
+.label{
+  color:#8b99a4;
   font-size:10px;
-  font-weight:900;
-  letter-spacing:5px;
-  margin-bottom:11px;
+  font-weight:800;
+  letter-spacing:3px;
+  margin-bottom:4px;
 }
 
-h1{
-  margin:0;
+.value{
   color:#fff;
-  font-size:44px;
-  line-height:.92;
-  letter-spacing:-2px;
-  text-shadow:0 0 20px rgba(50,230,255,.75);
+  font-size:25px;
+  font-weight:900;
 }
 
-.subtitle{
-  margin:17px 0 25px;
-  color:#8497af;
-  font-size:11px;
+#life{
+  font-size:22px;
   letter-spacing:1px;
 }
 
-button{
-  appearance:none;
-  border:0;
-  cursor:pointer;
-  color:white;
+/* ================= PHASE ================= */
+
+#phaseTitle{
+  position:absolute;
+  top:137px;
+  left:50%;
+  transform:translateX(-50%);
+
+  color:#70efff;
+  border:2px solid #57eaff;
+  border-radius:35px;
+
+  padding:11px 24px;
+
+  font-size:14px;
   font-weight:900;
+  letter-spacing:3px;
+
+  white-space:nowrap;
+
+  background:rgba(0,10,16,.58);
+
+  box-shadow:
+    0 0 25px rgba(40,225,255,.24),
+    inset 0 0 20px rgba(40,225,255,.05);
+
+  z-index:30;
+  pointer-events:none;
 }
 
-button:active{
-  transform:scale(.97);
+#objective{
+  position:absolute;
+  top:184px;
+  left:50%;
+  transform:translateX(-50%);
+
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:3px;
+
+  white-space:nowrap;
+
+  text-shadow:0 0 16px #fff;
+
+  z-index:30;
+  pointer-events:none;
 }
 
-.mainBtn{
+/* ================= MIRA ================= */
+
+#crosshair{
+  position:absolute;
+
+  left:50%;
+  top:52%;
+
+  width:82px;
+  height:82px;
+
+  transform:translate(-50%,-50%);
+
+  z-index:28;
+  pointer-events:none;
+}
+
+#crosshair .ring{
+  position:absolute;
+  inset:11px;
+
+  border:2px solid #7df3ff;
+  border-radius:50%;
+
+  box-shadow:
+    0 0 12px #47eaff,
+    inset 0 0 8px #47eaff;
+}
+
+#crosshair .h{
+  position:absolute;
+  width:82px;
+  height:2px;
+  top:40px;
+  background:#8af5ff;
+  box-shadow:0 0 10px #4deaff;
+}
+
+#crosshair .v{
+  position:absolute;
+  width:2px;
+  height:82px;
+  left:40px;
+  background:#8af5ff;
+  box-shadow:0 0 10px #4deaff;
+}
+
+#crosshair .dot{
+  position:absolute;
+  width:7px;
+  height:7px;
+
+  left:37px;
+  top:37px;
+
+  background:white;
+  border-radius:50%;
+
+  box-shadow:0 0 10px white;
+}
+
+#hitmarker{
+  position:absolute;
+
+  left:50%;
+  top:52%;
+
+  transform:translate(-50%,-50%) scale(.5);
+
+  opacity:0;
+
+  color:#fff;
+
+  font-size:48px;
+  font-weight:900;
+
+  z-index:40;
+
+  text-shadow:
+    0 0 12px #fff,
+    0 0 25px #6eefff;
+
+  pointer-events:none;
+}
+
+#hitmarker.show{
+  animation:hit .22s ease-out;
+}
+
+@keyframes hit{
+  0%{
+    opacity:1;
+    transform:translate(-50%,-50%) scale(.7);
+  }
+  100%{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(1.2);
+  }
+}
+
+/* ================= DANO ================= */
+
+#damage{
+  position:absolute;
+  inset:0;
+
+  background:rgba(255,0,0,0);
+
+  z-index:27;
+
+  pointer-events:none;
+
+  transition:background .08s;
+}
+
+/* ================= BOTTOM ================= */
+
+#bottom{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:16px;
+
+  height:180px;
+
+  z-index:50;
+
+  pointer-events:none;
+}
+
+#ammoBar{
+  position:absolute;
+
+  right:22px;
+  bottom:144px;
+
+  width:48%;
+  height:8px;
+
+  border-radius:20px;
+
+  background:rgba(0,0,0,.7);
+
+  border:1px solid rgba(100,240,255,.25);
+
+  overflow:hidden;
+}
+
+#ammoFill{
   width:100%;
+  height:100%;
+
+  background:#63eaff;
+
+  box-shadow:0 0 14px #63eaff;
+}
+
+#reload{
+  position:absolute;
+
+  right:180px;
+  bottom:22px;
+
+  width:100px;
+  height:100px;
+
+  border-radius:50%;
+
+  border:2px solid rgba(255,255,255,.2);
+
+  background:rgba(0,0,0,.68);
+
+  color:#fff;
+
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1px;
+
+  pointer-events:auto;
+}
+
+#shoot{
+  position:absolute;
+
+  right:18px;
+  bottom:4px;
+
+  width:145px;
+  height:145px;
+
+  border-radius:50%;
+
+  border:3px solid #69ecff;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(50,220,255,.22),
+      rgba(0,12,20,.94) 68%
+    );
+
+  color:#fff;
+
+  font-size:16px;
+  font-weight:900;
+
+  letter-spacing:3px;
+
+  pointer-events:auto;
+
+  box-shadow:
+    0 0 30px rgba(50,225,255,.25),
+    inset 0 0 25px rgba(50,225,255,.08);
+}
+
+#shoot:active{
+  transform:scale(.93);
+}
+
+#gunIcon{
+  display:block;
+  font-size:30px;
+  margin-bottom:6px;
+}
+
+/* ================= TOAST ================= */
+
+#toast{
+  position:absolute;
+
+  left:50%;
+  top:35%;
+
+  transform:translate(-50%,-50%);
+
+  color:#fff;
+
+  font-size:24px;
+  font-weight:900;
+  letter-spacing:3px;
+
+  text-align:center;
+
+  z-index:60;
+
+  opacity:0;
+
+  pointer-events:none;
+
+  text-shadow:
+    0 0 15px #6eefff;
+}
+
+#toast.show{
+  animation:toast .8s ease-out;
+}
+
+@keyframes toast{
+  0%{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(.7);
+  }
+  20%{
+    opacity:1;
+    transform:translate(-50%,-50%) scale(1);
+  }
+  75%{
+    opacity:1;
+  }
+  100%{
+    opacity:0;
+    transform:translate(-50%,-70%) scale(1.1);
+  }
+}
+
+/* ================= TELAS ================= */
+
+#menu,
+#phases,
+#gameover,
+#victory{
+  position:absolute;
+  inset:0;
+
+  z-index:100;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(0,150,190,.14),
+      rgba(0,0,0,.97) 70%
+    );
+}
+
+#phases,
+#gameover,
+#victory{
+  display:none;
+}
+
+.panel{
+  width:min(90%,520px);
+
+  padding:30px 24px;
+
+  border:1px solid rgba(80,230,255,.35);
+
+  border-radius:26px;
+
+  background:rgba(0,8,14,.93);
+
+  box-shadow:
+    0 0 60px rgba(0,210,255,.12);
+
+  text-align:center;
+}
+
+.title{
+  color:#6cefff;
+
+  font-size:42px;
+  font-weight:1000;
+
+  letter-spacing:6px;
+
+  line-height:1;
+
+  text-shadow:
+    0 0 25px #35ddff;
+}
+
+.subtitle{
+  color:#fff;
+
+  margin-top:12px;
+  margin-bottom:25px;
+
+  font-size:13px;
+  font-weight:800;
+
+  letter-spacing:3px;
+}
+
+.bigButton{
+  width:100%;
+
   padding:17px;
-  border-radius:17px;
-  font-size:18px;
-  background:linear-gradient(100deg,#13dcff,#7341ff);
-  box-shadow:0 12px 35px rgba(20,200,255,.24);
-}
 
-.secondaryBtn{
-  width:100%;
-  margin-top:10px;
-  padding:15px;
-  border-radius:17px;
-  color:#c6f4ff;
-  background:#08172d;
-  border:1px solid rgba(80,220,255,.2);
-}
+  margin-top:9px;
 
-.bestTitle{
-  margin-top:20px;
-  color:#60748e;
-  font-size:9px;
+  border:2px solid #5ceaff;
+
+  border-radius:16px;
+
+  background:rgba(30,180,220,.10);
+
+  color:#fff;
+
+  font-size:17px;
   font-weight:900;
-  letter-spacing:2px;
+
+  letter-spacing:4px;
 }
 
-#menuBest{
-  color:#ffd83d;
-  font-size:23px;
-  font-weight:900;
-  margin-top:5px;
+.bigButton:active{
+  transform:scale(.97);
 }
 
 .phaseGrid{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+
+  grid-template-columns:
+    repeat(5,1fr);
+
   gap:7px;
-  margin:18px 0;
+
+  max-height:55vh;
+
+  overflow:auto;
+
+  margin-top:15px;
 }
 
 .phaseBtn{
-  position:relative;
-  min-height:74px;
-  border-radius:14px;
-  background:#08172d;
-  border:1px solid rgba(80,220,255,.15);
-}
+  min-height:56px;
 
-.phaseBtn .num{
-  display:block;
-  color:#59eaff;
-  font-size:21px;
+  border-radius:12px;
+
+  border:1px solid rgba(80,230,255,.25);
+
+  background:rgba(255,255,255,.04);
+
+  color:#fff;
+
   font-weight:900;
-}
-
-.phaseBtn .name{
-  display:block;
-  color:#9db1c9;
-  font-size:7px;
-  margin-top:3px;
-}
-
-.phaseBtn .goal{
-  display:block;
-  color:#ffd83d;
-  font-size:7px;
-  margin-top:4px;
 }
 
 .phaseBtn.locked{
-  opacity:.25;
+  opacity:.3;
 }
 
-.lock{
-  position:absolute;
-  right:5px;
-  top:4px;
-}
+/* ================= MOBILE ================= */
 
-.resultTitle{
-  color:#59eaff;
-  font-size:10px;
-  font-weight:900;
-  letter-spacing:3px;
-}
+@media(max-width:700px){
 
-.resultStats{
-  color:#d6e6f7;
-  line-height:1.8;
-  margin:18px 0 22px;
+  #hud{
+    top:8px;
+    left:8px;
+    right:8px;
+    gap:6px;
+  }
+
+  .box{
+    min-height:65px;
+    padding:9px 10px;
+    border-radius:15px;
+  }
+
+  .label{
+    font-size:8px;
+    letter-spacing:2px;
+  }
+
+  .value{
+    font-size:22px;
+  }
+
+  #life{
+    font-size:19px;
+  }
+
+  #phaseTitle{
+    top:130px;
+    font-size:12px;
+    padding:10px 18px;
+    letter-spacing:2px;
+  }
+
+  #objective{
+    top:178px;
+    font-size:11px;
+    letter-spacing:2px;
+  }
+
+  #reload{
+    right:176px;
+    bottom:22px;
+    width:94px;
+    height:94px;
+  }
+
+  #shoot{
+    right:14px;
+    bottom:4px;
+    width:140px;
+    height:140px;
+  }
+
+  #ammoBar{
+    right:15px;
+    width:57%;
+    bottom:138px;
+  }
 }
 </style>
 </head>
@@ -303,158 +614,203 @@ button:active{
 
 <div id="game"></div>
 
+<!-- HUD -->
+
 <div id="hud">
 
-  <div id="score">0</div>
-
-  <div id="coins">
-    🪙 0/6
+  <div class="box">
+    <div class="label">FASE</div>
+    <div class="value" id="phase">1</div>
   </div>
 
-  <div id="target">
-    META 1000
+  <div class="box">
+    <div class="label">ALVOS</div>
+    <div class="value" id="targets">0/8</div>
   </div>
 
-  <div id="progressBox">
-    <div id="progress"></div>
+  <div class="box">
+    <div class="label">VIDA</div>
+    <div class="value" id="life">❤️❤️❤️</div>
   </div>
 
-  <div id="speed">
-    VELOCIDADE 0.72x
+  <div class="box">
+    <div class="label">MOEDAS</div>
+    <div class="value" id="coins">0</div>
   </div>
 
-  <div id="phaseHud">
-    FASE 1 • NEON AZUL
+</div>
+
+<div id="phaseTitle">
+  FASE 1 • CIDADE NEON
+</div>
+
+<div id="objective">
+  ELIMINE 8 ALVOS
+</div>
+
+<!-- MIRA -->
+
+<div id="crosshair">
+
+  <div class="ring"></div>
+  <div class="h"></div>
+  <div class="v"></div>
+  <div class="dot"></div>
+
+</div>
+
+<div id="hitmarker">✦</div>
+
+<div id="damage"></div>
+
+<div id="toast"></div>
+
+<!-- CONTROLES -->
+
+<div id="bottom">
+
+  <div id="ammoBar">
+    <div id="ammoFill"></div>
   </div>
 
-  <button id="sound">
-    🔊 SOM
+  <button id="reload">
+    ↻
+    <br>
+    RECARREGAR
   </button>
 
-  <div id="hint">
-    DESLIZE ← → FAIXA • ↑ PULAR • ↓ DESLIZAR
-  </div>
+  <button id="shoot">
+    <span id="gunIcon">🔫</span>
+    ATIRAR
+  </button>
 
 </div>
 
+<!-- MENU -->
 
-<div id="menu" class="screen show">
+<div id="menu">
 
-  <div class="card">
+  <div class="panel">
 
-    <div class="logo">
-      3D RUNNER EXPERIENCE
-    </div>
-
-    <h1>
+    <div class="title">
       ÚLTIMO<br>SEGUNDO
-    </h1>
+    </div>
 
     <div class="subtitle">
-      CORRA • PEGUE MOEDAS • SOBREVIVA
+      NEON COMBAT
     </div>
 
-    <button id="play" class="mainBtn">
-      ▶ JOGAR
+    <button class="bigButton" id="start">
+      JOGAR
     </button>
 
-    <button id="phases" class="secondaryBtn">
-      🎮 50 FASES
+    <button class="bigButton" id="choosePhase">
+      ESCOLHER FASE
     </button>
-
-    <div class="bestTitle">
-      MELHOR PONTUAÇÃO
-    </div>
-
-    <div id="menuBest">
-      0
-    </div>
 
   </div>
 
 </div>
 
+<!-- FASES -->
 
-<div id="phaseMenu" class="screen">
+<div id="phases">
 
-  <div class="card">
+  <div class="panel">
 
-    <div class="logo">
-      PROGRESSÃO
+    <div class="title"
+         style="font-size:30px">
+      FASES
     </div>
-
-    <h1 style="font-size:32px">
-      50 FASES
-    </h1>
 
     <div class="subtitle">
-      Pontuação e moedas são necessárias para avançar.
+      50 MISSÕES
     </div>
 
-    <div id="phaseGrid" class="phaseGrid"></div>
+    <div
+      class="phaseGrid"
+      id="phaseGrid">
+    </div>
 
-    <button id="backMenu" class="secondaryBtn">
-      ← VOLTAR
+    <button
+      class="bigButton"
+      id="closePhases">
+      VOLTAR
     </button>
 
   </div>
 
 </div>
 
+<!-- GAME OVER -->
 
-<div id="gameover" class="screen">
+<div id="gameover">
 
-  <div class="card">
+  <div class="panel">
 
-    <div class="resultTitle">
-      CORRIDA ENCERRADA
+    <div class="title"
+         style="font-size:34px">
+      MISSÃO<br>FALHOU
     </div>
 
-    <h1>
-      FIM DE JOGO
-    </h1>
+    <div
+      id="message"
+      style="
+      color:#aaa;
+      margin:18px 0;
+      line-height:1.7;">
+    </div>
 
-    <div id="finalStats" class="resultStats"></div>
-
-    <button id="again" class="mainBtn">
-      🔄 VOLTAR À FASE 1
+    <button
+      class="bigButton"
+      id="retry">
+      TENTAR NOVAMENTE
     </button>
 
-    <button id="overMenu" class="secondaryBtn">
-      🏠 MENU
+    <button
+      class="bigButton"
+      id="backMenu">
+      MENU
     </button>
 
   </div>
 
 </div>
 
+<!-- VITÓRIA -->
 
-<div id="victory" class="screen">
+<div id="victory">
 
-  <div class="card">
+  <div class="panel">
 
-    <div class="resultTitle">
-      FASE CONCLUÍDA
+    <div class="title"
+         style="font-size:34px">
+      FASE<br>CONCLUÍDA
     </div>
 
-    <h1>
-      🏆 VITÓRIA
-    </h1>
+    <div
+      id="victoryText"
+      style="
+      color:#aaa;
+      margin:18px 0;
+      line-height:1.7;">
+    </div>
 
-    <div id="victoryStats" class="resultStats"></div>
-
-    <button id="next" class="mainBtn">
-      ▶ PRÓXIMA FASE
+    <button
+      class="bigButton"
+      id="nextPhase">
+      PRÓXIMA FASE
     </button>
 
-    <button id="victoryMenu" class="secondaryBtn">
-      🏠 MENU
+    <button
+      class="bigButton"
+      id="victoryMenu">
+      MENU
     </button>
 
   </div>
 
 </div>
-
 
 <script type="module">
 
@@ -463,50 +819,171 @@ import * as THREE from
 
 
 /* =========================================================
-   CENA
+   ELEMENTOS
 ========================================================= */
 
-const mount=
-  document.getElementById("game");
+const $ = id =>
+document.getElementById(id);
 
-const scene=
-  new THREE.Scene();
+const game = $("game");
 
-scene.background=
-  new THREE.Color(0x030916);
+const phaseEl =
+$("phase");
 
-scene.fog=
-  new THREE.FogExp2(
-    0x06111f,
-    .008
-  );
+const targetsEl =
+$("targets");
+
+const lifeEl =
+$("life");
+
+const coinsEl =
+$("coins");
+
+const phaseTitle =
+$("phaseTitle");
+
+const objective =
+$("objective");
+
+const ammoFill =
+$("ammoFill");
+
+const hitmarker =
+$("hitmarker");
+
+const damage =
+$("damage");
+
+const toast =
+$("toast");
+
+const menu =
+$("menu");
+
+const phasesScreen =
+$("phases");
+
+const gameover =
+$("gameover");
+
+const victory =
+$("victory");
 
 
-const camera=
-  new THREE.PerspectiveCamera(
-    62,
-    innerWidth/innerHeight,
-    .05,
-    220
-  );
+/* =========================================================
+   FASES
+========================================================= */
 
-camera.position.set(
-  0,
-  4.8,
-  8.8
+const WORLDS = [
+  "CIDADE NEON",
+  "CIDADE NEON",
+  "CIDADE NEON",
+  "CIDADE NEON",
+  "CIDADE NEON",
+  "CIDADE NEON",
+  "CIDADE NEON",
+  "CIDADE NEON",
+  "CIDADE NEON",
+  "CIDADE NEON"
+];
+
+let currentPhase =
+Number(
+  localStorage.getItem(
+    "ultimoSegundoPhase"
+  ) || 1
+);
+
+let unlocked =
+Number(
+  localStorage.getItem(
+    "ultimoSegundoUnlocked"
+  ) || 1
 );
 
 
-const renderer=
-  new THREE.WebGLRenderer({
-    antialias:true,
-    powerPreference:"high-performance"
-  });
+/* =========================================================
+   ESTADO
+========================================================= */
+
+let phaseTarget = 8;
+
+let kills = 0;
+let coins = 0;
+let lives = 3;
+
+let ammo = 12;
+const maxAmmo = 12;
+
+let running = false;
+let reloading = false;
+
+let enemies = [];
+let crates = [];
+
+let particles = [];
+let tracers = [];
+let enemyShots = [];
+
+let spawnTimer = 0;
+let enemyShotTimer = 0;
+
+let cameraYaw = 0;
+let cameraPitch = 0;
+
+let touchStartX = 0;
+let touchStartY = 0;
+
+let lastTime =
+performance.now();
+
+
+/* =========================================================
+   THREE
+========================================================= */
+
+const scene =
+new THREE.Scene();
+
+scene.background =
+new THREE.Color(0x010308);
+
+scene.fog =
+new THREE.FogExp2(
+  0x02050a,
+  .006
+);
+
+
+const camera =
+new THREE.PerspectiveCamera(
+  65,
+  innerWidth / innerHeight,
+  .1,
+  300
+);
+
+camera.position.set(
+  0,
+  1.55,
+  4
+);
+
+camera.rotation.order =
+"YXZ";
+
+
+const renderer =
+new THREE.WebGLRenderer({
+  antialias:true,
+  powerPreference:
+    "high-performance"
+});
 
 renderer.setPixelRatio(
   Math.min(
-    1.6,
-    devicePixelRatio
+    devicePixelRatio,
+    1.6
   )
 );
 
@@ -515,1355 +992,1700 @@ renderer.setSize(
   innerHeight
 );
 
-renderer.outputColorSpace=
-  THREE.SRGBColorSpace;
+renderer.outputColorSpace =
+THREE.SRGBColorSpace;
 
-renderer.toneMapping=
-  THREE.ACESFilmicToneMapping;
+renderer.toneMapping =
+THREE.ACESFilmicToneMapping;
 
-renderer.toneMappingExposure=
-  1.15;
+renderer.toneMappingExposure =
+1.35;
 
-renderer.shadowMap.enabled=true;
-
-mount.appendChild(
+game.appendChild(
   renderer.domElement
 );
 
 
 /* =========================================================
-   ILUMINAÇÃO
+   LUZ CINEMATOGRÁFICA
 ========================================================= */
 
-const hemi=
+scene.add(
   new THREE.HemisphereLight(
-    0x83ddff,
-    0x02030a,
-    1.4
-  );
-
-scene.add(hemi);
-
-
-const sun=
-  new THREE.DirectionalLight(
-    0xd8f5ff,
-    2.8
-  );
-
-sun.position.set(
-  -5,
-  12,
-  8
+    0x8bdcff,
+    0x04050b,
+    1.8
+  )
 );
 
-sun.castShadow=true;
-
-scene.add(sun);
-
-
-const neonLight=
-  new THREE.PointLight(
-    0x22eaff,
-    20,
-    45,
-    2
-  );
-
-neonLight.position.set(
-  0,
-  3,
-  -25
+const mainLight =
+new THREE.DirectionalLight(
+  0x9edfff,
+  2.5
 );
 
-scene.add(neonLight);
+mainLight.position.set(
+  5,
+  14,
+  5
+);
+
+scene.add(mainLight);
+
+
+const cyanLight =
+new THREE.PointLight(
+  0x00eaff,
+  35,
+  70
+);
+
+cyanLight.position.set(
+  -8,
+  4,
+  -30
+);
+
+scene.add(cyanLight);
+
+
+const magentaLight =
+new THREE.PointLight(
+  0xff168d,
+  28,
+  65
+);
+
+magentaLight.position.set(
+  9,
+  5,
+  -45
+);
+
+scene.add(magentaLight);
 
 
 /* =========================================================
-   10 AMBIENTES
-   Cada fase muda o ambiente.
+   MATERIAIS
 ========================================================= */
 
-const environments=[
-
-  {
-    name:"NEON AZUL",
-    sky:0x030a18,
-    fog:0x061323,
-    road:0x08121d,
-    glow:0x1fdfff
-  },
-
-  {
-    name:"NEON ROXO",
-    sky:0x0b0419,
-    fog:0x160b27,
-    road:0x0d0a18,
-    glow:0xa95cff
-  },
-
-  {
-    name:"NEON TURQUESA",
-    sky:0x021416,
-    fog:0x06352f,
-    road:0x071615,
-    glow:0x27f0d0
-  },
-
-  {
-    name:"NEON VERMELHO",
-    sky:0x180308,
-    fog:0x350711,
-    road:0x13070c,
-    glow:0xff3f6d
-  },
-
-  {
-    name:"NEON AZUL ELÉTRICO",
-    sky:0x03081e,
-    fog:0x0b1b50,
-    road:0x080d1b,
-    glow:0x527cff
-  },
-
-  {
-    name:"NEON PRATA",
-    sky:0x080a0d,
-    fog:0x202832,
-    road:0x0d1014,
-    glow:0xd8f1ff
-  },
-
-  {
-    name:"NEON VIOLETA",
-    sky:0x0c0316,
-    fog:0x270a3c,
-    road:0x100916,
-    glow:0xd261ff
-  },
-
-  {
-    name:"NEON CIANO",
-    sky:0x02131e,
-    fog:0x0a3850,
-    road:0x07141c,
-    glow:0x5deaff
-  },
-
-  {
-    name:"NEON MAGENTA",
-    sky:0x12020e,
-    fog:0x350827,
-    road:0x12070f,
-    glow:0xff49c8
-  },
-
-  {
-    name:"ÚLTIMO NEON",
-    sky:0x12020d,
-    fog:0x42104d,
-    road:0x100711,
-    glow:0xff65e4
-  }
-
-];
-
-
-const phases=[];
-
-for(
-  let i=1;
-  i<=50;
-  i++
+function material(
+  color,
+  emissive=0x000000,
+  intensity=0
 ){
 
-  const env=
-    (i-1)%
-    environments.length;
+  return new THREE.MeshStandardMaterial({
 
-  phases.push({
+    color,
 
-    id:i,
+    emissive,
 
-    env,
+    emissiveIntensity:
+      intensity,
 
-    name:
-      environments[env].name,
+    roughness:.32,
 
-    scoreGoal:
-      1000+
-      (i-1)*120,
-
-    coinGoal:
-      6+
-      Math.floor((i-1)/3),
-
-    speed:
-      .72+
-      (i-1)*.018,
-
-    spawn:
-      Math.max(
-        950,
-        1500-
-        (i-1)*10
-      )
-
+    metalness:.72
   });
+}
 
+
+function neon(
+  color
+){
+
+  return new THREE.MeshStandardMaterial({
+
+    color,
+
+    emissive:color,
+
+    emissiveIntensity:3,
+
+    roughness:.18,
+
+    metalness:.55
+  });
 }
 
 
 /* =========================================================
-   MATERIAIS DA ESTRADA
+   CENÁRIO FIXO
 ========================================================= */
 
-const roadMaterial=
-  new THREE.MeshStandardMaterial({
-    color:0x08121d,
-    roughness:.92,
-    metalness:.08
-  });
+const world =
+new THREE.Group();
+
+scene.add(world);
 
 
-const road=
+/* ================= ESTRADA ================= */
+
+const road =
+new THREE.Mesh(
+
+  new THREE.PlaneGeometry(
+    34,
+    330
+  ),
+
+  material(
+    0x080b10
+  )
+
+);
+
+road.rotation.x =
+-Math.PI/2;
+
+road.position.z =
+-135;
+
+world.add(road);
+
+
+/* ================= BORDA NEON ================= */
+
+for(const x of [-9,9]){
+
+  const edge =
   new THREE.Mesh(
-    new THREE.PlaneGeometry(
-      15,
-      190
+
+    new THREE.BoxGeometry(
+      .13,
+      .07,
+      330
     ),
-    roadMaterial
+
+    neon(
+      0x00eaff
+    )
+
   );
-
-road.rotation.x=
-  -Math.PI/2;
-
-road.position.z=
-  -45;
-
-road.receiveShadow=true;
-
-scene.add(road);
-
-
-/* =========================================================
-   LATERAIS
-========================================================= */
-
-const shoulderMaterial=
-  new THREE.MeshStandardMaterial({
-    color:0x03070d,
-    roughness:1
-  });
-
-
-const shoulderL=
-  new THREE.Mesh(
-    new THREE.PlaneGeometry(
-      14,
-      190
-    ),
-    shoulderMaterial
-  );
-
-shoulderL.rotation.x=
-  -Math.PI/2;
-
-shoulderL.position.set(
-  -14,
-  -.01,
-  -45
-);
-
-scene.add(
-  shoulderL
-);
-
-
-const shoulderR=
-  shoulderL.clone();
-
-shoulderR.position.x=
-  14;
-
-scene.add(
-  shoulderR
-);
-
-
-/* =========================================================
-   NEON DAS BORDAS
-========================================================= */
-
-const edgeMaterial=
-  new THREE.MeshStandardMaterial({
-    color:0x1fdfff,
-    emissive:0x1fdfff,
-    emissiveIntensity:5
-  });
-
-
-const edges=[];
-
-for(
-  const x of [-7.3,7.3]
-){
-
-  const edge=
-    new THREE.Mesh(
-      new THREE.BoxGeometry(
-        .07,
-        .07,
-        190
-      ),
-      edgeMaterial
-    );
 
   edge.position.set(
     x,
     .05,
-    -45
+    -135
   );
 
-  scene.add(edge);
-
-  edges.push(edge);
-
+  world.add(edge);
 }
 
 
-/* =========================================================
-   DIVISÃO DAS 3 FAIXAS
-========================================================= */
-
-const laneMaterial=
-  new THREE.MeshStandardMaterial({
-    color:0x1d6073,
-    emissive:0x0a3542,
-    emissiveIntensity:1.5
-  });
-
+/* ================= FAIXAS ================= */
 
 for(
-  const x of [-2.25,2.25]
+  let z=5;
+  z>-300;
+  z-=11
 ){
 
-  const line=
+  for(
+    const x of [-3,3]
+  ){
+
+    const stripe =
     new THREE.Mesh(
+
       new THREE.BoxGeometry(
-        .045,
+        .11,
         .035,
-        190
+        4.8
       ),
-      laneMaterial
+
+      neon(
+        0xb9f5ff
+      )
+
     );
 
-  line.position.set(
-    x,
-    .03,
-    -45
-  );
-
-  scene.add(line);
-
-}
-
-
-/* =========================================================
-   MARCAS HORIZONTAIS
-========================================================= */
-
-const marks=[];
-
-const markMaterial=
-  new THREE.MeshStandardMaterial({
-    color:0x154456,
-    emissive:0x092a38,
-    emissiveIntensity:1.5
-  });
-
-
-for(
-  let i=0;
-  i<48;
-  i++
-){
-
-  const mark=
-    new THREE.Mesh(
-      new THREE.BoxGeometry(
-        9.5,
-        .025,
-        .045
-      ),
-      markMaterial
-    );
-
-  mark.position.set(
-    0,
-    .028,
-    -108+i*2.7
-  );
-
-  scene.add(mark);
-
-  marks.push(mark);
-
-}
-
-
-/* =========================================================
-   ESTRELAS
-========================================================= */
-
-const starArray=[];
-
-for(
-  let i=0;
-  i<800;
-  i++
-){
-
-  starArray.push(
-    (Math.random()-.5)*180,
-    7+Math.random()*75,
-    -110+Math.random()*100
-  );
-
-}
-
-const starGeometry=
-  new THREE.BufferGeometry();
-
-starGeometry.setAttribute(
-  "position",
-  new THREE.Float32BufferAttribute(
-    starArray,
-    3
-  )
-);
-
-const starMaterial=
-  new THREE.PointsMaterial({
-    color:0x9cecff,
-    size:.055,
-    transparent:true,
-    opacity:.65
-  });
-
-const stars=
-  new THREE.Points(
-    starGeometry,
-    starMaterial
-  );
-
-scene.add(stars);
-
-
-/* =========================================================
-   PLAYER
-========================================================= */
-
-const player=
-  new THREE.Group();
-
-player.position.set(
-  0,
-  0,
-  4
-);
-
-scene.add(player);
-
-
-const suitMaterial=
-  new THREE.MeshStandardMaterial({
-    color:0x116bb1,
-    metalness:.6,
-    roughness:.28
-  });
-
-
-const darkMaterial=
-  new THREE.MeshStandardMaterial({
-    color:0x090f1e,
-    metalness:.7,
-    roughness:.22
-  });
-
-
-const skinMaterial=
-  new THREE.MeshStandardMaterial({
-    color:0xc9947d,
-    roughness:.7
-  });
-
-
-const visorMaterial=
-  new THREE.MeshStandardMaterial({
-    color:0x7cf5ff,
-    emissive:0x35eaff,
-    emissiveIntensity:6,
-    metalness:.65,
-    roughness:.15
-  });
-
-
-function limb(
-  length,
-  radius,
-  material
-){
-
-  const m=
-    new THREE.Mesh(
-      new THREE.CapsuleGeometry(
-        radius,
-        length,
-        5,
-        10
-      ),
-      material
-    );
-
-  m.castShadow=true;
-
-  return m;
-}
-
-
-const torso=
-  new THREE.Mesh(
-    new THREE.CapsuleGeometry(
-      .40,
-      .75,
-      6,
-      14
-    ),
-    suitMaterial
-  );
-
-torso.position.y=
-  1.25;
-
-torso.scale.set(
-  .82,
-  1,
-  .52
-);
-
-torso.castShadow=true;
-
-player.add(
-  torso
-);
-
-
-const head=
-  new THREE.Mesh(
-    new THREE.SphereGeometry(
-      .30,
-      18,
-      18
-    ),
-    skinMaterial
-  );
-
-head.position.y=
-  2.00;
-
-head.castShadow=true;
-
-player.add(head);
-
-
-const helmet=
-  new THREE.Mesh(
-    new THREE.SphereGeometry(
-      .315,
-      18,
-      18,
-      0,
-      Math.PI*2,
-      0,
-      Math.PI*.55
-    ),
-    darkMaterial
-  );
-
-helmet.position.y=
-  2.05;
-
-player.add(helmet);
-
-
-const visor=
-  new THREE.Mesh(
-    new THREE.BoxGeometry(
-      .34,
-      .10,
-      .045
-    ),
-    visorMaterial
-  );
-
-visor.position.set(
-  0,
-  1.99,
-  -.285
-);
-
-player.add(visor);
-
-
-const chest=
-  new THREE.Mesh(
-    new THREE.BoxGeometry(
-      .30,
-      .10,
-      .04
-    ),
-    visorMaterial
-  );
-
-chest.position.set(
-  0,
-  1.38,
-  -.23
-);
-
-player.add(chest);
-
-
-const armL=
-  limb(.55,.09,darkMaterial);
-
-const armR=
-  limb(.55,.09,darkMaterial);
-
-armL.position.set(
-  -.46,
-  1.36,
-  0
-);
-
-armR.position.set(
-  .46,
-  1.36,
-  0
-);
-
-player.add(armL);
-player.add(armR);
-
-
-const legL=
-  limb(.62,.11,darkMaterial);
-
-const legR=
-  limb(.62,.11,darkMaterial);
-
-legL.position.set(
-  -.18,
-  .53,
-  0
-);
-
-legR.position.set(
-  .18,
-  .53,
-  0
-);
-
-player.add(legL);
-player.add(legR);
-
-
-const bootMaterial=
-  new THREE.MeshStandardMaterial({
-    color:0x111b32,
-    metalness:.7,
-    roughness:.22
-  });
-
-
-const bootL=
-  new THREE.Mesh(
-    new THREE.BoxGeometry(
-      .20,
-      .13,
-      .40
-    ),
-    bootMaterial
-  );
-
-const bootR=
-  bootL.clone();
-
-bootL.position.set(
-  -.18,
-  .14,
-  -.10
-);
-
-bootR.position.set(
-  .18,
-  .14,
-  -.10
-);
-
-player.add(bootL);
-player.add(bootR);
-
-
-/* =========================================================
-   OBSTÁCULO ALTO
-========================================================= */
-
-function createBarrier(){
-
-  const group=
-    new THREE.Group();
-
-  const red=
-    new THREE.MeshStandardMaterial({
-      color:0xef4165,
-      emissive:0x9d1638,
-      emissiveIntensity:1.6,
-      roughness:.4
-    });
-
-  const white=
-    new THREE.MeshStandardMaterial({
-      color:0xf8f5f2,
-      roughness:.4
-    });
-
-  const body=
-    new THREE.Mesh(
-      new THREE.BoxGeometry(
-        1.20,
-        1.35,
-        .58
-      ),
-      red
-    );
-
-  body.position.y=
-    .68;
-
-  body.castShadow=true;
-
-  group.add(body);
-
-
-  for(
-    const y of [.38,.94]
-  ){
-
-    const stripe=
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          1.22,
-          .14,
-          .60
-        ),
-        white
-      );
-
-    stripe.position.y=
-      y;
-
-    group.add(stripe);
-
-  }
-
-
-  return group;
-}
-
-
-/* =========================================================
-   OBSTÁCULO BAIXO
-========================================================= */
-
-function createLow(){
-
-  const group=
-    new THREE.Group();
-
-  const orange=
-    new THREE.MeshStandardMaterial({
-      color:0xff8b38,
-      emissive:0xb83d0a,
-      emissiveIntensity:1.8,
-      roughness:.4
-    });
-
-  const white=
-    new THREE.MeshStandardMaterial({
-      color:0xffffff
-    });
-
-
-  const bar=
-    new THREE.Mesh(
-      new THREE.BoxGeometry(
-        1.40,
-        .34,
-        .48
-      ),
-      orange
-    );
-
-  bar.position.y=
-    1.02;
-
-  bar.castShadow=true;
-
-  group.add(bar);
-
-
-  const stripe=
-    new THREE.Mesh(
-      new THREE.BoxGeometry(
-        1.42,
-        .10,
-        .50
-      ),
-      white
-    );
-
-  stripe.position.y=
-    1.02;
-
-  group.add(stripe);
-
-
-  for(
-    const x of [-.50,.50]
-  ){
-
-    const leg=
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          .11,
-          1,
-          .11
-        ),
-        orange
-      );
-
-    leg.position.set(
+    stripe.position.set(
       x,
-      .50,
-      0
+      .04,
+      z
     );
 
-    group.add(leg);
-
+    world.add(stripe);
   }
-
-
-  return group;
 }
 
 
 /* =========================================================
-   MOEDA
+   CIDADE FIXA
 ========================================================= */
 
-function createCoin(){
-
-  const gold=
-    new THREE.MeshStandardMaterial({
-      color:0xffd83d,
-      emissive:0xffa400,
-      emissiveIntensity:3.2,
-      metalness:.75,
-      roughness:.16
-    });
-
-
-  const coin=
-    new THREE.Mesh(
-      new THREE.TorusGeometry(
-        .20,
-        .06,
-        12,
-        28
-      ),
-      gold
-    );
-
-  coin.rotation.y=
-    Math.PI/2;
-
-  coin.castShadow=true;
-
-  return coin;
-}
-
-
-/* =========================================================
-   OBJETOS
-========================================================= */
-
-let objects=[];
-
-function addObject(
-  type,
-  lane,
-  z
+function createBuilding(
+  x,
+  z,
+  width,
+  height,
+  depth
 ){
 
-  let mesh;
+  const building =
+  new THREE.Mesh(
 
-  if(type==="barrier"){
-    mesh=createBarrier();
-  }
+    new THREE.BoxGeometry(
+      width,
+      height,
+      depth
+    ),
 
-  if(type==="low"){
-    mesh=createLow();
-  }
+    material(
+      0x060a11
+    )
 
-  if(type==="coin"){
-    mesh=createCoin();
-  }
+  );
 
-  mesh.position.set(
-    lane*2.25,
-    0,
+  building.position.set(
+    x,
+    height/2,
     z
   );
 
-  scene.add(mesh);
+  world.add(building);
 
-  objects.push({
-    type,
-    lane,
-    mesh,
-    collected:false
-  });
 
+  /* linhas verticais */
+
+  const line =
+  new THREE.Mesh(
+
+    new THREE.BoxGeometry(
+      .055,
+      height*.85,
+      .05
+    ),
+
+    neon(
+      0x00eaff
+    )
+
+  );
+
+  line.position.set(
+    x-width/2+.12,
+    height/2,
+    z-depth/2-.03
+  );
+
+  world.add(line);
+
+
+  /* janelas */
+
+  for(
+    let y=1;
+    y<height-1;
+    y+=1.45
+  ){
+
+    for(
+      let xx=-width/2+.45;
+      xx<width/2-.2;
+      xx+=.8
+    ){
+
+      const window =
+      new THREE.Mesh(
+
+        new THREE.BoxGeometry(
+          .38,
+          .07,
+          .035
+        ),
+
+        neon(
+          Math.random()>.5
+          ? 0x00eaff
+          : 0x126cff
+        )
+
+      );
+
+      window.position.set(
+        x+xx,
+        y,
+        z-depth/2-.04
+      );
+
+      world.add(window);
+    }
+  }
+}
+
+
+/* lado esquerdo */
+
+createBuilding(
+  -14,
+  -22,
+  6,
+  10,
+  8
+);
+
+createBuilding(
+  -17,
+  -42,
+  8,
+  15,
+  9
+);
+
+createBuilding(
+  -13,
+  -67,
+  5,
+  19,
+  8
+);
+
+createBuilding(
+  -18,
+  -96,
+  9,
+  13,
+  10
+);
+
+createBuilding(
+  -14,
+  -126,
+  7,
+  21,
+  10
+);
+
+createBuilding(
+  -19,
+  -160,
+  10,
+  16,
+  11
+);
+
+createBuilding(
+  -14,
+  -198,
+  7,
+  22,
+  10
+);
+
+
+/* lado direito */
+
+createBuilding(
+  14,
+  -25,
+  7,
+  14,
+  9
+);
+
+createBuilding(
+  18,
+  -48,
+  9,
+  18,
+  10
+);
+
+createBuilding(
+  14,
+  -76,
+  6,
+  11,
+  8
+);
+
+createBuilding(
+  18,
+  -102,
+  10,
+  21,
+  11
+);
+
+createBuilding(
+  14,
+  -136,
+  7,
+  16,
+  9
+);
+
+createBuilding(
+  19,
+  -168,
+  10,
+  23,
+  12
+);
+
+createBuilding(
+  14,
+  -205,
+  7,
+  15,
+  9
+);
+
+
+/* =========================================================
+   HORIZONTE NEON
+========================================================= */
+
+const horizon =
+new THREE.Mesh(
+
+  new THREE.SphereGeometry(
+    34,
+    32,
+    16
+  ),
+
+  new THREE.MeshBasicMaterial({
+
+    color:0x06384c,
+
+    transparent:true,
+
+    opacity:.30,
+
+    side:
+      THREE.BackSide
+  })
+
+);
+
+horizon.position.set(
+  0,
+  12,
+  -110
+);
+
+scene.add(horizon);
+
+
+/* =========================================================
+   LUA / SOL NEON
+========================================================= */
+
+const sun =
+new THREE.Mesh(
+
+  new THREE.SphereGeometry(
+    7,
+    32,
+    32
+  ),
+
+  new THREE.MeshBasicMaterial({
+    color:0x0b6174,
+    transparent:true,
+    opacity:.32
+  })
+
+);
+
+sun.position.set(
+  0,
+  12,
+  -145
+);
+
+world.add(sun);
+
+
+/* =========================================================
+   ARMA MODERNA
+========================================================= */
+
+const weapon =
+new THREE.Group();
+
+camera.add(weapon);
+
+scene.add(camera);
+
+
+/* corpo */
+
+const gunBody =
+new THREE.Mesh(
+
+  new THREE.BoxGeometry(
+    .31,
+    .20,
+    .72
+  ),
+
+  material(
+    0x11161d
+  )
+
+);
+
+gunBody.position.set(
+  .40,
+  -.34,
+  -.82
+);
+
+weapon.add(gunBody);
+
+
+/* parte superior */
+
+const gunTop =
+new THREE.Mesh(
+
+  new THREE.BoxGeometry(
+    .13,
+    .08,
+    .54
+  ),
+
+  neon(
+    0x00eaff
+  )
+
+);
+
+gunTop.position.set(
+  .40,
+  -.23,
+  -1.02
+);
+
+weapon.add(gunTop);
+
+
+/* cano */
+
+const barrel =
+new THREE.Mesh(
+
+  new THREE.CylinderGeometry(
+    .055,
+    .075,
+    .70,
+    12
+  ),
+
+  material(
+    0x050607
+  )
+
+);
+
+barrel.rotation.x =
+Math.PI/2;
+
+barrel.position.set(
+  .40,
+  -.30,
+  -1.46
+);
+
+weapon.add(barrel);
+
+
+/* grip */
+
+const grip =
+new THREE.Mesh(
+
+  new THREE.CapsuleGeometry(
+    .07,
+    .25,
+    4,
+    8,
+    1
+  ),
+
+  material(
+    0x080a0d
+  )
+
+);
+
+grip.rotation.x =
+-.20;
+
+grip.position.set(
+  .40,
+  -.51,
+  -.69
+);
+
+weapon.add(grip);
+
+
+/* =========================================================
+   FLASH
+========================================================= */
+
+const flash =
+new THREE.PointLight(
+  0xffeeaa,
+  0,
+  12
+);
+
+camera.add(flash);
+
+
+function muzzleFlash(){
+
+  flash.intensity=20;
+
+  setTimeout(
+    ()=>{
+      flash.intensity=0;
+    },
+    45
+  );
+
+  weapon.position.z=.08;
+
+  setTimeout(
+    ()=>{
+      weapon.position.z=0;
+    },
+    60
+  );
 }
 
 
 /* =========================================================
-   PADRÕES
-   Um obstáculo atrás do outro.
-   Sempre existe uma rota.
+   INIMIGO MODERNO
 ========================================================= */
 
-let pattern=0;
+function createEnemy(
+  boss=false
+){
 
-function spawnPattern(){
+  const enemy =
+  new THREE.Group();
 
-  const r=
-    pattern++;
+  const scale =
+    boss ? 1.65 : 1.18;
 
-  const start=-88;
+  enemy.scale.setScalar(
+    scale
+  );
 
-  /*
-    FASES 1-5:
-    1 obstáculo.
-  */
 
-  if(phase<=5){
+  /* pernas */
 
-    const obstacleLane=
-      [-1,0,1]
-      [Math.floor(Math.random()*3)];
+  const legMaterial =
+  material(
+    boss
+      ? 0x16182c
+      : 0x10151e
+  );
 
-    const coinLane=
-      obstacleLane===-1
-      ? 1
-      : -1;
 
-    addObject(
-      "barrier",
-      obstacleLane,
-      start
+  for(
+    const x of [-.28,.28]
+  ){
+
+    const leg =
+    new THREE.Mesh(
+
+      new THREE.CapsuleGeometry(
+        .13,
+        .65,
+        4,
+        8,
+        1
+      ),
+
+      legMaterial
+
     );
 
-    addObject(
-      "coin",
-      coinLane,
-      start-7
+    leg.position.set(
+      x,
+      .48,
+      0
+    );
+
+    enemy.add(leg);
+
+
+    const boot =
+    new THREE.Mesh(
+
+      new THREE.BoxGeometry(
+        .28,
+        .18,
+        .42
+      ),
+
+      material(
+        0x080a0f
+      )
+
+    );
+
+    boot.position.set(
+      x,
+      .12,
+      -.08
+    );
+
+    enemy.add(boot);
+  }
+
+
+  /* corpo blindado */
+
+  const armor =
+  new THREE.Mesh(
+
+    new THREE.CapsuleGeometry(
+      .47,
+      .72,
+      6,
+      12,
+      2
+    ),
+
+    material(
+      boss
+        ? 0x24102e
+        : 0x111a25
+    )
+
+  );
+
+  armor.position.y=1.25;
+
+  enemy.add(armor);
+
+
+  /* peito */
+
+  const chest =
+  new THREE.Mesh(
+
+    new THREE.BoxGeometry(
+      .62,
+      .42,
+      .20
+    ),
+
+    material(
+      boss
+        ? 0x32113a
+        : 0x162330
+    )
+
+  );
+
+  chest.position.set(
+    0,
+    1.30,
+    -.42
+  );
+
+  enemy.add(chest);
+
+
+  /* núcleo */
+
+  const coreColor =
+    boss
+      ? 0xff00d9
+      : 0x00eaff;
+
+  const core =
+  new THREE.Mesh(
+
+    new THREE.SphereGeometry(
+      .13,
+      16,
+      16
+    ),
+
+    neon(
+      coreColor
+    )
+
+  );
+
+  core.position.set(
+    0,
+    1.30,
+    -.55
+  );
+
+  enemy.add(core);
+
+
+  /* cabeça */
+
+  const head =
+  new THREE.Mesh(
+
+    new THREE.SphereGeometry(
+      .38,
+      20,
+      16
+    ),
+
+    material(
+      0x0b0f15
+    )
+
+  );
+
+  head.position.y=2.03;
+
+  enemy.add(head);
+
+
+  /* visor */
+
+  const visor =
+  new THREE.Mesh(
+
+    new THREE.BoxGeometry(
+      .47,
+      .105,
+      .08
+    ),
+
+    neon(
+      boss
+        ? 0xff00aa
+        : 0x00eaff
+    )
+
+  );
+
+  visor.position.set(
+    0,
+    2.05,
+    -.35
+  );
+
+  enemy.add(visor);
+
+
+  /* ombreiras */
+
+  for(
+    const x of [-.62,.62]
+  ){
+
+    const shoulder =
+    new THREE.Mesh(
+
+      new THREE.SphereGeometry(
+        .19,
+        12,
+        10
+      ),
+
+      neon(
+        boss
+          ? 0xff00aa
+          : 0x00aaff
+      )
+
+    );
+
+    shoulder.position.set(
+      x,
+      1.63,
+      0
+    );
+
+    enemy.add(
+      shoulder
+    );
+  }
+
+
+  /* braços */
+
+  for(
+    const x of [-.66,.66]
+  ){
+
+    const arm =
+    new THREE.Mesh(
+
+      new THREE.CapsuleGeometry(
+        .12,
+        .62,
+        4,
+        8,
+        1
+      ),
+
+      material(
+        0x111923
+      )
+
+    );
+
+    arm.rotation.z =
+      x<0
+        ? -.10
+        : .10;
+
+    arm.position.set(
+      x,
+      1.15,
+      0
+    );
+
+    enemy.add(arm);
+  }
+
+
+  enemy.userData = {
+
+    type:"enemy",
+
+    hp:
+      boss
+        ? 5
+        : 1,
+
+    boss,
+
+    dead:false,
+
+    phaseOffset:
+      Math.random()*10
+
+  };
+
+
+  /*
+    IMPORTANTE:
+    Os inimigos NÃO aparecem colados.
+    Eles começam longe e se aproximam.
+  */
+
+  const lanes =
+    [-4.5,-1.5,1.5,4.5];
+
+  const lane =
+    lanes[
+      Math.floor(
+        Math.random()*
+        lanes.length
+      )
+    ];
+
+  enemy.position.set(
+    lane,
+    0,
+    -58 -
+    Math.random()*16
+  );
+
+
+  scene.add(enemy);
+
+  enemies.push(
+    enemy
+  );
+
+  return enemy;
+}
+
+
+/* =========================================================
+   OBSTÁCULO MODERNO
+========================================================= */
+
+function createCrate(){
+
+  const obstacle =
+  new THREE.Group();
+
+
+  const body =
+  new THREE.Mesh(
+
+    new THREE.BoxGeometry(
+      1.65,
+      1.5,
+      1.65
+    ),
+
+    material(
+      0x151b23
+    )
+
+  );
+
+  obstacle.add(body);
+
+
+  const frameColor =
+  0xffa400;
+
+
+  for(
+    const y of [-.45,.45]
+  ){
+
+    const stripe =
+    new THREE.Mesh(
+
+      new THREE.BoxGeometry(
+        1.72,
+        .08,
+        .08
+      ),
+
+      neon(
+        frameColor
+      )
+
+    );
+
+    stripe.position.y=y;
+
+    obstacle.add(
+      stripe
+    );
+  }
+
+
+  obstacle.userData={
+
+    type:"crate",
+
+    hp:2
+
+  };
+
+
+  const lanes =
+    [-4.5,-1.5,1.5,4.5];
+
+  const lane =
+    lanes[
+      Math.floor(
+        Math.random()*
+        lanes.length
+      )
+    ];
+
+
+  obstacle.position.set(
+    lane,
+    .75,
+    -58-
+    Math.random()*25
+  );
+
+
+  scene.add(
+    obstacle
+  );
+
+  crates.push(
+    obstacle
+  );
+}
+
+
+/* =========================================================
+   EXPLOSÃO
+========================================================= */
+
+function explosion(
+  position,
+  color=0x00eaff
+){
+
+  for(
+    let i=0;
+    i<28;
+    i++
+  ){
+
+    const particle =
+    new THREE.Mesh(
+
+      new THREE.SphereGeometry(
+        .045,
+        7,
+        7
+      ),
+
+      neon(
+        color
+      )
+
+    );
+
+
+    particle.position.copy(
+      position
+    );
+
+
+    particle.userData = {
+
+      velocity:
+        new THREE.Vector3(
+
+          (Math.random()-.5)*.32,
+
+          (Math.random()-.2)*.32,
+
+          (Math.random()-.5)*.32
+
+        ),
+
+      life:.65
+
+    };
+
+
+    scene.add(
+      particle
+    );
+
+    particles.push(
+      particle
+    );
+  }
+}
+
+
+/* =========================================================
+   RASTRO DO TIRO
+========================================================= */
+
+function tracer(
+  start,
+  end
+){
+
+  const geometry =
+  new THREE.BufferGeometry()
+  .setFromPoints([
+    start,
+    end
+  ]);
+
+
+  const material =
+  new THREE.LineBasicMaterial({
+
+    color:0xa9f8ff,
+
+    transparent:true,
+
+    opacity:1
+  });
+
+
+  const line =
+  new THREE.Line(
+    geometry,
+    material
+  );
+
+
+  scene.add(
+    line
+  );
+
+
+  tracers.push({
+
+    line,
+
+    life:.12
+
+  });
+}
+
+
+/* =========================================================
+   RAYCASTER
+========================================================= */
+
+const raycaster =
+new THREE.Raycaster();
+
+
+function shootTarget(){
+
+  /*
+    SEMPRE mira no centro.
+  */
+
+  raycaster.setFromCamera(
+    new THREE.Vector2(0,0),
+    camera
+  );
+
+
+  const objects=[];
+
+
+  enemies.forEach(
+    enemy=>{
+
+      if(
+        !enemy.userData.dead
+      ){
+
+        objects.push(
+          enemy
+        );
+      }
+
+    }
+  );
+
+
+  crates.forEach(
+    crate=>{
+      objects.push(
+        crate
+      );
+    }
+  );
+
+
+  const hits =
+  raycaster.intersectObjects(
+    objects,
+    true
+  );
+
+
+  if(hits.length){
+
+    let object =
+      hits[0].object;
+
+
+    while(
+      object &&
+      !object.userData.type
+    ){
+
+      object =
+        object.parent;
+    }
+
+
+    if(object){
+
+      return {
+
+        object,
+
+        point:
+          hits[0].point
+
+      };
+    }
+  }
+
+
+  /*
+    MIRA ASSISTIDA
+  */
+
+  let best=null;
+
+  let bestDistance=
+    Infinity;
+
+
+  enemies.forEach(
+    enemy=>{
+
+      if(
+        enemy.userData.dead
+      ) return;
+
+
+      const target =
+      enemy.position.clone();
+
+      target.y+=1.35;
+
+
+      const projected =
+      target.project(
+        camera
+      );
+
+
+      const distance =
+      Math.sqrt(
+        projected.x*
+        projected.x+
+        projected.y*
+        projected.y
+      );
+
+
+      if(
+        projected.z>-1 &&
+        projected.z<1 &&
+        distance<.34 &&
+        distance<bestDistance
+      ){
+
+        best=
+          enemy;
+
+        bestDistance=
+          distance;
+      }
+
+    }
+  );
+
+
+  if(best){
+
+    const point =
+      best.position.clone();
+
+    point.y+=1.35;
+
+
+    return {
+
+      object:best,
+
+      point
+
+    };
+  }
+
+
+  return null;
+}
+
+
+/* =========================================================
+   ATIRAR
+========================================================= */
+
+function shoot(){
+
+  if(!running) return;
+
+  if(reloading) return;
+
+
+  if(ammo<=0){
+
+    showToast(
+      "SEM MUNIÇÃO"
     );
 
     return;
   }
 
 
-  /*
-    FASES 6-10:
-    obstáculo → moeda → obstáculo.
-  */
+  ammo--;
 
-  if(phase<=10){
+  updateAmmo();
 
-    const a=
-      r%2===0
-      ?-1
-      :1;
+  muzzleFlash();
 
-    const b=
-      r%2===0
-      ?1
-      :-1;
+  beep(
+    700,
+    .055
+  );
 
-    addObject(
-      "barrier",
-      a,
-      start
-    );
 
-    addObject(
-      "coin",
-      0,
-      start-7
-    );
-
-    addObject(
-      "barrier",
-      b,
-      start-15
-    );
-
-    addObject(
-      "coin",
-      0,
-      start-22
-    );
-
-    return;
-  }
+  const start =
+    new THREE.Vector3();
 
 
   /*
-    FASES 11-20:
-    sequência alternando.
+    pega exatamente a posição
+    do cano
   */
 
-  if(phase<=20){
-
-    const a=
-      r%2===0
-      ?-1
-      :1;
-
-    addObject(
-      "barrier",
-      a,
-      start
-    );
-
-    addObject(
-      "coin",
-      0,
-      start-6
-    );
-
-    addObject(
-      "barrier",
-      0,
-      start-13
-    );
-
-    addObject(
-      "coin",
-      -a,
-      start-19
-    );
-
-    addObject(
-      "barrier",
-      -a,
-      start-27
-    );
-
-    addObject(
-      "coin",
-      0,
-      start-34
-    );
-
-    return;
-  }
-
-
-  /*
-    FASES 21-30:
-    mistura salto/deslize.
-  */
-
-  if(phase<=30){
-
-    const a=
-      r%2===0
-      ?-1
-      :1;
-
-    addObject(
-      "barrier",
-      a,
-      start
-    );
-
-    addObject(
-      "coin",
-      0,
-      start-6
-    );
-
-    addObject(
-      "low",
-      0,
-      start-14
-    );
-
-    addObject(
-      "coin",
-      -a,
-      start-20
-    );
-
-    addObject(
-      "barrier",
-      -a,
-      start-28
-    );
-
-    return;
-  }
-
-
-  /*
-    FASES 31-40:
-    mais velocidade.
-  */
-
-  if(phase<=40){
-
-    const a=
-      r%2===0
-      ?-1
-      :1;
-
-    addObject(
-      "barrier",
-      a,
-      start
-    );
-
-    addObject(
-      "coin",
-      0,
-      start-5
-    );
-
-    addObject(
-      "low",
-      0,
-      start-11
-    );
-
-    addObject(
-      "coin",
-      -a,
-      start-17
-    );
-
-    addObject(
-      "barrier",
-      -a,
-      start-24
-    );
-
-    addObject(
-      "coin",
-      0,
-      start-31
-    );
-
-    return;
-  }
-
-
-  /*
-    FASES 41-50:
-    difícil, mas rota aberta.
-  */
-
-  const a=
-    r%2===0
-    ?-1
-    :1;
-
-  addObject(
-    "barrier",
-    a,
+  barrel.getWorldPosition(
     start
   );
 
-  addObject(
-    "coin",
-    0,
-    start-5
-  );
 
-  addObject(
-    "low",
-    0,
-    start-11
-  );
-
-  addObject(
-    "coin",
-    -a,
-    start-17
-  );
-
-  addObject(
-    "barrier",
-    -a,
-    start-23
-  );
-
-  addObject(
-    "coin",
-    0,
-    start-29
-  );
-
-}
+  const target =
+    shootTarget();
 
 
-/* =========================================================
-   TROCA DO AMBIENTE
-========================================================= */
+  let end;
 
-function applyEnvironment(){
 
-  const p=
-    phases[phase-1];
+  if(target){
 
-  const env=
-    environments[p.env];
+    end =
+      target.point.clone();
 
-  scene.background=
-    new THREE.Color(
-      env.sky
+
+    tracer(
+      start,
+      end
     );
 
-  scene.fog.color.set(
-    env.fog
-  );
 
-  roadMaterial.color.set(
-    env.road
-  );
+    if(
+      target.object.userData.type
+      ===
+      "enemy"
+    ){
 
-  edgeMaterial.color.set(
-    env.glow
-  );
+      hitEnemy(
+        target.object
+      );
 
-  edgeMaterial.emissive.set(
-    env.glow
-  );
+    }else{
 
-  laneMaterial.color.set(
-    env.glow
-  );
+      hitCrate(
+        target.object
+      );
+    }
 
-  neonLight.color.set(
-    env.glow
-  );
 
-  starMaterial.color.set(
-    env.glow
-  );
+  }else{
 
-  neonLight.intensity=
-    17+
-    (phase%5)*2;
+    const direction =
+      new THREE.Vector3(
+        0,
+        0,
+        -1
+      )
+      .applyQuaternion(
+        camera.quaternion
+      );
 
-  phaseHud.textContent=
-    "FASE "+
-    phase+
-    " • "+
-    env.name;
 
+    end =
+      camera.position.clone()
+      .add(
+        direction.multiplyScalar(
+          90
+        )
+      );
+
+
+    tracer(
+      start,
+      end
+    );
+  }
 }
 
 
 /* =========================================================
-   RESET
+   INIMIGO ATINGIDO
 ========================================================= */
 
-function clearObjects(){
+function hitEnemy(
+  enemy
+){
 
-  for(
-    const o of objects
+  enemy.userData.hp--;
+
+
+  explosion(
+    enemy.position.clone()
+      .add(
+        new THREE.Vector3(
+          0,
+          1.3,
+          0
+        )
+      ),
+    enemy.userData.boss
+      ? 0xff00d9
+      : 0x00eaff
+  );
+
+
+  hitmarker.classList.remove(
+    "show"
+  );
+
+  void hitmarker.offsetWidth;
+
+  hitmarker.classList.add(
+    "show"
+  );
+
+
+  if(
+    enemy.userData.hp<=0
   ){
 
-    scene.remove(
-      o.mesh
+    killEnemy(
+      enemy
     );
-
   }
-
-  objects=[];
 }
 
 
-function resetGame(){
+/* =========================================================
+   MATAR
+========================================================= */
 
-  clearObjects();
+function killEnemy(
+  enemy
+){
 
-  score=0;
+  if(
+    enemy.userData.dead
+  ) return;
 
-  coins=0;
 
-  targetLane=0;
+  enemy.userData.dead=true;
 
-  playerLane=0;
 
-  jumpY=0;
+  kills++;
 
-  jumpVelocity=0;
+  coins +=
+    enemy.userData.boss
+      ? 15
+      : 1;
 
-  sliding=false;
 
-  slideTimer=0;
-
-  pattern=0;
-
-  spawnTimer=0;
-
-  player.position.set(
-    0,
-    0,
-    4
+  explosion(
+    enemy.position.clone()
+      .add(
+        new THREE.Vector3(
+          0,
+          1.2,
+          0
+        )
+      ),
+    enemy.userData.boss
+      ? 0xff00d9
+      : 0x00eaff
   );
 
-  player.rotation.set(
-    0,
-    0,
-    0
+
+  scene.remove(
+    enemy
   );
 
-  player.scale.set(
-    1,
-    1,
-    1
-  );
 
-  applyEnvironment();
+  enemies =
+    enemies.filter(
+      e=>e!==enemy
+    );
+
 
   updateHUD();
 
+
+  showToast(
+    enemy.userData.boss
+      ? "BOSS DESTRUÍDO"
+      : "ALVO ELIMINADO"
+  );
+
+
+  checkVictory();
+}
+
+
+/* =========================================================
+   OBSTÁCULOS
+========================================================= */
+
+function hitCrate(
+  crate
+){
+
+  crate.userData.hp--;
+
+
+  explosion(
+    crate.position,
+    0xffa000
+  );
+
+
+  if(
+    crate.userData.hp<=0
+  ){
+
+    coins++;
+
+    scene.remove(
+      crate
+    );
+
+
+    crates =
+      crates.filter(
+        c=>c!==crate
+      );
+
+
+    updateHUD();
+
+
+    showToast(
+      "OBSTÁCULO DESTRUÍDO"
+    );
+  }
+}
+
+
+/* =========================================================
+   RECARREGAR
+========================================================= */
+
+function reload(){
+
+  if(!running) return;
+
+  if(reloading) return;
+
+  if(ammo===maxAmmo) return;
+
+
+  reloading=true;
+
+
+  showToast(
+    "RECARREGANDO"
+  );
+
+
+  setTimeout(
+    ()=>{
+
+      ammo=maxAmmo;
+
+      reloading=false;
+
+      updateAmmo();
+
+    },
+    900
+  );
 }
 
 
@@ -1873,736 +2695,281 @@ function resetGame(){
 
 function updateHUD(){
 
-  const p=
-    phases[phase-1];
+  phaseEl.textContent =
+    currentPhase;
 
-  scoreEl.textContent=
-    Math.floor(score);
 
-  coinsEl.textContent=
-    "🪙 "+
-    coins+
-    "/"+
-    p.coinGoal;
+  targetsEl.textContent =
+    `${kills}/${phaseTarget}`;
 
-  targetEl.textContent=
-    "META "+
-    p.scoreGoal;
 
-  progressEl.style.width=
-    Math.min(
-      100,
-      score/
-      p.scoreGoal*
-      100
-    )+
-    "%";
+  coinsEl.textContent =
+    coins;
 
-  speedEl.textContent=
-    "VELOCIDADE "+
-    p.speed.toFixed(2)+
-    "x";
 
+  lifeEl.textContent =
+    "❤️".repeat(
+      Math.max(
+        0,
+        lives
+      )
+    );
+
+
+  phaseTitle.textContent =
+    `FASE ${currentPhase} • CIDADE NEON`;
+
+
+  objective.textContent =
+    `ELIMINE ${phaseTarget} ALVOS`;
+}
+
+
+function updateAmmo(){
+
+  ammoFill.style.width =
+    `${(
+      ammo/maxAmmo
+    )*100}%`;
 }
 
 
 /* =========================================================
-   ÁUDIO
+   TOAST
 ========================================================= */
 
-let audio=null;
+function showToast(
+  text
+){
 
-let soundOn=true;
+  toast.textContent =
+    text;
 
-function initAudio(){
+  toast.classList.remove(
+    "show"
+  );
 
-  if(audio)return;
+  void toast.offsetWidth;
 
-  try{
-
-    audio=
-      new(
-        window.AudioContext||
-        window.webkitAudioContext
-      )();
-
-  }catch(e){}
-
+  toast.classList.add(
+    "show"
+  );
 }
+
+
+/* =========================================================
+   SOM
+========================================================= */
+
+let audioCtx=null;
 
 
 function beep(
   frequency,
-  duration,
-  type="sine",
-  volume=.03
+  duration
 ){
 
-  if(
-    !soundOn||
-    !audio
-  ){
-    return;
-  }
+  try{
 
-  const osc=
-    audio.createOscillator();
+    if(!audioCtx){
 
-  const gain=
-    audio.createGain();
+      audioCtx =
+        new (
+          window.AudioContext ||
+          window.webkitAudioContext
+        )();
 
-  osc.type=type;
-
-  osc.frequency.value=
-    frequency;
-
-  gain.gain.setValueAtTime(
-    volume,
-    audio.currentTime
-  );
-
-  gain.gain.exponentialRampToValueAtTime(
-    .001,
-    audio.currentTime+
-    duration
-  );
-
-  osc.connect(gain);
-
-  gain.connect(
-    audio.destination
-  );
-
-  osc.start();
-
-  osc.stop(
-    audio.currentTime+
-    duration
-  );
-
-}
+    }
 
 
-/* =========================================================
-   MOVIMENTO
-========================================================= */
+    if(
+      audioCtx.state===
+      "suspended"
+    ){
 
-let jumpY=0;
-
-let jumpVelocity=0;
-
-let targetLane=0;
-
-let playerLane=0;
-
-let sliding=false;
-
-let slideTimer=0;
-
-function moveLeft(){
-
-  if(!running)return;
-
-  targetLane=
-    Math.max(
-      -1,
-      targetLane-1
-    );
-
-}
+      audioCtx.resume();
+    }
 
 
-function moveRight(){
+    const oscillator =
+      audioCtx.createOscillator();
 
-  if(!running)return;
-
-  targetLane=
-    Math.min(
-      1,
-      targetLane+1
-    );
-
-}
+    const gain =
+      audioCtx.createGain();
 
 
-function jump(){
+    oscillator.frequency.value =
+      frequency;
 
-  if(!running)return;
 
-  if(jumpY<=.01){
-
-    jumpVelocity=
-      .0205;
-
-    beep(
-      430,
+    gain.gain.setValueAtTime(
       .08,
-      "triangle",
-      .035
-    );
-
-  }
-
-}
-
-
-function slide(){
-
-  if(!running)return;
-
-  sliding=true;
-
-  slideTimer=
-    520;
-
-}
-
-
-/* =========================================================
-   TOUCH
-========================================================= */
-
-let touchX=0;
-
-let touchY=0;
-
-renderer.domElement.addEventListener(
-  "touchstart",
-  e=>{
-
-    const t=
-      e.changedTouches[0];
-
-    touchX=
-      t.clientX;
-
-    touchY=
-      t.clientY;
-
-  },
-  {passive:true}
-);
-
-
-renderer.domElement.addEventListener(
-  "touchend",
-  e=>{
-
-    const t=
-      e.changedTouches[0];
-
-    const dx=
-      t.clientX-touchX;
-
-    const dy=
-      t.clientY-touchY;
-
-    const ax=
-      Math.abs(dx);
-
-    const ay=
-      Math.abs(dy);
-
-    if(
-      Math.max(ax,ay)<25
-    ){
-      return;
-    }
-
-    if(ax>ay){
-
-      if(dx>0){
-        moveRight();
-      }else{
-        moveLeft();
-      }
-
-    }else{
-
-      if(dy<0){
-        jump();
-      }else{
-        slide();
-      }
-
-    }
-
-  },
-  {passive:true}
-);
-
-
-/* =========================================================
-   TECLADO
-========================================================= */
-
-addEventListener(
-  "keydown",
-  e=>{
-
-    if(
-      e.key==="ArrowLeft"||
-      e.key==="a"
-    ){
-      moveLeft();
-    }
-
-    if(
-      e.key==="ArrowRight"||
-      e.key==="d"
-    ){
-      moveRight();
-    }
-
-    if(
-      e.key==="ArrowUp"||
-      e.key==="w"||
-      e.key===" "
-    ){
-      jump();
-    }
-
-    if(
-      e.key==="ArrowDown"||
-      e.key==="s"
-    ){
-      slide();
-    }
-
-  }
-);
-
-
-/* =========================================================
-   PLAYER
-========================================================= */
-
-let gameTime=0;
-
-function updatePlayer(dt){
-
-  playerLane +=
-    (
-      targetLane-
-      playerLane
-    )*
-    Math.min(
-      1,
-      dt*.012
-    );
-
-  player.position.x=
-    playerLane*
-    2.25;
-
-
-  if(
-    jumpY>0||
-    jumpVelocity>0
-  ){
-
-    jumpY+=
-      jumpVelocity*
-      dt;
-
-    jumpVelocity-=
-      .000064*
-      dt;
-
-    if(jumpY<=0){
-
-      jumpY=0;
-
-      jumpVelocity=0;
-
-    }
-
-  }
-
-
-  if(
-    slideTimer>0
-  ){
-
-    slideTimer-=dt;
-
-    sliding=true;
-
-    player.scale.y=
-      THREE.MathUtils.lerp(
-        player.scale.y,
-        .62,
-        .25
-      );
-
-    player.position.y=
-      jumpY+.15;
-
-  }else{
-
-    sliding=false;
-
-    player.scale.y=
-      THREE.MathUtils.lerp(
-        player.scale.y,
-        1,
-        .18
-      );
-
-    player.position.y=
-      jumpY;
-
-  }
-
-
-  const run=
-    Math.sin(
-      gameTime*.018
-    );
-
-  const run2=
-    Math.sin(
-      gameTime*.018+
-      Math.PI
+      audioCtx.currentTime
     );
 
 
-  if(!sliding){
+    gain.gain.exponentialRampToValueAtTime(
+      .001,
+      audioCtx.currentTime+
+      duration
+    );
 
-    legL.rotation.x=
-      run*.55;
 
-    legR.rotation.x=
-      run2*.55;
+    oscillator.connect(
+      gain
+    );
 
-    armL.rotation.x=
-      run2*.48;
+    gain.connect(
+      audioCtx.destination
+    );
 
-    armR.rotation.x=
-      run*.48;
 
-  }else{
+    oscillator.start();
 
-    legL.rotation.x=0;
-    legR.rotation.x=0;
 
-    armL.rotation.x=-.8;
-    armR.rotation.x=.8;
+    oscillator.stop(
+      audioCtx.currentTime+
+      duration
+    );
 
-  }
-
+  }catch(e){}
 }
 
 
 /* =========================================================
-   CÂMERA
+   TIRO INIMIGO
 ========================================================= */
 
-function updateCamera(){
+function enemyShoot(){
 
-  camera.position.x=
-    THREE.MathUtils.lerp(
-      camera.position.x,
-      player.position.x*.28,
-      .08
+  if(!running) return;
+
+  if(!enemies.length) return;
+
+
+  const enemy =
+    enemies[
+      Math.floor(
+        Math.random()*
+        enemies.length
+      )
+    ];
+
+
+  if(!enemy) return;
+
+
+  const start =
+    enemy.position.clone();
+
+  start.y+=1.3;
+
+
+  const end =
+    camera.position.clone();
+
+
+  const geometry =
+    new THREE.BufferGeometry()
+      .setFromPoints([
+        start,
+        end
+      ]);
+
+
+  const material =
+    new THREE.LineBasicMaterial({
+
+      color:0xff285d,
+
+      transparent:true,
+
+      opacity:1
+    });
+
+
+  const line =
+    new THREE.Line(
+      geometry,
+      material
     );
 
-  camera.position.y=
-    THREE.MathUtils.lerp(
-      camera.position.y,
-      4.8+
-      jumpY*.08,
-      .08
-    );
 
-  camera.lookAt(
-    player.position.x*.12,
-    1.1+
-    jumpY*.05,
-    -30
+  scene.add(
+    line
   );
 
+
+  enemyShots.push({
+
+    line,
+
+    life:.32
+  });
+
+
+  setTimeout(
+    ()=>{
+
+      if(
+        running
+      ){
+
+        damagePlayer();
+      }
+
+    },
+    260
+  );
 }
 
 
 /* =========================================================
-   ESTRADA
+   DANO
 ========================================================= */
 
-function updateRoad(dt){
+function damagePlayer(){
 
-  const speed=
-    phases[phase-1].speed;
-
-  const movement=
-    speed*
-    dt*
-    .030;
-
-  for(
-    const mark of marks
-  ){
-
-    mark.position.z+=
-      movement;
-
-    if(
-      mark.position.z>7
-    ){
-
-      mark.position.z=
-        -108;
-
-    }
-
-  }
-
-}
+  if(!running) return;
 
 
-/* =========================================================
-   COLISÃO
-========================================================= */
-
-function collision(o){
-
-  const z=
-    o.mesh.position.z;
-
-  if(
-    z<1.0||
-    z>5.0
-  ){
-    return false;
-  }
+  lives--;
 
 
-  if(
-    Math.abs(
-      o.lane-
-      targetLane
-    )>.35
-  ){
-    return false;
-  }
-
-
-  if(
-    o.type==="coin"
-  ){
-
-    if(o.collected){
-      return false;
-    }
-
-    o.collected=true;
-
-    coins++;
-
-    score+=
-      35;
-
-    beep(
-      780,
-      .06,
-      "sine",
-      .035
-    );
-
-    scene.remove(
-      o.mesh
-    );
-
-    return false;
-  }
-
-
-  if(
-    o.type==="barrier"
-  ){
-
-    return jumpY<
-      1.0;
-
-  }
-
-
-  if(
-    o.type==="low"
-  ){
-
-    return (
-      jumpY<
-      .55&&
-      !sliding
-    );
-
-  }
-
-
-  return false;
-
-}
-
-
-/* =========================================================
-   OBJETOS
-========================================================= */
-
-function updateObjects(dt){
-
-  const speed=
-    phases[phase-1].speed;
-
-  const movement=
-    speed*
-    dt*
-    .030;
-
-
-  for(
-    let i=
-      objects.length-1;
-    i>=0;
-    i--
-  ){
-
-    const o=
-      objects[i];
-
-    o.mesh.position.z+=
-      movement;
-
-
-    if(
-      o.type==="coin"
-    ){
-
-      o.mesh.rotation.y+=
-        dt*.009;
-
-      o.mesh.rotation.z+=
-        dt*.005;
-
-    }
-
-
-    const z=
-      o.mesh.position.z;
-
-    const scale=
-      THREE.MathUtils.clamp(
-        .30+
-        (z+88)/100,
-        .30,
-        1.12
-      );
-
-    o.mesh.scale.setScalar(
-      scale
+  lifeEl.textContent =
+    "❤️".repeat(
+      Math.max(
+        0,
+        lives
+      )
     );
 
 
-    if(
-      collision(o)
-    ){
-
-      die();
-
-      return;
-
-    }
+  damage.style.background =
+    "rgba(255,0,0,.28)";
 
 
-    if(
-      o.collected||
-      z>8
-    ){
-
-      scene.remove(
-        o.mesh
-      );
-
-      objects.splice(
-        i,
-        1
-      );
-
-    }
-
-  }
-
-}
+  setTimeout(
+    ()=>{
+      damage.style.background =
+        "rgba(255,0,0,0)";
+    },
+    130
+  );
 
 
-/* =========================================================
-   SPAWN
-========================================================= */
+  beep(
+    100,
+    .12
+  );
 
-let spawnTimer=0;
-
-function updateSpawn(dt){
-
-  spawnTimer+=dt;
-
-  const p=
-    phases[phase-1];
 
   if(
-    spawnTimer>=
-    p.spawn
+    lives<=0
   ){
 
-    spawnTimer=0;
-
-    /*
-      Se a pista ainda estiver cheia,
-      espera a sequência passar.
-    */
-
-    const busy=
-      objects.some(
-        o=>
-          o.mesh.position.z>
-          -45
-      );
-
-    if(!busy){
-
-      spawnPattern();
-
-    }
-
+    endGame();
   }
-
-}
-
-
-/* =========================================================
-   COMEÇAR
-========================================================= */
-
-let running=false;
-
-function startGame(){
-
-  initAudio();
-
-  if(
-    audio&&
-    audio.state==="suspended"
-  ){
-
-    audio.resume();
-
-  }
-
-  hideScreens();
-
-  resetGame();
-
-  running=true;
-
 }
 
 
@@ -2610,443 +2977,879 @@ function startGame(){
    VITÓRIA
 ========================================================= */
 
-function winPhase(){
+function checkVictory(){
 
-  if(!running)return;
+  if(
+    kills<
+    phaseTarget
+  ) return;
+
+
+  finishPhase();
+}
+
+
+function finishPhase(){
+
+  if(!running) return;
+
 
   running=false;
 
-  const p=
-    phases[phase-1];
-
-
-  /*
-    IMPORTANTE:
-    pontuação + moedas.
-  */
 
   if(
-    score<
-    p.scoreGoal
+    currentPhase>=unlocked &&
+    currentPhase<50
   ){
 
-    running=true;
-
-    return;
-
-  }
+    unlocked =
+      currentPhase+1;
 
 
-  if(
-    coins<
-    p.coinGoal
-  ){
-
-    running=true;
-
-    return;
-
-  }
-
-
-  bestScore=
-    Math.max(
-      bestScore,
-      score
+    localStorage.setItem(
+      "ultimoSegundoUnlocked",
+      unlocked
     );
-
-
-  if(
-    phase<50
-  ){
-
-    unlocked=
-      Math.max(
-        unlocked,
-        phase+1
-      );
-
   }
 
 
-  document.getElementById(
-    "victoryStats"
-  ).innerHTML=
-
-    "FASE "+
-    phase+
-    " • "+
-    p.name+
-    "<br>"+
-    "Pontuação: <b>"+
-    Math.floor(score)+
-    "</b><br>"+
-    "Moedas: <b>"+
-    coins+
-    "/"+
-    p.coinGoal+
-    "</b><br><br>"+
-    (
-      phase<50
-      ?
-      "FASE "+
-      (phase+1)+
-      " DESBLOQUEADA!"
-      :
-      "VOCÊ CONCLUIU AS 50 FASES!"
-    );
-
-
-  document.getElementById(
-    "next"
-  ).textContent=
-    phase<50
-    ?
-    "▶ PRÓXIMA FASE"
-    :
-    "🏆 CONCLUÍDO";
-
-
-  hideScreens();
-
-  victory.classList.add(
-    "show"
+  localStorage.setItem(
+    "ultimoSegundoPhase",
+    currentPhase
   );
 
+
+  $("victoryText").innerHTML =
+    `
+    ALVOS ELIMINADOS:
+    <b>${kills}</b>
+    <br><br>
+    MOEDAS:
+    <b>${coins}</b>
+    `;
+
+
+  victory.style.display =
+    "flex";
+
+
+  beep(
+    900,
+    .25
+  );
 }
 
 
 /* =========================================================
-   MORTE
+   GAME OVER
 ========================================================= */
 
-function die(){
-
-  if(!running)return;
+function endGame(){
 
   running=false;
+
+
+  $("message").innerHTML =
+    `
+    FASE:
+    <b>${currentPhase}</b>
+    <br>
+    ALVOS:
+    <b>${kills}</b>
+    <br>
+    MOEDAS:
+    <b>${coins}</b>
+    `;
+
+
+  gameover.style.display =
+    "flex";
+
 
   beep(
     90,
-    .22,
-    "sawtooth",
-    .05
+    .4
   );
-
-
-  bestScore=
-    Math.max(
-      bestScore,
-      score
-    );
-
-
-  phase=1;
-
-  unlocked=1;
-
-
-  document.getElementById(
-    "finalStats"
-  ).innerHTML=
-
-    "Pontuação: <b>"+
-    Math.floor(score)+
-    "</b><br>"+
-    "Moedas: <b>"+
-    coins+
-    "</b><br><br>"+
-    "Você perdeu a corrida.<br>"+
-    "<b>O progresso voltou para a Fase 1.</b>";
-
-
-  setTimeout(
-    ()=>{
-
-      hideScreens();
-
-      gameover.classList.add(
-        "show"
-      );
-
-    },
-    180
-  );
-
 }
 
 
 /* =========================================================
-   TELAS
+   LIMPAR
 ========================================================= */
 
-function hideScreens(){
+function clearObjects(){
 
-  menu.classList.remove(
-    "show"
+  enemies.forEach(
+    e=>scene.remove(e)
   );
 
-  phaseMenu.classList.remove(
-    "show"
+  crates.forEach(
+    c=>scene.remove(c)
   );
 
-  gameover.classList.remove(
-    "show"
+  particles.forEach(
+    p=>scene.remove(p)
   );
 
-  victory.classList.remove(
-    "show"
+  tracers.forEach(
+    t=>scene.remove(t.line)
   );
 
+  enemyShots.forEach(
+    s=>scene.remove(s.line)
+  );
+
+
+  enemies=[];
+  crates=[];
+  particles=[];
+  tracers=[];
+  enemyShots=[];
 }
 
 
-function showMenu(){
+/* =========================================================
+   INICIAR
+========================================================= */
 
-  running=false;
+function startGame(){
 
-  hideScreens();
+  menu.style.display =
+    "none";
 
-  menu.classList.add(
-    "show"
+  phasesScreen.style.display =
+    "none";
+
+  gameover.style.display =
+    "none";
+
+  victory.style.display =
+    "none";
+
+
+  clearObjects();
+
+
+  kills=0;
+  coins=0;
+  lives=3;
+
+  ammo=maxAmmo;
+
+  phaseTarget =
+    8+
+    Math.floor(
+      (currentPhase-1)*.65
+    );
+
+
+  spawnTimer=0;
+  enemyShotTimer=0;
+
+
+  cameraYaw=0;
+  cameraPitch=0;
+
+
+  camera.position.set(
+    0,
+    1.55,
+    4
   );
 
-  document.getElementById(
-    "menuBest"
-  ).textContent=
-    Math.floor(bestScore);
 
+  camera.rotation.set(
+    0,
+    0,
+    0
+  );
+
+
+  updateHUD();
+
+  updateAmmo();
+
+
+  /*
+    Começa com dois inimigos
+    visíveis, mas longe.
+  */
+
+  createEnemy(false);
+
+  createEnemy(false);
+
+
+  if(
+    currentPhase>=3
+  ){
+
+    createCrate();
+  }
+
+
+  running=true;
+
+
+  showToast(
+    `FASE ${currentPhase}`
+  );
 }
 
 
-function buildPhaseMenu(){
+/* =========================================================
+   PRÓXIMA
+========================================================= */
 
-  phaseGrid.innerHTML="";
+function nextPhase(){
 
-  phases.forEach(
-    p=>{
+  if(
+    currentPhase<50
+  ){
 
-      const b=
-        document.createElement(
-          "button"
-        );
+    currentPhase++;
 
-      b.className=
-        "phaseBtn"+
-        (
-          p.id>unlocked
-          ?
-          " locked"
-          :
-          ""
-        );
-
-      b.innerHTML=
-        `<span class="num">${p.id}</span>`+
-        `<span class="name">${p.name}</span>`+
-        `<span class="goal">🪙 ${p.coinGoal}</span>`+
-        (
-          p.id>unlocked
-          ?
-          `<span class="lock">🔒</span>`
-          :
-          ""
-        );
+    localStorage.setItem(
+      "ultimoSegundoPhase",
+      currentPhase
+    );
+  }
 
 
-      if(
-        p.id<=unlocked
-      ){
-
-        b.onclick=()=>{
-
-          phase=
-            p.id;
-
-          startGame();
-
-        };
-
-      }
+  startGame();
+}
 
 
-      phaseGrid.appendChild(
-        b
+/* =========================================================
+   FASES
+========================================================= */
+
+function buildPhaseGrid(){
+
+  const grid =
+    $("phaseGrid");
+
+  grid.innerHTML="";
+
+
+  for(
+    let i=1;
+    i<=50;
+    i++
+  ){
+
+    const button =
+      document.createElement(
+        "button"
       );
 
-    }
-  );
 
+    button.className =
+      "phaseBtn";
+
+
+    if(
+      i>unlocked
+    ){
+
+      button.classList.add(
+        "locked"
+      );
+
+      button.textContent =
+        `🔒 ${i}`;
+
+    }else{
+
+      button.textContent =
+        `FASE ${i}`;
+
+
+      button.onclick =
+        ()=>{
+
+          currentPhase=i;
+
+          startGame();
+        };
+    }
+
+
+    grid.appendChild(
+      button
+    );
+  }
 }
+
+
+/* =========================================================
+   SPAWN
+========================================================= */
+
+function spawnLogic(
+  dt
+){
+
+  spawnTimer+=dt;
+
+
+  const interval =
+    Math.max(
+      .75,
+      1.55-
+      (currentPhase-1)*.018
+    );
+
+
+  if(
+    spawnTimer>=interval &&
+    enemies.length<5
+  ){
+
+    spawnTimer=0;
+
+
+    const bossPhase =
+      currentPhase%10===0;
+
+
+    const hasBoss =
+      enemies.some(
+        e=>e.userData.boss
+      );
+
+
+    if(
+      bossPhase &&
+      kills>=phaseTarget-1 &&
+      !hasBoss
+    ){
+
+      createEnemy(true);
+
+    }else{
+
+      createEnemy(false);
+    }
+  }
+
+
+  if(
+    currentPhase>=3 &&
+    Math.random()<dt*.25 &&
+    crates.length<3
+  ){
+
+    createCrate();
+  }
+}
+
+
+/* =========================================================
+   MOVIMENTO
+========================================================= */
+
+function updateWorld(
+  dt
+){
+
+  const speed =
+    .72+
+    (currentPhase-1)*.018;
+
+
+  const move =
+    speed*
+    dt*
+    13;
+
+
+  /*
+    inimigos
+  */
+
+  for(
+    let i=enemies.length-1;
+    i>=0;
+    i--
+  ){
+
+    const enemy =
+      enemies[i];
+
+
+    enemy.position.z+=
+      move;
+
+
+    /*
+      pequena animação
+      para parecer vivo
+    */
+
+    enemy.position.y =
+      Math.sin(
+        performance.now()*.004+
+        enemy.userData.phaseOffset
+      )*.025;
+
+
+    if(
+      enemy.position.z>5
+    ){
+
+      scene.remove(
+        enemy
+      );
+
+      enemies.splice(
+        i,
+        1
+      );
+
+      damagePlayer();
+    }
+  }
+
+
+  /*
+    obstáculos
+  */
+
+  for(
+    let i=crates.length-1;
+    i>=0;
+    i--
+  ){
+
+    const crate =
+      crates[i];
+
+
+    crate.position.z+=
+      move;
+
+
+    crate.rotation.y+=
+      dt*.25;
+
+
+    if(
+      crate.position.z>5
+    ){
+
+      scene.remove(
+        crate
+      );
+
+      crates.splice(
+        i,
+        1
+      );
+    }
+  }
+}
+
+
+/* =========================================================
+   PARTÍCULAS
+========================================================= */
+
+function updateParticles(
+  dt
+){
+
+  for(
+    let i=particles.length-1;
+    i>=0;
+    i--
+  ){
+
+    const p =
+      particles[i];
+
+
+    p.position.addScaledVector(
+      p.userData.velocity,
+      dt*60
+    );
+
+
+    p.userData.life-=
+      dt;
+
+
+    p.scale.multiplyScalar(
+      .95
+    );
+
+
+    if(
+      p.userData.life<=0
+    ){
+
+      scene.remove(
+        p
+      );
+
+      particles.splice(
+        i,
+        1
+      );
+    }
+  }
+}
+
+
+/* =========================================================
+   TRACERS
+========================================================= */
+
+function updateTracers(
+  dt
+){
+
+  for(
+    let i=tracers.length-1;
+    i>=0;
+    i--
+  ){
+
+    const t =
+      tracers[i];
+
+
+    t.life-=dt;
+
+
+    t.line.material.opacity =
+      Math.max(
+        0,
+        t.life/.12
+      );
+
+
+    if(
+      t.life<=0
+    ){
+
+      scene.remove(
+        t.line
+      );
+
+      tracers.splice(
+        i,
+        1
+      );
+    }
+  }
+}
+
+
+/* =========================================================
+   TIROS INIMIGOS
+========================================================= */
+
+function updateEnemyShots(
+  dt
+){
+
+  for(
+    let i=enemyShots.length-1;
+    i>=0;
+    i--
+  ){
+
+    const shot =
+      enemyShots[i];
+
+
+    shot.life-=dt;
+
+
+    shot.line.material.opacity =
+      Math.max(
+        0,
+        shot.life/.32
+      );
+
+
+    if(
+      shot.life<=0
+    ){
+
+      scene.remove(
+        shot.line
+      );
+
+      enemyShots.splice(
+        i,
+        1
+      );
+    }
+  }
+}
+
+
+/* =========================================================
+   TOUCH
+========================================================= */
+
+renderer.domElement.addEventListener(
+  "touchstart",
+  event=>{
+
+    if(
+      event.touches.length!==1
+    ) return;
+
+
+    touchStartX =
+      event.touches[0].clientX;
+
+    touchStartY =
+      event.touches[0].clientY;
+
+  },
+  {
+    passive:false
+  }
+);
+
+
+renderer.domElement.addEventListener(
+  "touchmove",
+  event=>{
+
+    if(!running) return;
+
+    if(
+      event.touches.length!==1
+    ) return;
+
+
+    const x =
+      event.touches[0].clientX;
+
+    const y =
+      event.touches[0].clientY;
+
+
+    const dx =
+      x-touchStartX;
+
+    const dy =
+      y-touchStartY;
+
+
+    touchStartX=x;
+    touchStartY=y;
+
+
+    cameraYaw -=
+      dx*.003;
+
+
+    cameraPitch -=
+      dy*.002;
+
+
+    cameraPitch =
+      THREE.MathUtils.clamp(
+        cameraPitch,
+        -.35,
+        .35
+      );
+
+
+    camera.rotation.y =
+      cameraYaw;
+
+    camera.rotation.x =
+      cameraPitch;
+
+
+    event.preventDefault();
+
+  },
+  {
+    passive:false
+  }
+);
+
+
+/* =========================================================
+   BOTÃO TIRO
+========================================================= */
+
+$("shoot").addEventListener(
+  "pointerdown",
+  event=>{
+
+    event.preventDefault();
+
+    shoot();
+
+  }
+);
+
+
+/* =========================================================
+   RELOAD
+========================================================= */
+
+$("reload").addEventListener(
+  "pointerdown",
+  event=>{
+
+    event.preventDefault();
+
+    reload();
+
+  }
+);
 
 
 /* =========================================================
    BOTÕES
 ========================================================= */
 
-document.getElementById(
-  "play"
-).onclick=()=>{
-
-  phase=1;
-
+$("start").onclick =
+()=>{
   startGame();
-
 };
 
 
-document.getElementById(
-  "phases"
-).onclick=()=>{
+$("choosePhase").onclick =
+()=>{
 
-  hideScreens();
+  buildPhaseGrid();
 
-  buildPhaseMenu();
+  menu.style.display=
+    "none";
 
-  phaseMenu.classList.add(
-    "show"
-  );
-
+  phasesScreen.style.display=
+    "flex";
 };
 
 
-document.getElementById(
-  "backMenu"
-).onclick=()=>{
+$("closePhases").onclick =
+()=>{
 
-  showMenu();
+  phasesScreen.style.display=
+    "none";
 
+  menu.style.display=
+    "flex";
 };
 
 
-document.getElementById(
-  "again"
-).onclick=()=>{
-
-  phase=1;
-
-  unlocked=1;
-
+$("retry").onclick =
+()=>{
   startGame();
-
 };
 
 
-document.getElementById(
-  "overMenu"
-).onclick=()=>{
+$("backMenu").onclick =
+()=>{
 
-  phase=1;
+  gameover.style.display=
+    "none";
 
-  unlocked=1;
-
-  showMenu();
-
+  menu.style.display=
+    "flex";
 };
 
 
-document.getElementById(
-  "next"
-).onclick=()=>{
+$("nextPhase").onclick =
+()=>{
 
-  if(
-    phase>=50
-  ){
+  victory.style.display=
+    "none";
 
-    phase=1;
-
-    unlocked=1;
-
-    showMenu();
-
-    return;
-
-  }
-
-  phase++;
-
-  startGame();
-
+  nextPhase();
 };
 
 
-document.getElementById(
-  "victoryMenu"
-).onclick=()=>{
+$("victoryMenu").onclick =
+()=>{
 
-  showMenu();
+  victory.style.display=
+    "none";
 
+  menu.style.display=
+    "flex";
 };
 
 
-document.getElementById(
-  "sound"
-).onclick=e=>{
+/* =========================================================
+   TECLADO
+========================================================= */
 
-  e.stopPropagation();
-
-  soundOn=
-    !soundOn;
-
-  e.currentTarget.textContent=
-    soundOn
-    ?
-    "🔊 SOM"
-    :
-    "🔇 SOM";
-
-  if(soundOn){
-
-    initAudio();
+window.addEventListener(
+  "keydown",
+  event=>{
 
     if(
-      audio&&
-      audio.state===
-      "suspended"
+      event.code==="Space"
     ){
 
-      audio.resume();
-
+      shoot();
     }
 
-    beep(
-      650,
-      .08,
-      "triangle",
-      .03
-    );
 
+    if(
+      event.key.toLowerCase()==="r"
+    ){
+
+      reload();
+    }
+
+
+    if(
+      event.key==="ArrowLeft"
+    ){
+
+      cameraYaw+=.05;
+
+      camera.rotation.y=
+        cameraYaw;
+    }
+
+
+    if(
+      event.key==="ArrowRight"
+    ){
+
+      cameraYaw-=.05;
+
+      camera.rotation.y=
+        cameraYaw;
+    }
   }
-
-};
+);
 
 
 /* =========================================================
    RESIZE
 ========================================================= */
 
-addEventListener(
+window.addEventListener(
   "resize",
   ()=>{
 
-    camera.aspect=
+    camera.aspect =
       innerWidth/
       innerHeight;
 
+
     camera.updateProjectionMatrix();
+
 
     renderer.setSize(
       innerWidth,
       innerHeight
     );
-
-    renderer.setPixelRatio(
-      Math.min(
-        1.6,
-        devicePixelRatio
-      )
-    );
-
   }
 );
 
@@ -3055,83 +3858,71 @@ addEventListener(
    LOOP
 ========================================================= */
 
-let lastTime=
-  performance.now();
-
-
-function loop(now){
+function animate(
+  now
+){
 
   requestAnimationFrame(
-    loop
+    animate
   );
 
-  const dt=
+
+  const dt =
     Math.min(
-      32,
-      Math.max(
-        0,
-        now-lastTime
-      )
+      (now-lastTime)/1000,
+      .05
     );
+
 
   lastTime=now;
 
 
   if(running){
 
-    gameTime+=dt;
+    spawnLogic(dt);
+
+    updateWorld(dt);
 
 
-    const p=
-      phases[phase-1];
+    enemyShotTimer+=dt;
 
 
-    score+=
-      p.speed*
-      dt*
-      .055;
+    const interval =
+      Math.max(
+        1.7,
+        3.5-
+        (currentPhase-1)*.035
+      );
 
-
-    updatePlayer(dt);
-
-    updateCamera();
-
-    updateRoad(dt);
-
-    updateObjects(dt);
-
-    updateSpawn(dt);
-
-    updateHUD();
-
-
-    /*
-      Só passa quando
-      pontuação E moedas
-      forem atingidas.
-    */
 
     if(
-      score>=p.scoreGoal&&
-      coins>=p.coinGoal
+      enemyShotTimer>=interval
     ){
 
-      winPhase();
+      enemyShotTimer=0;
 
+
+      if(
+        enemies.length
+      ){
+
+        enemyShoot();
+      }
     }
-
   }
 
 
-  stars.rotation.y+=
-    dt*.000008;
+  updateParticles(dt);
+
+  updateTracers(dt);
+
+  updateEnemyShots(dt);
 
 
   renderer.render(
     scene,
     camera
   );
-
 }
 
 
@@ -3139,13 +3930,11 @@ function loop(now){
    INÍCIO
 ========================================================= */
 
-buildPhaseMenu();
-
-applyEnvironment();
-
 updateHUD();
 
-loop(
+updateAmmo();
+
+animate(
   performance.now()
 );
 
